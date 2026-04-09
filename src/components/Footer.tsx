@@ -55,7 +55,7 @@ export default function Footer() {
             </h3>
             <div className="space-y-2">
               {[
-                { name: "Portfolio", path: "/library" },
+                { name: "Portfolio", path: "/portfolio" },
                 { name: "Services", path: "/services" },
                 { name: "About", path: "/about" },
                 { name: "Vault", path: "/vault" },

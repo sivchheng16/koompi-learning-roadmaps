@@ -79,7 +79,7 @@ export const GAMES: Game[] = [
     iframeUrl: "https://typing-math-game.vercel.app",
     appImageUrl:
       "https://drive.google.com/file/d/1l1rA29APscP38-PhAwd84miuwOQCI2-K/view?usp=sharing",
-    thumbnail: "/src/assets/game-cover/typing-code-game.png",
+    thumbnail: "/src/assets/game-cover/typing-code.png",
     category: "typing",
   },
   {
@@ -90,7 +90,7 @@ export const GAMES: Game[] = [
     iframeUrl: "https://typing-math-game.vercel.app/",
     appImageUrl:
       "https://drive.google.com/file/d/1crkVv9NvpqEmCwA10r-k2Bwr6ouEcj_-/view?usp=sharing",
-    thumbnail: "/src/assets/game-cover/typing-math-game.png",
+    thumbnail: "/src/assets/game-cover/typing-math.png",
     category: "typing",
   },
   {
@@ -126,4 +126,81 @@ export const GAMES: Game[] = [
     thumbnail: "src/assets/game-cover/master-mouse.png",
     category: "mouse",
   },
+  {
+    id: "LinkNumber",
+    title: "Link Number",
+    description: "A thrilling mouse-controlled game where you navigate a clever mouse through intricate mazes and challenges. Test your reflexes and problem-solving skills!",
+    iframeUrl: "https://link-number.vercel.app/",
+    appImageUrl:
+      "https://drive.google.com/file/d/162FfIfjRK249uDLKwHkaBS-JfbwFXwZI/view?usp=sharing",
+    thumbnail: "src/assets/game-cover/link-number.png",
+    category: "puzzle",
+  },
+];
+
+export interface Lesson {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+}
+
+export interface Topic {
+  id: string;
+  title: string;
+  description: string;
+  iconName: string;
+  level: string;
+  lessons: Lesson[];
+}
+
+export const TOPICS: Topic[] = [
+  {
+    id: "html",
+    title: "HTML",
+    description: "The standard markup language for documents designed to be displayed in a web browser.",
+    iconName: "LayoutTemplate",
+    level: "Beginner",
+    lessons: [
+      { id: "html-1", title: "Introduction to HTML", description: "Learn the basic structure of an HTML document.", duration: "30 mins" },
+      { id: "html-2", title: "HTML Elements and Tags", description: "Deep dive into paragraphs, headings, and formatting.", duration: "45 mins" },
+      { id: "html-3", title: "Forms and Input", description: "Learn how to build interactive forms for users.", duration: "1 hr" }
+    ]
+  },
+  {
+    id: "css",
+    title: "CSS",
+    description: "Style sheet language used for describing the presentation of a document written in HTML.",
+    iconName: "Paintbrush",
+    level: "Beginner",
+    lessons: [
+      { id: "css-1", title: "CSS Fundamentals", description: "Understanding selectors, properties, and values.", duration: "45 mins" },
+      { id: "css-2", title: "Flexbox & Grid", description: "Mastering modern layout techniques.", duration: "1.5 hrs" },
+      { id: "css-3", title: "Animations", description: "Creating smooth transitions and keyframe animations.", duration: "1 hr" }
+    ]
+  },
+  {
+    id: "javascript",
+    title: "JavaScript",
+    description: "High-level, often just-in-time compiled language that conforms to the ECMAScript standard.",
+    iconName: "Code2",
+    level: "Intermediate",
+    lessons: [
+      { id: "js-1", title: "Variables & Data Types", description: "Understanding let, const, strings, arrays, and objects.", duration: "1 hr" },
+      { id: "js-2", title: "Functions & Scope", description: "Learn about arrow functions, closures, and lexical scope.", duration: "1.5 hrs" },
+      { id: "js-3", title: "DOM Manipulation", description: "Interacting with the browser and handling events.", duration: "2 hrs" }
+    ]
+  },
+  {
+    id: "react",
+    title: "React",
+    description: "A free and open-source front-end JavaScript library for building user interfaces based on components.",
+    iconName: "AppWindow",
+    level: "Advanced",
+    lessons: [
+      { id: "react-1", title: "Components & Props", description: "Building reusable UI components.", duration: "1 hr" },
+      { id: "react-2", title: "State & Hooks", description: "Managing state with useState and useEffect.", duration: "2 hrs" },
+      { id: "react-3", title: "Routing", description: "Client-side routing with React Router.", duration: "1.5 hrs" }
+    ]
+  }
 ];

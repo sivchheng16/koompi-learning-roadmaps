@@ -6,10 +6,11 @@ import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'sonner';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Library from './pages/Portfolio';
+import Portfolio from './pages/Portfolio';
 import GamePortal from './pages/GamePortal';
 import About from './pages/About';
 import Services from './pages/Services';
+import TopicDetails from './pages/TopicDetails';
 import { Project } from './constants';
 import ProjectModal from './components/ProjectModal';
 import ScrollToTop from './components/ScrollToTop';
@@ -37,9 +38,9 @@ function AnimatedRoutes({
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/library"
+        <Route path="/portfolio"
           element={
-            <Library
+            <Portfolio
               favorites={favorites}
               recentlyPlayed={[]} // Keeping for compatibility, not used in Portfolio
               toggleFavorite={toggleFavorite}
@@ -52,6 +53,7 @@ function AnimatedRoutes({
         <Route path="/services" element={<Services />} />
         <Route path="/pages" element={<Services />} />
         <Route path="/vault" element={<GamePortal />} />
+        <Route path="/document/:topicId" element={<TopicDetails />} />
       </Routes>
     </AnimatePresence>
   );

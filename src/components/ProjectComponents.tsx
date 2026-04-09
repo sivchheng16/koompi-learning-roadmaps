@@ -32,7 +32,7 @@ export function SafeImage({
             setHasError(true);
             setIsLoading(false);
           }}
-          className={`w-full h-full object-cover grayscale transition-all duration-1000 ease-in-out ${isLoading ? "opacity-0 scale-110" : "opacity-100 scale-100"} group-hover:grayscale-0 group-hover:scale-105`}
+          className={`w-full h-full object-cover transition-all duration-1000 ease-in-out ${isLoading ? "opacity-0 scale-110" : "opacity-100 scale-100"} group-hover:grayscale-0 group-hover:scale-105`}
           referrerPolicy="no-referrer"
         />
       )}

@@ -173,7 +173,7 @@ export default function GamePortal() {
             className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl flex flex-col"
           >
             {/* Overlay Header */}
-            <div className="h-20 border-b border-white/10 px-8 flex items-center justify-between bg-black/50">
+            <div className="h-15 border-b border-white/10 px-8 flex items-center justify-between bg-black/50 py-1">
               <div className="flex items-center gap-6">
                 <Terminal className="w-5 h-5 text-primary" />
                 <div>
@@ -204,7 +204,7 @@ export default function GamePortal() {
             </div>
 
             {/* Frame Container */}
-            <div className="flex-1 relative bg-black flex items-center justify-center p-4 md:p-12">
+            <div className="flex-1 relative bg-black flex items-center justify-center">
               <div className="absolute inset-0 pointer-events-none opacity-20">
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%]" />
               </div>
@@ -226,7 +226,7 @@ export default function GamePortal() {
             </div>
 
             {/* Overlay Footer */}
-            <div className="h-16 border-t border-white/5 px-8 flex items-center justify-between bg-black/30">
+            <div className="h-10 border-t border-white/5 px-8 flex items-center justify-between bg-black/30">
               <div className="flex items-center gap-6 text-[9px] font-sans font-bold uppercase tracking-[0.2em] text-white/40">
                 <div className="flex items-center gap-2">
                   <Monitor className="w-3 h-3" />

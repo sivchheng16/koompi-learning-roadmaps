@@ -92,204 +92,204 @@ const processSteps = [
 export default function Services() {
   const [activeCategory, setActiveCategory] = useState("All Team");
 
-    const categories = [
-      {
-        name: "All Team",
-        description: "United in purpose, diverse in talent",
-        moments: [
-          {
-            title: "Sivchheng Kheang",
-            role: "Full-Stack Developer",
-            description: "React, Node.js, TypeScript specialist",
-            image:
-              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Team Member 1",
-            role: "Frontend Developer",
-            description: "UI/UX implementation expert",
-            image:
-              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Team Member 2",
-            role: "Backend Developer",
-            description: "API development and database management",
-            image:
-              "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Team Member 3",
-            role: "DevOps Engineer",
-            description: "Infrastructure and deployment specialist",
-            image:
-              "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Business Lead",
-            role: "Product Manager",
-            description: "Product strategy and roadmap planning",
-            image:
-              "https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Marketing Manager",
-            role: "Growth Specialist",
-            description: "Digital marketing and user acquisition",
-            image:
-              "https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Operations Manager",
-            role: "Business Operations",
-            description: "Process optimization and team coordination",
-            image:
-              "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Sales Director",
-            role: "Partnership Development",
-            description: "Client relationships and business development",
-            image:
-              "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Junior Developer",
-            role: "Apprentice Programmer",
-            description: "Learning full-stack development fundamentals",
-            image:
-              "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Design Apprentice",
-            role: "UI/UX Learner",
-            description:
-              "Developing design skills and user experience knowledge",
-            image:
-              "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Business Apprentice",
-            role: "Management Trainee",
-            description: "Learning business operations and project management",
-            image:
-              "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Tech Apprentice",
-            role: "IT Support Trainee",
-            description:
-              "Building technical support and system administration skills",
-            image:
-              "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&q=80&w=400",
-          },
-        ],
-      },
-      {
-        name: "Developer",
-        description: "Code, create, and innovate",
-        moments: [
-          {
-            title: "Sivchheng Kheang",
-            role: "Full-Stack Developer",
-            description: "React, Node.js, TypeScript specialist",
-            image:
-              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Team Member 1",
-            role: "Frontend Developer",
-            description: "UI/UX implementation expert",
-            image:
-              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Team Member 2",
-            role: "Backend Developer",
-            description: "API development and database management",
-            image:
-              "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Team Member 3",
-            role: "DevOps Engineer",
-            description: "Infrastructure and deployment specialist",
-            image:
-              "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
-          },
-        ],
-      },
-      {
-        name: "Business",
-        description: "Strategy, growth, and partnerships",
-        moments: [
-          {
-            title: "Business Lead",
-            role: "Product Manager",
-            description: "Product strategy and roadmap planning",
-            image:
-              "https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Marketing Manager",
-            role: "Growth Specialist",
-            description: "Digital marketing and user acquisition",
-            image:
-              "https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Operations Manager",
-            role: "Business Operations",
-            description: "Process optimization and team coordination",
-            image:
-              "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Sales Director",
-            role: "Partnership Development",
-            description: "Client relationships and business development",
-            image:
-              "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400",
-          },
-        ],
-      },
-      {
-        name: "Apprentice",
-        description: "Learning, growing, and developing",
-        moments: [
-          {
-            title: "Junior Developer",
-            role: "Apprentice Programmer",
-            description: "Learning full-stack development fundamentals",
-            image:
-              "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Design Apprentice",
-            role: "UI/UX Learner",
-            description:
-              "Developing design skills and user experience knowledge",
-            image:
-              "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Business Apprentice",
-            role: "Management Trainee",
-            description: "Learning business operations and project management",
-            image:
-              "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=400",
-          },
-          {
-            title: "Tech Apprentice",
-            role: "IT Support Trainee",
-            description:
-              "Building technical support and system administration skills",
-            image:
-              "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&q=80&w=400",
-          },
-        ],
-      },
-    ];
+  const categories = [
+    {
+      name: "All Team",
+      description: "United in purpose, diverse in talent",
+      moments: [
+        {
+          title: "Sivchheng Kheang",
+          role: "Full-Stack Developer",
+          description: "React, Node.js, TypeScript specialist",
+          image:
+            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Team Member 1",
+          role: "Frontend Developer",
+          description: "UI/UX implementation expert",
+          image:
+            "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Team Member 2",
+          role: "Backend Developer",
+          description: "API development and database management",
+          image:
+            "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Team Member 3",
+          role: "DevOps Engineer",
+          description: "Infrastructure and deployment specialist",
+          image:
+            "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Business Lead",
+          role: "Product Manager",
+          description: "Product strategy and roadmap planning",
+          image:
+            "https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Marketing Manager",
+          role: "Growth Specialist",
+          description: "Digital marketing and user acquisition",
+          image:
+            "https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Operations Manager",
+          role: "Business Operations",
+          description: "Process optimization and team coordination",
+          image:
+            "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Sales Director",
+          role: "Partnership Development",
+          description: "Client relationships and business development",
+          image:
+            "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Junior Developer",
+          role: "Apprentice Programmer",
+          description: "Learning full-stack development fundamentals",
+          image:
+            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Design Apprentice",
+          role: "UI/UX Learner",
+          description:
+            "Developing design skills and user experience knowledge",
+          image:
+            "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Business Apprentice",
+          role: "Management Trainee",
+          description: "Learning business operations and project management",
+          image:
+            "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Tech Apprentice",
+          role: "IT Support Trainee",
+          description:
+            "Building technical support and system administration skills",
+          image:
+            "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&q=80&w=400",
+        },
+      ],
+    },
+    {
+      name: "Developer",
+      description: "Code, create, and innovate",
+      moments: [
+        {
+          title: "Sivchheng Kheang",
+          role: "Full-Stack Developer",
+          description: "React, Node.js, TypeScript specialist",
+          image:
+            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Team Member 1",
+          role: "Frontend Developer",
+          description: "UI/UX implementation expert",
+          image:
+            "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Team Member 2",
+          role: "Backend Developer",
+          description: "API development and database management",
+          image:
+            "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Team Member 3",
+          role: "DevOps Engineer",
+          description: "Infrastructure and deployment specialist",
+          image:
+            "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
+        },
+      ],
+    },
+    {
+      name: "Business",
+      description: "Strategy, growth, and partnerships",
+      moments: [
+        {
+          title: "Business Lead",
+          role: "Product Manager",
+          description: "Product strategy and roadmap planning",
+          image:
+            "https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Marketing Manager",
+          role: "Growth Specialist",
+          description: "Digital marketing and user acquisition",
+          image:
+            "https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Operations Manager",
+          role: "Business Operations",
+          description: "Process optimization and team coordination",
+          image:
+            "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Sales Director",
+          role: "Partnership Development",
+          description: "Client relationships and business development",
+          image:
+            "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400",
+        },
+      ],
+    },
+    {
+      name: "Apprentice",
+      description: "Learning, growing, and developing",
+      moments: [
+        {
+          title: "Junior Developer",
+          role: "Apprentice Programmer",
+          description: "Learning full-stack development fundamentals",
+          image:
+            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Design Apprentice",
+          role: "UI/UX Learner",
+          description:
+            "Developing design skills and user experience knowledge",
+          image:
+            "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Business Apprentice",
+          role: "Management Trainee",
+          description: "Learning business operations and project management",
+          image:
+            "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          title: "Tech Apprentice",
+          role: "IT Support Trainee",
+          description:
+            "Building technical support and system administration skills",
+          image:
+            "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&q=80&w=400",
+        },
+      ],
+    },
+  ];
   return (
     <div className="min-h-screen pt-32 pb-20">
       {/* Hero Section */}
@@ -318,7 +318,7 @@ export default function Services() {
       </section>
 
       {/* Services Detail */}
-      <section className="px-8 mb-40">
+      {/* <section className="px-8 mb-40">
         <div className="max-w-7xl mx-auto space-y-32">
           {services.map((service, index) => (
             <motion.div
@@ -365,10 +365,10 @@ export default function Services() {
             </motion.div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* Process Section */}
-      <section className="py-32 px-8 bg-muted/5 border-y border-border/20">
+      {/* <section className="py-32 px-8 bg-muted/5 border-y border-border/20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-24">
             <p className="font-sans text-[10px] font-bold tracking-[0.3em] text-primary uppercase mb-6">
@@ -397,7 +397,7 @@ export default function Services() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* KOOMPI Company Section */}
       <section className="py-32 px-8 bg-gradient-to-br from-background via-muted/5 to-primary/5">
@@ -465,12 +465,12 @@ export default function Services() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="aspect-[4/5] bg-muted overflow-hidden border border-border/20"
+              // className="aspect-[4/5] bg-muted overflow-hidden border border-border/20"
             >
               <img
                 src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1200"
                 alt="KOOMPI Team Collaboration"
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 hover:scale-100"
+                className="w-full h-full object-cover hover:grayscale-0 transition-all duration-1000 scale-105 hover:scale-100"
               />
             </motion.div>
           </div>
@@ -536,7 +536,7 @@ export default function Services() {
                     <img
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"
+                      className="w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"
                     />
                   </div>
                   <h4 className="font-serif text-lg font-medium mb-2 group-hover:text-primary transition-colors">
@@ -589,11 +589,10 @@ export default function Services() {
                 <button
                   key={category.name}
                   onClick={() => setActiveCategory(category.name)}
-                  className={`px-6 py-3 font-sans text-sm font-semibold uppercase tracking-wider transition-all duration-300 rounded-md ${
-                    activeCategory === category.name
-                      ? "bg-primary text-primary-foreground shadow-lg"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                  }`}
+                  className={`px-6 py-3 font-sans text-sm font-semibold uppercase tracking-wider transition-all duration-300 rounded-md ${activeCategory === category.name
+                    ? "bg-primary text-primary-foreground shadow-lg"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    }`}
                 >
                   {category.name}
                 </button>
@@ -619,11 +618,10 @@ export default function Services() {
 
           {/* Gallery Grid */}
           <div
-            className={`grid gap-6 ${
-              activeCategory === "All Team"
-                ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4"
-                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
-            }`}
+            className={`grid gap-6 ${activeCategory === "All Team"
+              ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4"
+              : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+              }`}
           >
             {categories
               .find((cat) => cat.name === activeCategory)
@@ -640,7 +638,7 @@ export default function Services() {
                     <img
                       src={moment.image}
                       alt={moment.title}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"
+                      className="w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
                   </div>

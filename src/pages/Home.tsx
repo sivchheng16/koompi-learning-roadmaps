@@ -12,6 +12,8 @@ import {
   ExternalLink,
   Paintbrush,
   Layout,
+  LayoutTemplate,
+  AppWindow,
   Compass,
   Home as HomeIcon,
 } from "lucide-react";
@@ -20,7 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { PROJECTS } from "../constants";
+import { GAMES, TOPICS } from "../constants";
 import video from "../assets/video/about-me.mp4";
 import Footer from "../components/Footer";
 
@@ -50,6 +52,13 @@ const services = [
       "Crafting user-centered designs that balance aesthetics with functionality.",
   },
 ];
+
+const topicIconMap: Record<string, React.FC<any>> = {
+  LayoutTemplate,
+  Paintbrush,
+  Code2,
+  AppWindow,
+};
 
 export default function Home() {
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
@@ -81,14 +90,14 @@ export default function Home() {
       {/* Hero — minimal, high-impact */}
       <section className="hero-section relative min-h-screen flex items-center px-8 pt-20 overflow-hidden ">
         {/* Background video */}
-        <video
+        {/* <video
           autoPlay
           loop
           muted
           className="absolute top-0 left-0 w-auto min-h-full max-w-none object-cover z-0"
         >
           <source src={video} type="video/mp4" />
-        </video>
+        </video> */}
 
         {/* Blur overlay in front of video */}
         <div className="absolute inset-0 backdrop-blur-sm bg-black/10 z-5"></div>
@@ -138,7 +147,7 @@ export default function Home() {
                     size="lg"
                     className="rounded-none h-14 px-8 bg-white text-black hover:bg-gray-200 transition-colors duration-500 font-sans text-xs tracking-[0.2em] uppercase"
                   >
-                    <Link to="/library">View Collection</Link>
+                    <Link to="/portfolio">View Collection</Link>
                   </Button>
                 </div>
               </div>
@@ -156,6 +165,72 @@ export default function Home() {
               className="w-full h-full object-cover scale-110 hover:scale-100 transition-transform duration-1000"
             />
           </motion.div> */}
+        </div>
+      </section>
+
+      {/* Learning & Topics Section */}
+      <section className="py-32 px-8 border-t border-border/20 bg-muted/5 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            className="flex flex-col md:flex-row justify-between items-baseline mb-20 gap-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <div>
+              <p className="font-sans text-[10px] font-bold tracking-[0.3em] text-primary uppercase mb-6">
+                Learning
+              </p>
+              <h2 className="text-5xl font-serif font-medium tracking-tight">
+                Programming & Design.
+              </h2>
+            </div>
+            <p className="text-muted-foreground font-serif italic max-w-sm">
+              Explore documented lessons and materials on key technologies.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {TOPICS.map((topic, idx) => {
+              const Icon = topicIconMap[topic.iconName] || Code2;
+              return (
+                <motion.div
+                  key={topic.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: idx * 0.1 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                >
+                  <Link to={`/document/${topic.id}`} className="block h-full cursor-pointer group">
+                    <div className="border border-border/20 bg-background h-full p-8 flex flex-col justify-between group-hover:border-primary/50 group-hover:-translate-y-2 transition-all duration-500 relative overflow-hidden">
+                      {/* Subtle hover gradient background */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                      <div className="z-10 bg-muted/50 w-12 h-12 flex items-center justify-center mb-12 border border-border/20 group-hover:bg-primary group-hover:text-background group-hover:border-primary transition-colors duration-500">
+                        <Icon className="w-5 h-5" />
+                      </div>
+
+                      <div className="z-10">
+                        <p className="font-sans text-[9px] font-bold tracking-[0.2em] text-muted-foreground uppercase mb-3">
+                          {topic.level}
+                        </p>
+                        <h3 className="text-2xl font-serif font-medium tracking-tight mb-2 group-hover:text-primary transition-colors duration-500">
+                          {topic.title}
+                        </h3>
+                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
+                          {topic.description}
+                        </p>
+                        <div className="mt-6 font-sans text-[10px] font-bold uppercase tracking-widest text-primary flex items-center gap-2">
+                          View details <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -262,7 +337,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Portfolio Highlight — List style */}
+      {/* Games Highlight — List style */}
       <section
         id="projects"
         className="py-32 px-8 border-t border-border/20 bg-muted/5"
@@ -277,10 +352,10 @@ export default function Home() {
           >
             <div>
               <p className="font-sans text-[10px] font-bold tracking-[0.3em] text-primary uppercase mb-6">
-                Our Work
+                Digital Games Archive
               </p>
               <h2 className="text-6xl font-serif font-medium tracking-tight hover:text-primary transition-colors duration-500 cursor-pointer">
-                Recent Projects.
+                The Vault.
               </h2>
             </div>
             <motion.div whileHover={{ x: 5 }} transition={{ duration: 0.3 }}>
@@ -289,24 +364,24 @@ export default function Home() {
                 asChild
                 className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase text-muted-foreground hover:text-primary p-0 h-auto"
               >
-                <Link to="/library">
-                  Explore All Works <ArrowRight className="ml-2 w-3 h-3" />
+                <Link to="/vault">
+                  Explore All Games <ArrowRight className="ml-2 w-3 h-3" />
                 </Link>
               </Button>
             </motion.div>
           </motion.div>
 
           <div className="space-y-0">
-            {PROJECTS.map((project, index) => (
+            {GAMES.map((game, index) => (
               <motion.div
-                key={project.id}
+                key={game.id}
                 layout
                 className="border-t border-border/20 group"
               >
                 <button
                   onClick={() =>
                     setExpandedProject(
-                      expandedProject === project.id ? null : project.id,
+                      expandedProject === game.id ? null : game.id,
                     )
                   }
                   className="w-full text-left py-12 grid grid-cols-[80px_1fr_auto] md:grid-cols-[100px_1fr_200px_auto] gap-8 items-center"
@@ -316,31 +391,28 @@ export default function Home() {
                   </span>
                   <div>
                     <h3 className="text-3xl font-serif font-medium tracking-tight group-hover:text-primary transition-colors duration-500">
-                      {project.title}
+                      {game.title}
                     </h3>
                     <p className="text-xs font-sans tracking-[0.1em] text-muted-foreground uppercase mt-2">
-                      {project.category} / {project.year}
+                      {game.category}
                     </p>
                   </div>
                   <div className="hidden md:flex flex-wrap gap-2 justify-end">
-                    {project.tags.slice(0, 2).map((tag) => (
-                      <motion.span
-                        key={tag}
-                        className="text-[10px] font-sans font-bold uppercase tracking-widest text-muted-foreground/60 border border-border/40 px-3 py-1 group-hover:border-primary group-hover:text-primary transition-all duration-500 cursor-pointer"
-                        whileHover={{ scale: 1.1 }}
-                      >
-                        {tag}
-                      </motion.span>
-                    ))}
+                    <motion.span
+                      className="text-[10px] font-sans font-bold uppercase tracking-widest text-muted-foreground/60 border border-border/40 px-3 py-1 group-hover:border-primary group-hover:text-primary transition-all duration-500 cursor-pointer"
+                      whileHover={{ scale: 1.1 }}
+                    >
+                      {game.category}
+                    </motion.span>
                   </div>
                   <motion.div
                     className="w-10 h-10 border border-border/40 flex items-center justify-center transition-all duration-500 group-hover:border-primary group-hover:bg-primary group-hover:text-background"
                     animate={{
-                      rotate: expandedProject === project.id ? 180 : 0,
+                      rotate: expandedProject === game.id ? 180 : 0,
                     }}
                     transition={{ duration: 0.3 }}
                   >
-                    {expandedProject === project.id ? (
+                    {expandedProject === game.id ? (
                       <ChevronUp className="w-4 h-4" />
                     ) : (
                       <ChevronDown className="w-4 h-4" />
@@ -348,7 +420,7 @@ export default function Home() {
                   </motion.div>
                 </button>
                 <AnimatePresence>
-                  {expandedProject === project.id && (
+                  {expandedProject === game.id && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
@@ -359,16 +431,16 @@ export default function Home() {
                       <div className="pb-16 pl-[100px] grid grid-cols-1 lg:grid-cols-[1fr_450px] gap-16">
                         <div className="space-y-8">
                           <p className="text-xl text-muted-foreground font-serif leading-relaxed italic">
-                            {project.description}
-                          </p>
-                          <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
-                            {project.details}
+                            {game.description}
                           </p>
                           <Button
+                            asChild
                             variant="outline"
                             className="rounded-none font-sans text-[10px] font-bold tracking-[0.2em] uppercase h-12 px-8"
                           >
-                            View Study <ExternalLink className="ml-3 w-3 h-3" />
+                            <Link to="/vault">
+                              Play Game <ExternalLink className="ml-3 w-3 h-3" />
+                            </Link>
                           </Button>
                         </div>
                         <motion.div
@@ -377,8 +449,8 @@ export default function Home() {
                           transition={{ duration: 0.5 }}
                         >
                           <img
-                            src={project.thumbnail}
-                            alt={project.title}
+                            src={game.thumbnail}
+                            alt={game.title}
                             className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 hover:scale-100"
                           />
                         </motion.div>

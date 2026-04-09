@@ -11,7 +11,7 @@ import { useEffect, useRef } from 'react';
 
 const CATEGORIES = ['All', 'Web Development', 'Mobile', 'UI/UX Design'];
 
-export default function Library({
+export default function Portfolio({
   favorites,
   toggleFavorite,
   setViewingProject,
