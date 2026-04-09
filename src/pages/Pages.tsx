@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home, Portfolio, User, Layout, ArrowRight, Layers, Terminal, Cpu, Zap, Globe, Compass, Square } from 'lucide-react';
+import { Home, Briefcase, User, Layout, ArrowRight, Layers, Terminal, Cpu, Zap, Globe, Compass, Square, MessageCircle, Instagram } from 'lucide-react';
 
 const directory = [
   {
     title: 'Main Pages',
     links: [
       { name: '01 Home', path: '/', icon: Home, desc: 'Start here — an overview of the studio and what we do.' },
-      { name: '02 Portfolio', path: '/portfolio', icon: Portfolio, desc: 'Browse all of our residential and commercial design projects.' },
+      { name: '02 Portfolio', path: '/portfolio', icon: Briefcase, desc: 'Browse all of our residential and commercial design projects.' },
       { name: '03 About Us', path: '/author', icon: User, desc: 'Our story, our values, and the team behind the work.' },
     ],
   },
@@ -27,8 +27,6 @@ const directory = [
     ],
   },
 ];
-
-import { MessageCircle, Instagram } from 'lucide-react';
 
 export default function Pages() {
   return (
