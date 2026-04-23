@@ -47,7 +47,7 @@ export default function TopicDetails() {
   if (!topic) {
     return (
       <div className="min-h-screen bg-background text-foreground pt-32 px-8 flex flex-col items-center justify-center text-center">
-        <h2 className="text-4xl font-sans mb-6">Terminal Error: Topic Not Found</h2>
+        <h2 className="text-4xl font-sans mb-6">System Error: Topic Not Found</h2>
         <Button asChild variant="outline" className="h-14 px-10 rounded-full glass-panel font-mono text-[10px] font-bold tracking-widest uppercase">
           <Link to="/">Reboot to Home</Link>
         </Button>
@@ -57,7 +57,7 @@ export default function TopicDetails() {
   if (!topic.lessons) {
     return (
       <div className="min-h-screen bg-background text-foreground pt-32 px-8 flex flex-col items-center justify-center text-center">
-        <h2 className="text-4xl font-sans mb-6">Terminal Error: Lesson Not Found</h2>
+        <h2 className="text-4xl font-sans mb-6">System Error: Lesson Not Found</h2>
         <Button asChild variant="outline" className="h-14 px-10 rounded-full glass-panel font-mono text-[10px] font-bold tracking-widest uppercase">
           <Link to="/">Reboot to Home</Link>
         </Button>
@@ -79,7 +79,7 @@ export default function TopicDetails() {
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-background text-foreground relative pt-24 ">
+    <div className="h-screen flex flex-col overflow-hidden bg-background text-foreground relative ">
       {/* Background Mesh Gradients */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <div className="absolute top-[5%] left-[10%] w-[50vw] h-[50vw] bg-primary/5 blur-[120px] rounded-full" />

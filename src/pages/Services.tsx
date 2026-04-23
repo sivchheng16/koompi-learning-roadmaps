@@ -185,7 +185,7 @@ export default function Services() {
             </div>
 
             <h1 className="text-4xl xs:text-5xl md:text-9xl font-sans font-medium tracking-tighter leading-[0.8] mb-14 uppercase flex flex-wrap justify-center overflow-hidden">
-              {"Services".split("").map((char, index) => (
+              {"Modules".split("").map((char, index) => (
                 <motion.span
                   key={index}
                   initial={{ y: "100%" }}
@@ -445,7 +445,7 @@ export default function Services() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-32">
             <p className="font-mono text-[10px] font-bold tracking-[0.4em] text-primary uppercase mb-6">The Collective</p>
-            <h2 className="text-5xl md:text-6xl font-sans font-medium">Studio Team.</h2>
+            <h2 className="text-5xl md:text-6xl font-sans font-medium">KOOMPI Team.</h2>
           </div>
 
           <div className="flex justify-center mb-20">
@@ -575,7 +575,7 @@ export default function Services() {
                 >
                   <div className="space-y-12">
                     <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed font-sans italic opacity-70">
-                      Collaborate with our Khmer-led technical studio to architect exceptional digital experiences. Currently accepting system audits for Q3 2026.
+                      Collaborate with the KOOMPI technical department to architect exceptional digital experiences. KOOMPI OS continues to evolve for the future of regional development.
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">

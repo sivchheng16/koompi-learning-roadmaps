@@ -35,18 +35,17 @@ export default function Footer() {
                 <img src={logo} alt="logo" className="w-full h-full object-contain" />
               </div>
               <span className="font-sans text-3xl font-medium tracking-[0.2em] text-foreground">
-                Portfolio
-                {/* <span className="italic font-light opacity-60">Studio.</span> */}
+                KOOMPI OS
               </span>
             </Link>
             <p className="text-xl text-muted-foreground font-sans leading-relaxed italic opacity-80 max-w-sm">
-              "Building high-performance digital systems that balance technical mastery with intuitive user design."
+              "Developing high-performance software systems for the future of education and innovation."
             </p>
             <div className="flex justify-center md:justify-start gap-4">
               {[
-                { icon: Github, href: "https://github.com/sivchheng16" },
-                { icon: MessageCircle, href: "https://t.me/sivchhengkheang" },
-                { icon: Instagram, href: "https://instagram.com/chhe_ng16" }
+                { icon: Github, href: "https://github.com/koompi" },
+                { icon: MessageCircle, href: "https://t.me/koompi" },
+                { icon: Instagram, href: "https://instagram.com/koompi_os" }
               ].map((social, i) => (
                 <a
                   key={i}
@@ -66,10 +65,10 @@ export default function Footer() {
             <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.4em] text-primary">Systems Map</h3>
             <div className="space-y-4">
               {[
-                { name: "Global Home", path: "/" },
-                { name: "The Collective", path: "/about" },
-                { name: "Services", path: "/services" },
-                { name: "Archive", path: "/portfolio" },
+                { name: "System Home", path: "/" },
+                { name: "About KOOMPI", path: "/about" },
+                { name: "Modules", path: "/services" },
+                { name: "Features", path: "/portfolio" },
                 { name: "The Vault", path: "/vault" }
               ].map((link) => (
                 <Link
@@ -109,11 +108,11 @@ export default function Footer() {
         <div className="py-5 border-t border-b border-white/5 flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">
-              © {currentYear} SIVCHHENG KHEANG
+              © {currentYear} KOOMPI OS
             </p>
             <div className="h-4 w-px bg-white/10 hidden md:block" />
             <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground/70">
-              APPRENTICE SHIP MEMBER OF KOOMPI
+              Official Software Department
             </p>
           </div>
           <p className="font-sans italic text-sm text-muted-foreground/40">

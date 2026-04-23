@@ -4,7 +4,7 @@ import { AnimatePresence } from 'motion/react';
 import Lenis from 'lenis';
 import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'sonner';
-import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
 import { Project } from './constants';
 import ProjectModal from './components/ProjectModal';
 import ScrollToTop from './components/ScrollToTop';
@@ -108,24 +108,26 @@ export default function App() {
     <AuthProvider>
       <Router>
         <AuthModal />
-        <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
-            <Toaster position="top-center" expand={false} richColors />
-            <ScrollToTop />
-            <Navbar />
-            <main>
-              <AnimatedRoutes
-                favorites={favorites}
-                toggleFavorite={toggleFavorite}
-                setViewingProject={setViewingProject}
+        <div className="flex min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
+          <Toaster position="top-center" expand={false} richColors />
+          <ScrollToTop />
+          
+          <Sidebar />
+
+          <main className="flex-1 lg:pl-[280px] w-full min-h-screen">
+            <AnimatedRoutes
+              favorites={favorites}
+              toggleFavorite={toggleFavorite}
+              setViewingProject={setViewingProject}
+            />
+            {viewingProject && (
+              <ProjectModal
+                project={viewingProject}
+                onClose={() => setViewingProject(null)}
               />
-              {viewingProject && (
-                <ProjectModal
-                  project={viewingProject}
-                  onClose={() => setViewingProject(null)}
-                />
-              )}
-            </main>
-          </div>
+            )}
+          </main>
+        </div>
       </Router>
     </AuthProvider >
   );

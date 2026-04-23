@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Quote, Layers, Sun, Palette, ArrowRight,
-  Instagram, Linkedin, MessageCircle, Mail, Loader2, CheckCircle2
+  Instagram, Linkedin, MessageCircle, Mail, Loader2, CheckCircle2,
+  ShieldCheck
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -86,12 +87,12 @@ export default function About() {
             <div className="flex items-center gap-4 mb-8">
               <span className="w-12 h-[1px] bg-primary" />
               <p className="font-mono text-[10px] font-bold tracking-[0.4em] text-primary uppercase">
-                Studio Member
+                System Overview
               </p>
             </div>
             <h1 className="text-6xl md:text-8xl font-sans font-medium tracking-tighter leading-[0.85] mb-12 uppercase text-gradient">
-              Sivchheng Kheang <br />
-              <span className="opacity-50 italic font-light lowercase font-sans">designing the future.</span>
+              KOOMPI OS <br />
+              <span className="opacity-50 italic font-light lowercase font-sans">designing the future of education.</span>
             </h1>
             
             <div className="glass-panel p-10 md:p-16 rounded-[48px] max-w-4xl border-white/5 relative overflow-hidden group">
@@ -124,19 +125,19 @@ export default function About() {
             <div className="absolute -inset-4 bg-primary/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             <div className="aspect-[4/5] bg-muted/10 overflow-hidden glass-panel p-4 rounded-[48px] border-white/5 relative z-10 shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1200"
-                alt="Sivchheng Kheang"
+                src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1200"
+                alt="KOOMPI OS Architecture"
                 className="w-full h-full object-cover rounded-[36px] grayscale group-hover:grayscale-0 transition-all duration-1000 ease-in-out scale-105 group-hover:scale-100"
               />
               {/* Technical Overlay */}
               <div className="absolute bottom-10 left-10 right-10 p-6 glass-panel rounded-2xl border-white/10 backdrop-blur-3xl">
                  <div className="flex justify-between items-center">
                     <div className="space-y-1">
-                       <p className="font-mono text-[8px] font-bold text-primary uppercase tracking-widest">Biometric Identity</p>
-                       <p className="font-mono text-[10px] font-bold text-white/50 tracking-widest">KHEANG_S_01</p>
+                       <p className="font-mono text-[8px] font-bold text-primary uppercase tracking-widest">System Build</p>
+                       <p className="font-mono text-[10px] font-bold text-white/50 tracking-widest">KOOMPI_OS_v2.0</p>
                     </div>
                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
-                       <CheckCircle2 size={14} className="text-primary" />
+                       <ShieldCheck size={14} className="text-primary" />
                     </div>
                  </div>
               </div>
@@ -158,10 +159,10 @@ export default function About() {
                 Architecting <span className="text-primary italic">Seamless</span> <br /> Digital Systems.
               </h2>
               <p className="text-xl text-muted-foreground font-sans leading-relaxed italic border-l-2 border-primary/20 pl-10 opacity-80">
-                As a developer with deep roots in Cambodia's technical evolution, I specialize in bridging the gap between sophisticated backend architecture and high-end user design.
+                KOOMPI is a Cambodian-designed operating system and laptop project. We specialize in creating a high-performance, open-source ecosystem that empowers students and professionals to build their own future.
               </p>
               <p className="text-muted-foreground leading-relaxed text-sm font-sans max-w-xl opacity-60">
-                My journey at KOOMPI as a senior apprentice taught me that technology is only as good as the problem it solves. Today, I work at the intersection of performance and aesthetics, ensuring every line of code contributes to a faster, more beautiful digital world.
+                Our journey started with a vision to make computing accessible and powerful. Today, KOOMPI OS serves as a core platform for thousands, providing the tools for coding, design, and system administration in a beautiful, optimized environment.
               </p>
             </div>
 

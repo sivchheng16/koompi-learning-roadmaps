@@ -157,13 +157,13 @@ export default function Home() {
           >
             <span className="w-8 h-[1px] bg-primary/50" />
             <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-primary font-bold">
-              Tech Portfolio 2026
+              KOOMPI learing roadmap
             </p>
             <span className="w-8 h-[1px] bg-primary/50" />
           </motion.div>
 
           <h1 className="text-[11vw] md:text-[8vw] lg:text-[6vw] font-sans font-medium leading-[0.85] tracking-tighter mb-12 text-gradient flex flex-wrap justify-center overflow-hidden whitespace-nowrap">
-            {"APPRENTICE".split("").map((char, index) => (
+            {"KOOMPI".split("").map((char, index) => (
               <motion.span
                 key={index}
                 initial={{ y: "100%" }}
@@ -175,23 +175,23 @@ export default function Home() {
                 }}
                 className="inline-block"
               >
-                {char}
+                {char === " " ? "\u00A0" : char}
               </motion.span>
             ))}
             <br />
           </h1>
 
           <p className="text-lg md:text-xl font-sans max-w-2xl leading-relaxed text-foreground/70 mb-16 italic">
-            "Merging technical mastery with creative intuition. We build products that bridge the gap between initial concept and professional excellence."
+            "Empowering the next generation of Linux users and developers. KOOMPI OS provides a seamless gateway to mastering technology through interactive modules and core system insights."
           </p>
 
           <div className="flex flex-wrap justify-center gap-8">
-            <Button
-              onClick={requireAuth(() => navigate("/#documents"))}
-              className="h-14 md:h-16 px-10 md:px-12 rounded-full bg-primary text-background font-mono text-[11px] font-bold tracking-widest uppercase hover:scale-105 transition-all duration-300 shadow-xl shadow-primary/20"
-            >
-              Explore Documents
-            </Button>
+              <Button
+                onClick={requireAuth(() => navigate("/#documents"))}
+                className="h-14 md:h-16 px-10 md:px-12 rounded-full bg-primary text-background font-mono text-[11px] font-bold tracking-widest uppercase hover:scale-105 transition-all duration-300 shadow-xl shadow-primary/20"
+              >
+                System Modules
+              </Button>
             <Button
               onClick={requireAuth(() => navigate("/about"))}
               variant="outline"
@@ -246,7 +246,7 @@ export default function Home() {
               </h2>
             </div>
             <p className="text-primary text-lg font-sans max-w-sm">
-              Explore learn which one is you first programming language
+              Explore the core foundations of modern computing and software development.
             </p>
           </motion.div>
 
@@ -303,7 +303,7 @@ export default function Home() {
 
                       <div className="z-10 pt-6 border-t border-white/5 flex items-center justify-between">
                         <div className="font-mono text-[9px] font-bold uppercase tracking-[0.4em] text-primary flex items-center gap-3 group-hover:gap-6 transition-all duration-300">
-                          EXEC_MODULE <ArrowRight className="w-3 h-3 transition-transform" />
+                          INIT_SYSTEM <ArrowRight className="w-3 h-3 transition-transform" />
                         </div>
                         <div className="flex items-center gap-2 text-[9px] font-mono font-bold uppercase tracking-widest text-muted-foreground/20 italic">
                           <Clock className="w-3 h-3 text-primary/20" />
@@ -493,11 +493,10 @@ export default function Home() {
             viewport={{ once: false, amount: 0.5 }}
           >
             <p className="text-2xl text-muted-foreground font-sans leading-relaxed max-w-2xl hover:text-foreground transition-colors duration-500">
-              I'm a self-driven developer with hands-on experience across
-              frontend, backend, mobile, and UI/UX design. I bring ideas to life
-              from concept to deployment, with an obsession for quality and
-              commitment to continuous growth. Every project reflects thoughtful
-              planning and careful attention to detail.
+              KOOMPI OS is built on the principles of open-source freedom and
+              educational empowerment. Our platform is designed to provide users
+              with the tools they need to explore, build, and innovate within
+              the Linux ecosystem.
             </p>
             <div className="pt-4 pb-8">
               <Button
@@ -556,10 +555,10 @@ export default function Home() {
               </motion.div>
               <div>
                 <h4 className="font-sans text-xl italic group-hover:text-primary transition-colors duration-500">
-                  Sivechheng Kheang
+                  KOOMPI Core Team
                 </h4>
                 <p className="text-[9px] font-mono uppercase tracking-[0.4em] text-primary font-bold mt-2">
-                  Technical Lead • Founder
+                  System Architecture • Open Source
                 </p>
               </div>
             </motion.div>
