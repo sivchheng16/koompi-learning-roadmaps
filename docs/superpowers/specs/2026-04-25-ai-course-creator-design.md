@@ -52,20 +52,21 @@ Modules are expanded sequentially. Each module is a separate Claude call using t
 ## 3. Credit System
 
 ### Rules
-- Every registered user starts with **30 credits** (enough for 3 free courses)
+- Every registered user starts with **30 credits** (enough for 3 courses at 10 credits each)
 - **1 course costs 10 credits** on save
-- Credits are provisioned lazily on first visit to `/create`
-- If `credits_remaining < 10`, generation is blocked server-side before Claude is called
+- Generation (Phase 1 + 2) is gated — blocked before Claude is called if credits < 10
+- Server returns `{ error: "insufficient_credits" }` as a hard gate
 
 ### Getting more credits
-- **Request credits** — user submits a reason; admin approves in Supabase dashboard (no admin UI in v1)
-- **Buy credits** — placeholder button in v1 (links to contact page); real Stripe integration in v2
+- **Request credits** — user submits a reason; admin approves by updating `user_credits` in Supabase dashboard
+- No payment / buying in v1 — request flow only
 
 ### Credit UX
-- Wizard header shows "20 credits remaining (2 courses)"
-- If credits < 10, Create button replaced with upgrade prompt (two options: Request / Buy)
-- Server returns `{ error: "insufficient_credits" }` as a hard gate — client UI is secondary
-- Pricing framing: credits are the unit; courses cost 10 each
+- Wizard header shows "20 credits remaining (2 courses left)"
+- If credits < 10: Create button replaced with "Request more credits" prompt
+- `/my-courses` shows credit balance + "Request credits" link always visible
+- Request form: textarea for reason + submit → creates a `credit_requests` row with status `pending`
+- User sees "Request submitted — we'll review it shortly" confirmation
 
 ---
 
@@ -101,9 +102,18 @@ create table course_modules (
 -- Credits
 create table user_credits (
   user_id           text primary key,
-  credits_remaining int default 30,   -- 30 free = 3 courses at 10 credits each
+  credits_remaining int default 30,  -- 30 free = 3 courses at 10 credits each
   credits_used      int default 0,
   updated_at        timestamptz default now()
+);
+
+create table credit_requests (
+  id               uuid primary key default gen_random_uuid(),
+  user_id          text not null,
+  reason           text not null,
+  amount_requested int default 10,   -- default = 1 more course
+  status           text default 'pending',  -- pending | approved | rejected
+  created_at       timestamptz default now()
 );
 
 -- Credit requests
@@ -130,6 +140,7 @@ create table credit_requests (
 | GET | `/api/courses/mine` | required | List current user's courses |
 | GET | `/api/courses/:slug` | optional | View course (public or own) |
 | DELETE | `/api/courses/:slug` | required | Delete own course |
+| POST | `/api/credits/request` | required | Submit a credit request |
 | POST | `/api/credits/request` | required | Submit credit request |
 
 ---
