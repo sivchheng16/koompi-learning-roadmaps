@@ -1,157 +1,76 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import React, { useEffect, lazy, Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
-import Lenis from 'lenis';
 import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'sonner';
-import Sidebar from './components/Sidebar';
-import { Project } from './constants';
-import ProjectModal from './components/ProjectModal';
 import ScrollToTop from './components/ScrollToTop';
-import AuthModal from './components/AuthModal';
-import { LayoutProvider, useLayout } from './context/LayoutContext';
-import { cn } from './lib/utils';
-import NavbarMobile from './components/NavbarMobile';
+import { LayoutProvider } from './context/LayoutContext';
+import TopNav from './components/TopNav';
+import { ProgressProvider } from './context/ProgressContext';
 
-// Lazy load pages
-const Home = lazy(() => import('./pages/Home'));
-const Portfolio = lazy(() => import('./pages/Portfolio'));
-const GamePortal = lazy(() => import('./pages/GamePortal'));
-const About = lazy(() => import('./pages/About'));
-const Services = lazy(() => import('./pages/Services'));
 const TopicDetails = lazy(() => import('./pages/TopicDetails'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const CertVerification = lazy(() => import('./pages/CertVerification'));
+const CreateCourse = lazy(() => import('./pages/CreateCourse'));
+const MyCourses = lazy(() => import('./pages/MyCourses'));
+const CourseViewer = lazy(() => import('./pages/CourseViewer'));
 
-// Loading Fallback Component
 const PageLoader = () => (
   <div className="h-screen w-full flex flex-col items-center justify-center bg-background">
-    <div className="relative w-24 h-24">
-      <div className="absolute inset-0 border-4 border-primary/10 rounded-full" />
-      <div className="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-    </div>
-    <div className="mt-8 font-mono text-[10px] font-bold tracking-[0.5em] text-primary uppercase animate-pulse">
-      Loading System...
-    </div>
+    <div className="w-8 h-8 border-2 border-border border-t-primary rounded-full animate-spin" />
+    <p className="mt-4 text-sm font-sans text-muted-foreground">Loading…</p>
   </div>
 );
 
-function AnimatedRoutes({
-  favorites,
-  toggleFavorite,
-  setViewingProject
-}: any) {
+function AppContent() {
   const location = useLocation();
+  const isLessonRoute =
+    location.pathname.startsWith('/document/') ||
+    location.pathname.startsWith('/auth/') ||
+    location.pathname.startsWith('/cert/') ||
+    location.pathname.startsWith('/c/');
 
   return (
-    <AnimatePresence mode="wait">
-      <Suspense fallback={<PageLoader />}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/portfolio"
-            element={
-              <Portfolio
-                favorites={favorites}
-                recentlyPlayed={[]}
-                toggleFavorite={toggleFavorite}
-                setViewingProject={setViewingProject}
-                handleDownload={() => { }}
-              />
-            }
-          />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/pages" element={<Services />} />
-          <Route path="/vault" element={<GamePortal />} />
-          <Route path="/document/:topicId" element={<TopicDetails />} />
-          <Route path="/document/:topicId/:moduleId" element={<TopicDetails />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
-    </AnimatePresence>
+    <div className="min-h-screen bg-background text-foreground">
+      <Toaster position="top-center" expand={false} richColors />
+      <ScrollToTop />
+
+      {!isLessonRoute && <TopNav />}
+
+      <main className={!isLessonRoute ? "pt-16" : ""}>
+        <AnimatePresence mode="wait">
+          <Suspense fallback={<PageLoader />}>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/document/:topicId" element={<TopicDetails />} />
+              <Route path="/document/:topicId/:moduleId" element={<TopicDetails />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/cert/:tokenId" element={<CertVerification />} />
+              <Route path="/create" element={<CreateCourse />} />
+              <Route path="/my-courses" element={<MyCourses />} />
+              <Route path="/c/:slug" element={<CourseViewer />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </AnimatePresence>
+      </main>
+    </div>
   );
 }
 
 export default function App() {
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [viewingProject, setViewingProject] = useState<Project | null>(null);
-
-  useEffect(() => {
-    // Initialize Smooth Scroll (Lenis)
-    const lenis = new Lenis({
-      duration: 1.5,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    });
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    // Load favorites from localStorage
-    const savedFavorites = localStorage.getItem('portfolio-favorites');
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
-    }
-
-    return () => lenis.destroy();
-  }, []);
-
-  const toggleFavorite = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setFavorites(prev => {
-      const isFav = prev.includes(id);
-      const next = isFav ? prev.filter(fid => fid !== id) : [...prev, id];
-      localStorage.setItem('portfolio-favorites', JSON.stringify(next));
-      return next;
-    });
-  };
-
   return (
     <AuthProvider>
-      <LayoutProvider>
+      <ProgressProvider>
+        <LayoutProvider>
           <Router>
-            <AppContent
-              favorites={favorites}
-              toggleFavorite={toggleFavorite}
-              setViewingProject={setViewingProject}
-              viewingProject={viewingProject}
-            />
+            <AppContent />
           </Router>
-      </LayoutProvider>
-    </AuthProvider >
-  );
-}
-
-function AppContent({ favorites, toggleFavorite, setViewingProject, viewingProject }: any) {
-  const { isSidebarCollapsed } = useLayout();
-
-  return (
-    <div className="flex min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
-      <Toaster position="top-center" expand={false} richColors />
-      <ScrollToTop />
-      <AuthModal />
-
-      <Sidebar />
-
-      <main className={cn(
-        "flex-1 w-full min-h-screen transition-all duration-500 ease-in-out",
-        isSidebarCollapsed ? "lg:pl-[80px]" : "lg:pl-[280px]"
-      )}>
-        <AnimatedRoutes
-          favorites={favorites}
-          toggleFavorite={toggleFavorite}
-          setViewingProject={setViewingProject}
-        />
-        {viewingProject && (
-          <ProjectModal
-            project={viewingProject}
-            onClose={() => setViewingProject(null)}
-          />
-        )}
-      </main>
-    </div>
+        </LayoutProvider>
+      </ProgressProvider>
+    </AuthProvider>
   );
 }
