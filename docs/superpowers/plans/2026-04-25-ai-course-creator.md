@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Let registered users generate, save, and share courses using Claude AI, gated by a 30-credit allowance (10 credits per course) with a request-more flow.
+**Goal:** Let registered users generate, save, and share courses using AI, gated by a 30-credit allowance (10 credits per course) with a request-more flow.
 
-**Architecture:** Two-phase AI generation (outline → per-module expansion) using Claude tool use for structured JSON output. Content stored as typed `Block[]` in Supabase jsonb. CourseViewer uses a self-contained layout (not the hardwired TOPICS components). All AI calls happen server-side; `ANTHROPIC_API_KEY` never reaches the browser.
+**Architecture:** Two-phase AI generation (outline → per-module expansion) using OpenAI-compatible tool use for structured JSON output. Content stored as typed `Block[]` in Supabase jsonb. CourseViewer uses a self-contained layout (not the hardwired TOPICS components). All AI calls happen server-side; API keys never reach the browser. Provider is fully configurable via env vars — swap Kimi, DeepSeek, Claude, or any OpenAI-compat provider without code changes.
 
-**Tech Stack:** React 19 + Vite + TypeScript + Tailwind, Express server.js, Supabase, `@anthropic-ai/sdk`, React Router v7.
+**Tech Stack:** React 19 + Vite + TypeScript + Tailwind, Express server.js, Supabase, `openai` SDK (OpenAI-compatible, works with any provider), React Router v7.
 
 ---
 
@@ -20,23 +20,25 @@
 | `src/pages/CourseViewer.tsx` | **Create** | `/c/:slug` — self-contained viewer with sidebar |
 | `src/pages/MyCourses.tsx` | **Create** | `/my-courses` — course library + credit balance + request form |
 | `src/pages/CreateCourse.tsx` | **Create** | `/create` — 3-step wizard (details → generating → review) |
-| `server.js` | **Modify** | Add 8 new API routes + Anthropic SDK |
+| `server.js` | **Modify** | Add 8 new API routes + OpenAI-compat SDK |
 | `src/App.tsx` | **Modify** | Add 3 new routes, extend `isLessonRoute` to cover `/c/` |
 | `src/components/TopNav.tsx` | **Modify** | Add "Create" button + "My Courses" in user dropdown |
-| `.env` / `.env.example` | **Modify** | Add `ANTHROPIC_API_KEY` |
+| `.env` / `.env.example` | **Modify** | Add `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL` |
 
 ---
 
-## Task 1: Install `@anthropic-ai/sdk` + set env vars
+## Task 1: Install `openai` SDK + set env vars
 
 **Files:**
 - Modify: `.env`
 - Modify: `.env.example`
 
+The `openai` npm package works with any OpenAI-compatible provider (Kimi/Moonshot, DeepSeek, Mistral, Groq, Claude, etc.) by pointing `baseURL` at the provider's endpoint.
+
 - [ ] **Step 1: Install the SDK**
 
 ```bash
-npm install @anthropic-ai/sdk
+npm install openai
 ```
 
 Expected output ends with: `added N packages`
@@ -44,31 +46,48 @@ Expected output ends with: `added N packages`
 - [ ] **Step 2: Verify install**
 
 ```bash
-node -e "const { Anthropic } = require('@anthropic-ai/sdk'); console.log('ok')"
+node -e "const { OpenAI } = require('openai'); console.log('ok')"
 ```
 
 Expected: `ok`
 
-- [ ] **Step 3: Add env var to `.env`**
+- [ ] **Step 3: Add env vars to `.env`**
 
 Add below the Supabase block:
 ```
-# ── Anthropic ────────────────────────────────────────────────────────────────
-ANTHROPIC_API_KEY=your_key_here
+# ── AI Provider (server-side only — NEVER add VITE_ prefix) ─────────────────
+# Swap provider by changing these three vars — no code changes needed.
+#
+# Kimi / Moonshot:
+AI_BASE_URL=https://api.moonshot.cn/v1
+AI_API_KEY=sk-your-moonshot-key
+AI_MODEL=moonshot-v1-32k
+#
+# DeepSeek (very cheap):
+# AI_BASE_URL=https://api.deepseek.com/v1
+# AI_API_KEY=sk-your-deepseek-key
+# AI_MODEL=deepseek-chat
+#
+# Claude via OpenAI-compat:
+# AI_BASE_URL=https://api.anthropic.com/v1
+# AI_API_KEY=sk-ant-your-key
+# AI_MODEL=claude-sonnet-4-6
 ```
 
 - [ ] **Step 4: Add placeholder to `.env.example`**
 
 ```
-# ── Anthropic (server-side only — NEVER add VITE_ prefix) ───────────────────
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
+# ── AI Provider (server-side only — NEVER add VITE_ prefix) ─────────────────
+AI_BASE_URL=https://api.moonshot.cn/v1
+AI_API_KEY=your_ai_provider_key_here
+AI_MODEL=moonshot-v1-32k
 ```
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add package.json package-lock.json .env.example
-git commit -m "feat: install @anthropic-ai/sdk"
+git commit -m "feat: install openai SDK for provider-agnostic AI generation"
 ```
 
 ---
@@ -211,15 +230,16 @@ git commit -m "feat: add course types"
 **Files:**
 - Modify: `server.js`
 
-- [ ] **Step 1: Add Anthropic import at the top of `server.js`** (after the supabase import)
+- [ ] **Step 1: Add OpenAI client import at the top of `server.js`** (after the supabase import)
 
 ```javascript
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
-// slug generator — no extra dependency needed
-const makeSlug = () => require("crypto").randomBytes(6).toString("base64url").slice(0, 8);
+const ai = new OpenAI({
+  baseURL: process.env.AI_BASE_URL,
+  apiKey:  process.env.AI_API_KEY,
+});
+const AI_MODEL = process.env.AI_MODEL ?? "moonshot-v1-32k";
 ```
 
 - [ ] **Step 2: Add `GET /api/courses/credits`** — lazy-provisions row if missing
@@ -299,7 +319,7 @@ Expected: `{ "error": "invalid_token" }` — auth middleware is working.
 
 ```bash
 git add server.js
-git commit -m "feat: add credits endpoints and Anthropic client"
+git commit -m "feat: add credits endpoints and OpenAI-compat AI client"
 ```
 
 ---
@@ -311,7 +331,7 @@ git commit -m "feat: add credits endpoints and Anthropic client"
 
 - [ ] **Step 1: Add `POST /api/courses/generate/outline`**
 
-Add after the credits endpoints:
+Add after the credits endpoints. Uses OpenAI tool-call syntax (`type: "function"`, `parameters`, `tool_choice: "required"`) which is compatible with Kimi, DeepSeek, Claude-compat, and all other OpenAI-compat providers.
 
 ```javascript
 // ── AI Generation ─────────────────────────────────────────────────────────────
@@ -333,43 +353,47 @@ app.post("/api/courses/generate/outline", extractUserId, async (req, res) => {
   }
 
   try {
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-6",
+    const response = await ai.chat.completions.create({
+      model: AI_MODEL,
       max_tokens: 1024,
       tools: [{
-        name: "set_outline",
-        description: "Set the course module outline",
-        input_schema: {
-          type: "object",
-          required: ["modules"],
-          properties: {
-            modules: {
-              type: "array",
-              items: {
-                type: "object",
-                required: ["order", "title", "description", "duration"],
-                properties: {
-                  order:       { type: "number" },
-                  title:       { type: "string" },
-                  description: { type: "string" },
-                  duration:    { type: "string" }
+        type: "function",
+        function: {
+          name: "set_outline",
+          description: "Set the course module outline",
+          parameters: {
+            type: "object",
+            required: ["modules"],
+            properties: {
+              modules: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["order", "title", "description", "duration"],
+                  properties: {
+                    order:       { type: "number" },
+                    title:       { type: "string" },
+                    description: { type: "string" },
+                    duration:    { type: "string" }
+                  }
                 }
               }
             }
           }
         }
       }],
-      tool_choice: { type: "tool", name: "set_outline" },
+      tool_choice: "required",
       messages: [{
         role: "user",
         content: `Create a ${level} course outline titled "${title}".\nDescription: ${description}\nGenerate exactly ${n} modules. Be specific and practical.`
       }]
     });
 
-    const toolBlock = response.content.find(b => b.type === "tool_use");
-    if (!toolBlock) return res.status(500).json({ error: "generation_failed" });
+    const toolCall = response.choices[0]?.message?.tool_calls?.[0];
+    if (!toolCall) return res.status(500).json({ error: "generation_failed" });
 
-    const modules = toolBlock.input.modules.slice(0, n);
+    const parsed = JSON.parse(toolCall.function.arguments);
+    const modules = parsed.modules.slice(0, n);
     res.json({ modules });
   } catch (err) {
     console.error("outline generation error:", err);
@@ -388,51 +412,54 @@ app.post("/api/courses/generate/module", extractUserId, async (req, res) => {
   }
 
   try {
-    const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-6",
+    const response = await ai.chat.completions.create({
+      model: AI_MODEL,
       max_tokens: 4096,
       tools: [{
-        name: "set_module_content",
-        description: "Set the full content blocks for this lesson module",
-        input_schema: {
-          type: "object",
-          required: ["blocks"],
-          properties: {
-            blocks: {
-              type: "array",
-              maxItems: 10,
-              items: {
-                type: "object",
-                required: ["type"],
-                properties: {
-                  type:        { type: "string", enum: ["heading","paragraph","code","callout","list","quiz"] },
-                  level:       { type: "number" },
-                  text:        { type: "string" },
-                  language:    { type: "string" },
-                  code:        { type: "string" },
-                  variant:     { type: "string", enum: ["info","tip","warning"] },
-                  ordered:     { type: "boolean" },
-                  items:       { type: "array", items: { type: "string" } },
-                  question:    { type: "string" },
-                  options:     { type: "array", items: { type: "string" } },
-                  answer:      { type: "number" }
+        type: "function",
+        function: {
+          name: "set_module_content",
+          description: "Set the full content blocks for this lesson module",
+          parameters: {
+            type: "object",
+            required: ["blocks"],
+            properties: {
+              blocks: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["type"],
+                  properties: {
+                    type:     { type: "string", enum: ["heading","paragraph","code","callout","list","quiz"] },
+                    level:    { type: "number" },
+                    text:     { type: "string" },
+                    language: { type: "string" },
+                    code:     { type: "string" },
+                    variant:  { type: "string", enum: ["info","tip","warning"] },
+                    ordered:  { type: "boolean" },
+                    items:    { type: "array", items: { type: "string" } },
+                    question: { type: "string" },
+                    options:  { type: "array", items: { type: "string" } },
+                    answer:   { type: "number" }
+                  }
                 }
               }
             }
           }
         }
       }],
-      tool_choice: { type: "tool", name: "set_module_content" },
+      tool_choice: "required",
       messages: [{
         role: "user",
         content: `Write the lesson content for module "${module_title}" in a ${course_level} course on "${course_title}".\nModule goal: ${module_description ?? module_title}\nInclude: a heading, clear explanations, code examples where relevant, a tip callout, and end with one quiz question. Max 10 blocks total.`
       }]
     });
 
-    const toolBlock = response.content.find(b => b.type === "tool_use");
-    if (!toolBlock) return res.status(500).json({ error: "generation_failed" });
+    const toolCall = response.choices[0]?.message?.tool_calls?.[0];
+    if (!toolCall) return res.status(500).json({ error: "generation_failed" });
 
-    const blocks = toolBlock.input.blocks.slice(0, 10);
+    const parsed = JSON.parse(toolCall.function.arguments);
+    const blocks = parsed.blocks.slice(0, 10);
     res.json({ blocks });
   } catch (err) {
     console.error("module generation error:", err);
@@ -441,7 +468,7 @@ app.post("/api/courses/generate/module", extractUserId, async (req, res) => {
 });
 ```
 
-- [ ] **Step 3: Restart server and smoke-test (requires valid `ANTHROPIC_API_KEY` in `.env`)**
+- [ ] **Step 3: Restart server and smoke-test (requires valid `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL` in `.env`)**
 
 ```bash
 fuser -k 3001/tcp 2>/dev/null; sleep 1
