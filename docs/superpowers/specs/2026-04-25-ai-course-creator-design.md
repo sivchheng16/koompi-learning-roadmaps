@@ -52,19 +52,20 @@ Modules are expanded sequentially. Each module is a separate Claude call using t
 ## 3. Credit System
 
 ### Rules
-- Every registered user starts with **3 lifetime course credits**
-- 1 credit = 1 saved course (generation is free; saving costs the credit)
+- Every registered user starts with **30 credits** (enough for 3 free courses)
+- **1 course costs 10 credits** on save
 - Credits are provisioned lazily on first visit to `/create`
-- If `credits_remaining = 0`, generation is blocked server-side before Claude is called
+- If `credits_remaining < 10`, generation is blocked server-side before Claude is called
 
 ### Getting more credits
 - **Request credits** — user submits a reason; admin approves in Supabase dashboard (no admin UI in v1)
 - **Buy credits** — placeholder button in v1 (links to contact page); real Stripe integration in v2
 
 ### Credit UX
-- Wizard header shows "2 of 3 credits remaining"
-- At 0 credits, Create button replaced with upgrade prompt (two options: Request / Buy)
-- Server returns `{ error: "no_credits" }` as a hard gate — client UI is secondary
+- Wizard header shows "20 credits remaining (2 courses)"
+- If credits < 10, Create button replaced with upgrade prompt (two options: Request / Buy)
+- Server returns `{ error: "insufficient_credits" }` as a hard gate — client UI is secondary
+- Pricing framing: credits are the unit; courses cost 10 each
 
 ---
 
@@ -100,7 +101,7 @@ create table course_modules (
 -- Credits
 create table user_credits (
   user_id           text primary key,
-  credits_remaining int default 3,
+  credits_remaining int default 30,   -- 30 free = 3 courses at 10 credits each
   credits_used      int default 0,
   updated_at        timestamptz default now()
 );
