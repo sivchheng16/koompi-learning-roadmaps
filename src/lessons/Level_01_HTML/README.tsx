@@ -5,19 +5,19 @@ import { CodeBlock } from '../../components/ui/CodeBlock';
 import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Introduction() {
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
+    <article className="max-w-3xl mx-auto font-sans space-y-10">
+      <div>
+        <div>
           <Typography variant="h1">Introduction: HTML Fundamentals</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track 01: HTML Fundamentals</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Level Overview</Typography>
           <Typography>
             HTML (HyperText Markup Language) is the foundation of every website. In this level, you will learn to build the structure of web pages.
@@ -38,9 +38,9 @@ export default function Introduction() {
             <li>Project: Personal Bio Page</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Prerequisites</Typography>
           <Typography>
             Before starting this level, you should have:
@@ -52,9 +52,9 @@ export default function Introduction() {
             <li>Organized workspace set up</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">What You&apos;ll Build</Typography>
           <Typography>
             By the end of this level, you will create:
@@ -74,9 +74,9 @@ export default function Introduction() {
             <li>email@example.com</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">How to Use This Level</Typography>
           <Typography variant="h3">For Each Module</Typography>
           <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
@@ -95,9 +95,9 @@ export default function Introduction() {
 mkdir -p html-fundamentals
 cd html-fundamentals`}</CodeBlock>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Module Index</Typography>
           <Table>
             <TableHeader>
@@ -151,9 +151,9 @@ cd html-fundamentals`}</CodeBlock>
             </TableBody>
           </Table>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track Completion</Typography>
           <Typography>
             To complete Track 01:
@@ -166,9 +166,9 @@ cd html-fundamentals`}</CodeBlock>
             <li>HTML Fundamentals Badge earned</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography>
             Let&apos;s build your first website!
           </Typography>
@@ -176,7 +176,7 @@ cd html-fundamentals`}</CodeBlock>
             Start with Module 02: Getting Started
           </Typography>
         </div>
-      </section>
-    </div>
+      </div>
+    </article>
   );
 }

@@ -1,698 +1,242 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
-export default function Module01IntroductionCSS() {
-  return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Introduction to CSS</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 02: CSS Styling</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Understand what CSS is and why it&apos;s essential</li>
-            <li>Add CSS to your HTML pages using three methods</li>
-            <li>Write basic CSS rules</li>
-            <li>Understand CSS syntax and terminology</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: What is CSS?</Typography>
-          <Typography variant="h3">CSS Defined</Typography>
-          <Typography>
-            CSS stands for Cascading Style Sheets.
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Cascading: Styles can override each other in a specific order</li>
-            <li>Style: Appearance and presentation</li>
-            <li>Sheets: Separate files or sections containing styles</li>
-          </ul>
-          <Typography variant="h3">The Role of CSS</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>HTML</TableHead>
-                <TableHead>CSS</TableHead>
-                <TableHead>JavaScript</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell><strong>Structure</strong></TableCell>
-                <TableCell><strong>Style</strong></TableCell>
-                <TableCell><strong>Behavior</strong></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>&quot;What&apos;s on the page?&quot;</TableCell>
-                <TableCell>&quot;How does it look?&quot;</TableCell>
-                <TableCell>&quot;What does it do?&quot;</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  <ul className="list-disc pl-4 space-y-1">
-                    <li>Headings</li>
-                    <li>Paragraphs</li>
-                    <li>Images</li>
-                    <li>Links</li>
-                  </ul>
-                </TableCell>
-                <TableCell>
-                  <ul className="list-disc pl-4 space-y-1">
-                    <li>Colors</li>
-                    <li>Fonts</li>
-                    <li>Spacing</li>
-                    <li>Layout</li>
-                  </ul>
-                </TableCell>
-                <TableCell>
-                  <ul className="list-disc pl-4 space-y-1">
-                    <li>Click events</li>
-                    <li>Animations</li>
-                    <li>Data loading</li>
-                    <li>Form validation</li>
-                  </ul>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Why Learn CSS?</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Without CSS</TableHead>
-                <TableHead>With CSS</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Boring, plain pages</TableCell>
-                <TableCell>Beautiful, engaging designs</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Same look everywhere</TableCell>
-                <TableCell>Unique brand identity</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Hard to read</TableCell>
-                <TableCell>Easy to read with good typography</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Not professional</TableCell>
-                <TableCell>Professional appearance</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Desktop only</TableCell>
-                <TableCell>Works on all devices</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: CSS Syntax</Typography>
-          <Typography variant="h3">The Anatomy of a CSS Rule</Typography>
-          <CodeBlock language="css">{`selector {
- property: value;
- property: value;
-}`}</CodeBlock>
-          <Typography>
-            Example:
-          </Typography>
-          <CodeBlock language="css">{`h1 {
- color: blue;
- font-size: 24px;
-}`}</CodeBlock>
-          <Typography variant="h3">Breaking It Down</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li><strong>Selector (h1):</strong> What element(s) to style</li>
-            <li><strong>Declaration (color: blue;):</strong> A property-value pair inside the braces</li>
-            <li><strong>Property (color):</strong> What aspect of the element to change</li>
-            <li><strong>Value (blue):</strong> What setting to apply to that property</li>
-          </ul>
-          <Typography variant="h3">CSS Terminology</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Term</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Example</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Selector</TableCell>
-                <TableCell>What element(s) to style</TableCell>
-                <TableCell>h1, .class, #id</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Property</TableCell>
-                <TableCell>What aspect to change</TableCell>
-                <TableCell>color, font-size</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Value</TableCell>
-                <TableCell>What to set the property to</TableCell>
-                <TableCell>blue, 24px</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Declaration</TableCell>
-                <TableCell>A property-value pair</TableCell>
-                <TableCell>color: blue;</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Rule</TableCell>
-                <TableCell>Selector + declarations</TableCell>
-                <TableCell>The whole block</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Multiple Declarations</Typography>
-          <CodeBlock language="css">{`p {
- color: #333333;
- font-size: 16px;
- line-height: 1.6;
- margin-bottom: 20px;
-}`}</CodeBlock>
-          <Typography>
-            Every declaration ends with a semicolon (;).
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Three Ways to Add CSS</Typography>
-          <Typography variant="h3">Method 1: Inline CSS</Typography>
-          <Typography>
-            CSS written directly in HTML elements using the style attribute.
-          </Typography>
-          <CodeBlock language="html">{`<h1 style="color: blue; font-size: 24px;">Hello World</h1>
-<p style="color: gray;">This is a paragraph.</p>`}</CodeBlock>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Pros</TableHead>
-                <TableHead>Cons</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Quick for testing</TableCell>
-                <TableCell>Hard to maintain</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Specific to one element</TableCell>
-                <TableCell>Repeats for each element</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell></TableCell>
-                <TableCell>Mixes structure and style</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell></TableCell>
-                <TableCell>Not recommended for real projects</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Method 2: Internal CSS</Typography>
-          <Typography>
-            CSS written in a &lt;style&gt; element in the &lt;head&gt; section.
-          </Typography>
-          <CodeBlock language="html">{`<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <title>My Page</title>
- <style>
- h1 {
- color: blue;
- font-size: 24px;
- }
- p {
- color: gray;
- line-height: 1.6;
- }
- </style>
-</head>
-<body>
- <h1>Hello World</h1>
- <p>This is a paragraph.</p>
-</body>
-</html>`}</CodeBlock>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Pros</TableHead>
-                <TableHead>Cons</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>All styles in one place</TableCell>
-                <TableCell>Only for that one page</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Good for single-page sites</TableCell>
-                <TableCell>Can&apos;t reuse across pages</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Easier than inline</TableCell>
-                <TableCell>Makes HTML file longer</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Method 3: External CSS (Recommended!)</Typography>
-          <Typography>
-            CSS in a separate .css file, linked to HTML.
-          </Typography>
-          <Typography>
-            styles.css:
-          </Typography>
-          <CodeBlock language="css">{`h1 {
- color: blue;
- font-size: 24px;
-}
-p {
- color: gray;
- line-height: 1.6;
-}`}</CodeBlock>
-          <Typography>
-            index.html:
-          </Typography>
-          <CodeBlock language="html">{`<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <title>My Page</title>
- <link rel="stylesheet" href="styles.css">
-</head>
-<body>
- <h1>Hello World</h1>
- <p>This is a paragraph.</p>
-</body>
-</html>`}</CodeBlock>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Pros</TableHead>
-                <TableHead>Cons</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Clean separation</TableCell>
-                <TableCell>Extra file to manage</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Reuse across all pages</TableCell>
-                <TableCell>Need to link in each HTML</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Easy to maintain</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Browser can cache it</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Best practice!</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: The Link Element</Typography>
-          <Typography variant="h3">Linking External CSS</Typography>
-          <CodeBlock language="html">{`<link rel="stylesheet" href="css/style.css">`}</CodeBlock>
-          <Typography variant="h3">Attributes Explained</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Attribute</TableHead>
-                <TableHead>Value</TableHead>
-                <TableHead>Purpose</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>rel</TableCell>
-                <TableCell>stylesheet</TableCell>
-                <TableCell>Relationship (this is a stylesheet)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>href</TableCell>
-                <TableCell>css/style.css</TableCell>
-                <TableCell>Path to the CSS file</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Common File Structures</Typography>
-          <CodeBlock language="text">{`project/
-├── index.html
-├── about.html
-├── css/
-│ └── style.css ← External CSS file
-└── images/`}</CodeBlock>
-          <Typography>
-            From index.html:
-          </Typography>
-          <CodeBlock language="html">{`<link rel="stylesheet" href="css/style.css">`}</CodeBlock>
-          <Typography variant="h3">Multiple Stylesheets</Typography>
-          <Typography>
-            You can link multiple CSS files:
-          </Typography>
-          <CodeBlock language="html">{`<head>
- <link rel="stylesheet" href="css/reset.css">
- <link rel="stylesheet" href="css/style.css">
- <link rel="stylesheet" href="css/responsive.css">
-</head>`}</CodeBlock>
-          <Typography>
-            Order matters! Later files can override earlier ones.
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Your First Stylesheet</Typography>
-          <Typography variant="h3">Setting Up</Typography>
-          <Typography>
-            Step 1: Create the folder structure
-          </Typography>
-          <CodeBlock language="bash">{`cd ~/projects/learning
-mkdir css-practice
-cd css-practice
-mkdir css
-touch index.html css/style.css`}</CodeBlock>
-          <Typography>
-            Step 2: Create the HTML (index.html)
-          </Typography>
-          <CodeBlock language="html">{`<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>My First Styled Page</title>
- <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
- <header>
- <h1>Welcome to My Website</h1>
- <p>This is my first styled page!</p>
- </header>
- <main>
- <section>
- <h2>About This Page</h2>
- <p>I am learning CSS at KOOMPI. CSS makes websites beautiful!</p>
- <p>With CSS, I can change colors, fonts, spacing, and layout.</p>
- </section>
- <section>
- <h2>What I'm Learning</h2>
- <ul>
- <li>HTML structure</li>
- <li>CSS styling</li>
- <li>Web development</li>
- </ul>
- </section>
- </main>
- <footer>
- <p>&copy; 2024 My Name. Learning at KOOMPI.</p>
- </footer>
-</body>
-</html>`}</CodeBlock>
-          <Typography>
-            Step 3: Add basic styles (css/style.css)
-          </Typography>
-          <CodeBlock language="css">{`/* My First Stylesheet */
-/* Body styles - applies to whole page */
+const EXPLORE_STARTER = {
+  html: `<h1>Angkor Wat</h1>
+<p>One of the most famous temples in the world,
+   located in Siem Reap, Cambodia.</p>
+<p>Visit it and bring a camera.</p>`,
+  css: `/* Try changing these values and watch the preview */
 body {
- font-family: Arial, sans-serif;
- line-height: 1.6;
- margin: 0;
- padding: 20px;
- background-color: #f4f4f4;
- color: #333;
+  font-family: Georgia, serif;
+  background-color: #fdf6ec;
+  padding: 24px;
 }
-/* Header styles */
-header {
- background-color: #35424a;
- color: white;
- padding: 20px;
- text-align: center;
-}
-/* Main heading */
+
 h1 {
- margin: 0;
+  color: #c2622d;
+  font-size: 2rem;
 }
-/* Section headings */
-h2 {
- color: #35424a;
- border-bottom: 2px solid #35424a;
- padding-bottom: 10px;
-}
-/* Paragraphs */
+
 p {
- margin-bottom: 15px;
-}
-/* Lists */
-ul {
- background-color: white;
- padding: 20px;
- padding-left: 40px;
-}
-li {
- margin-bottom: 10px;
-}
-/* Footer */
-footer {
- background-color: #35424a;
- color: white;
- text-align: center;
- padding: 10px;
- margin-top: 20px;
-}`}</CodeBlock>
-          <Typography>
-            Step 4: View in browser
-          </Typography>
-          <CodeBlock language="bash">{`firefox index.html`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: CSS Comments</Typography>
-          <Typography variant="h3">Writing Comments</Typography>
-          <Typography>
-            Comments help you organize and explain your CSS:
-          </Typography>
-          <CodeBlock language="css">{`/* This is a single-line comment */
-/*
- * This is a multi-line comment
- * It can span several lines
- * Use it to explain complex code
- */
-/* ==========================================
- HEADER STYLES
- ========================================== */
-header {
- background-color: #333;
-}
-/* Navigation */
-nav {
- /* TODO: Add responsive styles */
-}`}</CodeBlock>
-          <Typography variant="h3">Comment Best Practices</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Do</TableHead>
-                <TableHead>Don&apos;t</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Explain why, not what</TableCell>
-                <TableCell>Comment obvious code</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Mark sections</TableCell>
-                <TableCell>Leave TODO comments in production</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Note browser fixes</TableCell>
-                <TableCell>Write novels</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: CSS Reset and Best Practices</Typography>
-          <Typography variant="h3">Why Reset?</Typography>
-          <Typography>
-            Different browsers have different default styles. A CSS reset creates a consistent starting point.
-          </Typography>
-          <Typography variant="h3">Simple Reset</Typography>
-          <CodeBlock language="css">{`/* Simple CSS Reset */
-* {
- margin: 0;
- padding: 0;
- box-sizing: border-box;
-}`}</CodeBlock>
-          <Typography>
-            The * selector targets ALL elements.
-          </Typography>
-          <Typography variant="h3">Best Practices Summary</Typography>
-          <CodeBlock language="text">{`┌─────────────────────────────────────────────────────────────────────────────┐
-│ CSS BEST PRACTICES │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ │
-│ USE EXTERNAL CSS │
-│ • Keep styles in .css files │
-│ • Link from HTML <head> │
-│ │
-│ ORGANIZE YOUR CODE │
-│ • Use comments to mark sections │
-│ • Group related styles together │
-│ • Keep consistent indentation │
-│ │
-│ USE MEANINGFUL NAMES │
-│ • Name classes by purpose, not appearance │
-│ • .error not .red-text │
-│ • .primary-button not .big-blue-button │
-│ │
-│ START WITH A RESET │
-│ • Normalize browser differences │
-│ • Creates consistent base │
-│ │
-│ TEST IN BROWSER │
-│ • Refresh often to see changes │
-│ • Use DevTools to experiment │
-│ │
-└─────────────────────────────────────────────────────────────────────────────┘`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: CSS Terminology</Typography>
-          <Typography>
-            Match the terms:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>h1 is a ______</li>
-            <li>color is a ______</li>
-            <li>blue is a ______</li>
-            <li>color: blue; is a ______</li>
-          </ul>
-          <Typography>
-            Options: selector, property, value, declaration
-          </Typography>
-          <Typography variant="h3">Exercise 2: Add Inline CSS</Typography>
-          <Typography>
-            Add inline styles to make:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>The &lt;h1&gt; red</li>
-            <li>The &lt;p&gt; blue with 20px font size</li>
-          </ul>
-          <CodeBlock language="html">{`<h1>Title</h1>
-<p>Paragraph text</p>`}</CodeBlock>
-          <Typography variant="h3">Exercise 3: Create Internal CSS</Typography>
-          <Typography>
-            Convert your inline CSS to internal CSS in the &lt;head&gt;.
-          </Typography>
-          <Typography variant="h3">Exercise 4: Create External CSS</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Create a new project folder</li>
-            <li>Create index.html and css/style.css</li>
-            <li>Link the stylesheet</li>
-            <li>Style at least 5 different elements</li>
-          </ul>
-          <Typography variant="h3">Exercise 5: Style Your Bio Page</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Create a css folder</li>
-            <li>Create style.css</li>
-            <li>Link it to your HTML</li>
-            <li>Add basic styles for body, headings, and paragraphs</li>
-          </ul>
-        </div>
+  color: #555;
+  line-height: 1.7;
+}`,
+};
+
+const CHALLENGE_STARTER = {
+  html: `<h1>My First Styled Page</h1>
+<body>Welcome to CSS!</body>`,
+  css: `/* Write CSS rules here.
+   Set color on h1 and background-color on body. */
+`,
+};
+
+const challenge = {
+  prompt:
+    "Write a CSS rule that sets `color` on `h1`, and another that sets `background-color` on `body`.",
+  check(_html: string, css: string, _js: string) {
+    const hasColor = /h1\s*\{[^}]*color\s*:/i.test(css);
+    const hasBg =
+      /body\s*\{[^}]*background-color\s*:/i.test(css) ||
+      /body\s*\{[^}]*background\s*:/i.test(css);
+    if (!hasColor)
+      return {
+        passed: false,
+        message: "Add a CSS rule for h1 that sets the color property.",
+      };
+    if (!hasBg)
+      return {
+        passed: false,
+        message:
+          "Good — now add a rule for body that sets background-color.",
+      };
+    return { passed: true, message: "Challenge complete!" };
+  },
+};
+
+export default function Module01IntroductionCSS() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
+  return (
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* ── 1. Hook ────────────────────────────────────────── */}
+      <section>
+        <p className="text-xl md:text-2xl text-foreground leading-relaxed font-serif">
+          HTML builds the walls — CSS paints them, hangs the pictures, and
+          decides where the light comes from. Without it, every website looks
+          like a government form from 1997.
+        </p>
       </section>
 
-      <div className="mt-20 pt-10 border-t border-white/5 mx-10">
-        <Typography variant="h2">Module Summary</Typography>
-        <Typography variant="h3">Key Vocabulary</Typography>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Term</TableHead>
-              <TableHead>Meaning</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell>CSS</TableCell>
-              <TableCell>Cascading Style Sheets</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Selector</TableCell>
-              <TableCell>What element(s) to style</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Property</TableCell>
-              <TableCell>What aspect to change</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Value</TableCell>
-              <TableCell>What to set the property to</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Declaration</TableCell>
-              <TableCell>Property-value pair</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Rule</TableCell>
-              <TableCell>Complete CSS block</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+      {/* ── 2. Concept ─────────────────────────────────────── */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-serif text-foreground">One rule, three parts</h2>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          CSS stands for <strong className="text-foreground">Cascading Style Sheets</strong>.
+          Every CSS instruction follows a single pattern: pick a{" "}
+          <strong className="text-foreground">selector</strong> (what to style), then list{" "}
+          <strong className="text-foreground">property: value</strong> pairs inside curly braces.
+        </p>
+        <div className="rounded-xl bg-stone-50 border border-border px-6 py-5 font-mono text-sm text-foreground leading-loose">
+          <span className="text-[#c2622d]">selector</span>
+          {" {\n"}
+          {"  "}
+          <span className="text-blue-600">property</span>
+          {": "}
+          <span className="text-green-700">value</span>
+          {";\n}"}
+        </div>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          The selector targets an HTML element. The property names what to
+          change (color, size, spacing). The value says how to change it.
+          That is the entire mental model — everything else is just more
+          properties to learn.
+        </p>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          There are three ways to attach CSS to a page: inline{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">style=""</code> attributes
+          (quick tests only), a{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;style&gt;</code> block
+          in the{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;head&gt;</code>, and an
+          external{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">.css</code> file linked with{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;link&gt;</code>. In real
+          projects you almost always use the external file — the browser can
+          cache it and you reuse the same styles across every page.
+        </p>
+      </section>
 
-        <Typography variant="h2">Next Steps</Typography>
-        <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-          <li>Complete all exercises</li>
-          <li>Create first external stylesheet</li>
-          <li>Apply basic styles to bio page</li>
-          <li>Get mentor verification</li>
+      {/* ── 3. Example ─────────────────────────────────────── */}
+      <section className="space-y-5">
+        <h2 className="text-2xl font-serif text-foreground">Annotated example</h2>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          Read through both files once. Notice how the HTML stays clean while
+          all appearance decisions live in CSS.
+        </p>
+        <div className="rounded-xl border border-border overflow-hidden">
+          <div className="px-5 py-2.5 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            index.html
+          </div>
+          <pre className="px-6 py-5 text-sm font-mono leading-relaxed text-foreground overflow-x-auto bg-[#fafaf9]">
+{`<link rel="stylesheet" href="styles.css">   ← links the CSS file
+
+<h1>Phnom Penh Street Food</h1>
+<p>The best banh mi you will ever eat.</p>`}
+          </pre>
+        </div>
+        <div className="rounded-xl border border-border overflow-hidden">
+          <div className="px-5 py-2.5 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            styles.css
+          </div>
+          <pre className="px-6 py-5 text-sm font-mono leading-relaxed text-foreground overflow-x-auto bg-[#fafaf9]">
+{`/* selector { property: value; } */
+
+body {
+  background-color: #fdf6ec;   /* warm off-white */
+  padding: 24px;
+}
+
+h1 {
+  color: #c2622d;              /* deep orange — warm, strong */
+  font-size: 2rem;
+}
+
+p {
+  color: #555;                 /* dark grey — readable without being harsh */
+  line-height: 1.7;            /* breathing room between lines */
+}`}
+          </pre>
+        </div>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          <li className="flex gap-2">
+            <span className="text-primary font-mono shrink-0">body</span>
+            targets the whole page — a good place for font and background defaults
+          </li>
+          <li className="flex gap-2">
+            <span className="text-primary font-mono shrink-0">/* … */</span>
+            CSS comments are ignored by the browser — use them freely
+          </li>
+          <li className="flex gap-2">
+            <span className="text-primary font-mono shrink-0">;</span>
+            every declaration ends with a semicolon — missing one breaks the rule
+          </li>
         </ul>
+      </section>
 
-        <div className="mt-12 p-8 glass-panel rounded-3xl text-center">
-          <Typography variant="h4" className="text-primary font-bold">Coming Next</Typography>
-          <Typography variant="lead" className="italic text-xl">Module 03 - Selectors & Specificity</Typography>
-          <Typography className="text-text-secondary">You will learn to target exactly the elements you want!</Typography>
+      {/* ── 4. Try it ──────────────────────────────────────── */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-serif text-foreground">Try it</h2>
+          <p className="text-base text-muted-foreground mt-1">
+            A styled page about Angkor Wat is preloaded. Change the{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">color</code> on{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">h1</code>, swap{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">background-color</code>,
+            or add a new rule for{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">p</code>. Watch
+            the preview update instantly.
+          </p>
         </div>
+        <CodePlayground
+          mode="web"
+          starter={EXPLORE_STARTER}
+          height="400px"
+        />
+      </section>
 
-        <div className="mt-12 text-center opacity-40 italic">
-          <Typography variant="muted">"CSS turns structure into beauty."</Typography>
+      {/* ── 5. Challenge ───────────────────────────────────── */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-serif text-foreground">Challenge</h2>
+          <p className="text-base text-muted-foreground mt-1">
+            Write two CSS rules from scratch: one that sets{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">color</code> on{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">h1</code>, and one
+            that sets{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">background-color</code>{" "}
+            on{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">body</code>. Any
+            valid color values work.
+          </p>
         </div>
-      </div>
-    </div>
+        <CodePlayground
+          mode="web"
+          starter={CHALLENGE_STARTER}
+          height="340px"
+          challenge={challenge}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
+      </section>
+
+      {/* ── 6. Gate ────────────────────────────────────────── */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
+      </section>
+
+    </article>
   );
 }

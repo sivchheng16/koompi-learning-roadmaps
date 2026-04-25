@@ -1,492 +1,280 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
+const EXPLORE_STARTER = {
+  html: `<div class="card">
+  <h2>Tonle Sap Lake</h2>
+  <p>The largest freshwater lake in Southeast Asia.
+     It swells to six times its dry-season size
+     during the monsoon.</p>
+</div>
+
+<div class="card highlight">
+  <h2>Cardamom Mountains</h2>
+  <p>One of the largest remaining rainforests
+     in mainland Southeast Asia.</p>
+</div>`,
+  css: `* {
+  box-sizing: border-box;  /* padding and border don't expand the element */
+}
+
+body {
+  font-family: sans-serif;
+  padding: 24px;
+  background-color: #f5f0e8;
+}
+
+.card {
+  background-color: white;
+  padding: 24px;           /* inner breathing room */
+  margin-bottom: 16px;     /* space outside the element */
+  border: 2px solid #d4c8b4;
+  border-radius: 8px;
+  width: 400px;
+}
+
+.card h2 {
+  margin: 0 0 8px 0;
+  color: #c2622d;
+}
+
+.highlight {
+  border-color: #c2622d;
+  border-width: 3px;
+}`,
+};
+
+const CHALLENGE_STARTER = {
+  html: `<div class="box">
+  <p>Add padding, margin, and a border to .box</p>
+</div>`,
+  css: `/* Style .box with padding, margin, and border */
+.box {
+  background-color: #fdf6ec;
+
+}`,
+};
+
+const challenge = {
+  prompt:
+    "Add `padding`, `margin`, and `border` to any element. All three must appear in your CSS.",
+  check(_html: string, css: string, _js: string) {
+    const hasPadding = /padding\s*:/i.test(css);
+    const hasMargin = /margin\s*:/i.test(css);
+    const hasBorder = /border\s*:/i.test(css);
+    if (!hasPadding)
+      return {
+        passed: false,
+        message: "Add a `padding` property to give the element some inner space.",
+      };
+    if (!hasMargin)
+      return {
+        passed: false,
+        message: "Good padding! Now add `margin` to push the element away from its neighbours.",
+      };
+    if (!hasBorder)
+      return {
+        passed: false,
+        message: "Almost — add a `border` to complete the box model (try `border: 2px solid #333`).",
+      };
+    return { passed: true, message: "Challenge complete!" };
+  },
+};
+
 export default function Module04BoxModel() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">The Box Model</Typography>
-        </div>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* ── 1. Hook ────────────────────────────────────────── */}
+      <section>
+        <p className="text-xl md:text-2xl text-foreground leading-relaxed font-serif">
+          Every element on a page is a rectangle. Understanding how those
+          rectangles grow, shrink, and push each other around is the single
+          most useful thing you can learn about CSS layout.
+        </p>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 02: CSS Styling</Typography>
+
+      {/* ── 2. Concept ─────────────────────────────────────── */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-serif text-foreground">Four layers, one box</h2>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          Picture an element as four nested rectangles:
+        </p>
+        <div className="rounded-xl bg-stone-50 border border-border divide-y divide-border text-sm">
+          <div className="px-6 py-3">
+            <span className="font-mono text-[#c2622d]">content</span>
+            <span className="text-muted-foreground ml-3">
+              the text or image itself — sized by{" "}
+              <code>width</code> and <code>height</code>
+            </span>
+          </div>
+          <div className="px-6 py-3">
+            <span className="font-mono text-[#c2622d]">padding</span>
+            <span className="text-muted-foreground ml-3">
+              space <em>inside</em> the border — pushes content away from the edge
+            </span>
+          </div>
+          <div className="px-6 py-3">
+            <span className="font-mono text-[#c2622d]">border</span>
+            <span className="text-muted-foreground ml-3">
+              a line around the padding — set thickness, style, and color
+            </span>
+          </div>
+          <div className="px-6 py-3">
+            <span className="font-mono text-[#c2622d]">margin</span>
+            <span className="text-muted-foreground ml-3">
+              space <em>outside</em> the border — pushes other elements away
+            </span>
+          </div>
         </div>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          By default, <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">width</code>{" "}
+          only sets the content area. Padding and border add to the total size —
+          which is confusing. Add{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">
+            box-sizing: border-box
+          </code>{" "}
+          to every project (via the{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">*</code>{" "}
+          selector) to make width mean the full visible size. Almost every
+          professional stylesheet does this.
+        </p>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          Shorthand properties let you set all four sides at once:{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">
+            padding: 16px 24px
+          </code>{" "}
+          means 16px top/bottom, 24px left/right. One value sets all four
+          sides. Four values go clockwise: top, right, bottom, left.
+        </p>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Understand the CSS box model completely</li>
-            <li>Control spacing with margin and padding</li>
-            <li>Apply borders and outlines</li>
-            <li>Use box-sizing for predictable layouts</li>
-            <li>Control element dimensions</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: Understanding the Box Model</Typography>
-          <Typography variant="h3">Everything is a Box</Typography>
-          <Typography>
-            In CSS, every element is a rectangular box. The box model describes how space is calculated.
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>THE CSS BOX MODEL</li>
-            <li>MARGIN</li>
-            <li>BORDER</li>
-            <li>PADDING</li>
-            <li>CONTENT</li>
-            <li>(text, images, etc.)</li>
-          </ul>
-          <Typography variant="h3">Box Model Components</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Component</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Content</TableCell>
-                <TableCell>The actual content (text, image)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Padding</TableCell>
-                <TableCell>Space INSIDE the box, around content</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Border</TableCell>
-                <TableCell>The edge of the box</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Margin</TableCell>
-                <TableCell>Space OUTSIDE the box, between elements</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Content - Width and Height</Typography>
-          <Typography variant="h3">Setting Dimensions</Typography>
-          <CodeBlock language="css">{`.box {
- width: 300px;
- height: 200px;
-}`}</CodeBlock>
-          <Typography variant="h3">Width Options</Typography>
-          <CodeBlock language="css">{`/* Fixed width */
-width: 300px;
-/* Percentage of parent */
-width: 50%;
-/* Maximum width (responsive) */
-max-width: 800px;
-/* Minimum width */
-min-width: 200px;
-/* Viewport width */
-width: 100vw;`}</CodeBlock>
-          <Typography variant="h3">Height Options</Typography>
-          <CodeBlock language="css">{`/* Fixed height */
-height: 200px;
-/* Minimum height (content can grow) */
-min-height: 400px;
-/* Full viewport height */
-height: 100vh;
-/* Auto - based on content */
-height: auto;`}</CodeBlock>
-          <Typography variant="h3">Best Practice: Responsive</Typography>
-          <CodeBlock language="css">{`/* Instead of fixed width */
-.container {
- max-width: 1200px; /* Never wider than this */
- width: 100%; /* Fill available space */
- margin: 0 auto; /* Center it */
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Padding</Typography>
-          <Typography variant="h3">Padding: Space Inside</Typography>
-          <Typography>
-            Padding creates space between the content and the border.
-          </Typography>
-          <CodeBlock language="css">{`.box {
- padding: 20px; /* All four sides */
-}`}</CodeBlock>
-          <Typography variant="h3">Individual Sides</Typography>
-          <CodeBlock language="css">{`.box {
- padding-top: 10px;
- padding-right: 20px;
- padding-bottom: 10px;
- padding-left: 20px;
-}`}</CodeBlock>
-          <Typography variant="h3">Shorthand Notation</Typography>
-          <CodeBlock language="css">{`/* All sides */
-padding: 20px;
-/* Vertical | Horizontal */
-padding: 10px 20px;
-/* Top | Horizontal | Bottom */
-padding: 10px 20px 30px;
-/* Top | Right | Bottom | Left (clockwise) */
-padding: 10px 20px 30px 40px;`}</CodeBlock>
-          <Typography>
-            Remember: Start at top, go clockwise (like a clock!)
-          </Typography>
-          <Typography variant="h3">Practical Examples</Typography>
-          <CodeBlock language="css">{`/* Button */
-.button {
- padding: 12px 24px; /* More horizontal space */
+
+      {/* ── 3. Example ─────────────────────────────────────── */}
+      <section className="space-y-5">
+        <h2 className="text-2xl font-serif text-foreground">Annotated example</h2>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          A card component using all four box model layers.
+        </p>
+        <div className="rounded-xl border border-border overflow-hidden">
+          <div className="px-5 py-2.5 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            styles.css
+          </div>
+          <pre className="px-6 py-5 text-sm font-mono leading-relaxed text-foreground overflow-x-auto bg-[#fafaf9]">
+{`/* Reset first — prevents browser defaults from fighting you */
+* {
+  box-sizing: border-box;
 }
-/* Card */
+
 .card {
- padding: 20px;
+  width: 360px;            /* total visible width (with border-box) */
+  background-color: white;
+
+  padding: 24px;           /* 24px on all four inner sides */
+  border: 2px solid #d4c8b4;
+  border-radius: 8px;      /* rounds the corners */
+  margin: 0 auto 24px;     /* 0 top, auto left/right (centers it), 24px bottom */
 }
-/* Header */
-header {
- padding: 10px 20px;
-}
-/* Section */
-section {
- padding: 60px 20px; /* More vertical breathing room */
-}`}</CodeBlock>
+
+/* Padding shorthand:
+   padding: top right bottom left  (clockwise)
+   padding: vertical horizontal    (two-value)
+   padding: 24px                   (all four equal) */`}
+          </pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Border</Typography>
-          <Typography variant="h3">Border Property</Typography>
-          <CodeBlock language="css">{`.box {
- border: 1px solid black;
-}`}</CodeBlock>
-          <Typography variant="h3">Border Shorthand</Typography>
-          <CodeBlock language="css">{`border: [width] [style] [color];
-/* Examples */
-border: 1px solid #333;
-border: 2px dashed blue;
-border: 3px dotted red;
-- ### Border Styles
-- \`\`\`css
-- border-style: solid; /* */
-- border-style: dashed; /* - - - - - */
-- border-style: dotted; /* .......... */
-- border-style: double; /* */
-- border-style: groove; /* 3D groove */
-- border-style: ridge; /* 3D ridge */
-- border-style: none; /* No border */
-### Individual Border Sides
-\`\`\`css
-border-top: 2px solid black;
-border-right: 1px dashed gray;
-border-bottom: 3px solid blue;
-border-left: none;`}</CodeBlock>
-          <Typography variant="h3">Border Radius (Rounded Corners)</Typography>
-          <CodeBlock language="css">{`/* All corners */
-border-radius: 10px;
-/* Circle (if width = height) */
-border-radius: 50%;
-/* Individual corners */
-border-radius: 10px 20px 10px 20px; /* TL TR BR BL */
-/* Different horizontal/vertical */
-border-radius: 20px / 10px;`}</CodeBlock>
-          <Typography variant="h3">Practical Border Examples</Typography>
-          <CodeBlock language="css">{`/* Card */
-.card {
- border: 1px solid #ddd;
- border-radius: 8px;
-}
-/* Button */
-.button {
- border: 2px solid #3498db;
- border-radius: 4px;
-}
-/* Circle avatar */
-.avatar {
- width: 100px;
- height: 100px;
- border-radius: 50%;
- border: 3px solid white;
-}
-/* Bottom border only (underline effect) */
-.tab {
- border: none;
- border-bottom: 3px solid #3498db;
-}`}</CodeBlock>
+
+      {/* ── 4. Try it ──────────────────────────────────────── */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-serif text-foreground">Try it</h2>
+          <p className="text-base text-muted-foreground mt-1">
+            Two cards about Cambodian geography are preloaded. Try increasing{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">
+              padding
+            </code>{" "}
+            to{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">
+              40px
+            </code>
+            , changing{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">
+              margin-bottom
+            </code>
+            , or removing{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">
+              box-sizing: border-box
+            </code>{" "}
+            to see what changes.
+          </p>
         </div>
+        <CodePlayground
+          mode="web"
+          starter={EXPLORE_STARTER}
+          height="440px"
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Margin</Typography>
-          <Typography variant="h3">Margin: Space Outside</Typography>
-          <Typography>
-            Margin creates space between elements.
-          </Typography>
-          <CodeBlock language="css">{`.box {
- margin: 20px; /* All four sides */
-}`}</CodeBlock>
-          <Typography variant="h3">Individual Sides</Typography>
-          <CodeBlock language="css">{`.box {
- margin-top: 10px;
- margin-right: 20px;
- margin-bottom: 10px;
- margin-left: 20px;
-}`}</CodeBlock>
-          <Typography variant="h3">Shorthand (Same as Padding)</Typography>
-          <CodeBlock language="css">{`/* All sides */
-margin: 20px;
-/* Vertical | Horizontal */
-margin: 10px 20px;
-/* Top | Right | Bottom | Left */
-margin: 10px 20px 30px 40px;`}</CodeBlock>
-          <Typography variant="h3">Auto Margin (Centering)</Typography>
-          <CodeBlock language="css">{`.container {
- max-width: 800px;
- margin: 0 auto; /* 0 top/bottom, auto left/right = centered */
-}`}</CodeBlock>
-          <Typography variant="h3">Margin Collapse</Typography>
-          <Typography>
-            When vertical margins touch, they collapse (only the larger one applies):
-          </Typography>
-          <CodeBlock language="css">{`h1 { margin-bottom: 20px; }
-p { margin-top: 15px; }
-/* You might expect 35px gap, but you get 20px (the larger one) */`}</CodeBlock>
-          <Typography>
-            This only happens with vertical margins, not horizontal.
-          </Typography>
-          <Typography variant="h3">Negative Margins</Typography>
-          <CodeBlock language="css">{`/* Pull element up/left */
-.overlap {
- margin-top: -20px;
-}`}</CodeBlock>
+
+      {/* ── 5. Challenge ───────────────────────────────────── */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-serif text-foreground">Challenge</h2>
+          <p className="text-base text-muted-foreground mt-1">
+            Add{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">
+              padding
+            </code>
+            ,{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">
+              margin
+            </code>
+            , and{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">
+              border
+            </code>{" "}
+            to the{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">
+              .box
+            </code>{" "}
+            element. All three must be present. Values are your choice.
+          </p>
         </div>
+        <CodePlayground
+          mode="web"
+          starter={CHALLENGE_STARTER}
+          height="320px"
+          challenge={challenge}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Box Sizing</Typography>
-          <Typography variant="h3">The Problem</Typography>
-          <Typography>
-            By default, width and height only apply to content. Padding and border add to total size!
-          </Typography>
-          <CodeBlock language="css">{`.box {
- width: 200px;
- padding: 20px;
- border: 5px solid black;
-}
-/* Actual width = 200 + 20 + 20 + 5 + 5 = 250px! */`}</CodeBlock>
-          <Typography variant="h3">The Solution: box-sizing</Typography>
-          <CodeBlock language="css">{`.box {
- box-sizing: border-box;
- width: 200px;
- padding: 20px;
- border: 5px solid black;
-}
-/* Now width IS 200px (including padding and border) */`}</CodeBlock>
-          <Typography variant="h3">Apply Globally (Best Practice)</Typography>
-          <CodeBlock language="css">{`/* Add to your CSS reset */
-*, *::before, *::after {
- box-sizing: border-box;
-}`}</CodeBlock>
-          <Typography variant="h3">Visual Comparison</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>BOX-SIZING COMPARISON</li>
-            <li>content-box (default) border-box (recommended)</li>
-            <li>width: 200px width: 200px</li>
-            <li>padding: 20px padding: 20px</li>
-            <li>border: 5px border: 5px</li>
-            <li>250px total 200px total</li>
-            <li>200px content content</li>
-            <li>(smaller)</li>
-            <li>Total width = content + padding + border</li>
-            <li>Total width = width (includes padding + border)</li>
-          </ul>
-        </div>
+
+      {/* ── 6. Gate ────────────────────────────────────────── */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Putting It All Together</Typography>
-          <Typography variant="h3">Complete Card Example</Typography>
-          <CodeBlock language="css">{`.card {
- /* Box sizing */
- box-sizing: border-box;
- /* Dimensions */
- width: 300px;
- min-height: 200px;
- /* Padding (inside) */
- padding: 20px;
- /* Border */
- border: 1px solid #ddd;
- border-radius: 8px;
- /* Margin (outside) */
- margin: 15px;
- /* Colors */
- background-color: white;
-}
-.card-title {
- margin: 0 0 15px 0; /* Only bottom margin */
- padding-bottom: 10px;
- border-bottom: 1px solid #eee;
-}
-.card-content {
- margin: 0;
-}`}</CodeBlock>
-          <Typography variant="h3">Debug with DevTools</Typography>
-          <Typography>
-            In browser DevTools, you can see the box model:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Right-click element → Inspect</li>
-            <li>Look at the box model diagram</li>
-            <li>See content, padding, border, margin values</li>
-            <li>Hover to highlight each part</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Box Model Quiz</Typography>
-          <Typography>
-            A box has:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>width: 200px</li>
-            <li>padding: 20px</li>
-            <li>border: 5px solid</li>
-            <li>margin: 10px</li>
-          </ul>
-          <Typography>
-            With default box-sizing, what&apos;s the total width including margin?
-          </Typography>
-          <Typography variant="h3">Exercise 2: Create a Card</Typography>
-          <Typography>
-            Create a card with:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>White background</li>
-            <li>Light gray border</li>
-            <li>20px padding inside</li>
-            <li>Rounded corners</li>
-            <li>15px margin between cards</li>
-          </ul>
-          <Typography variant="h3">Exercise 3: Center a Container</Typography>
-          <Typography>
-            Create a container that:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Has max-width of 1000px</li>
-            <li>Is centered horizontally</li>
-            <li>Has 20px padding</li>
-          </ul>
-          <Typography variant="h3">Exercise 4: Button Styling</Typography>
-          <Typography>
-            Create a button with:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Padding: 12px vertical, 24px horizontal</li>
-            <li>Border: 2px solid</li>
-            <li>Border radius: 4px</li>
-            <li>No margin on top, 20px on bottom</li>
-          </ul>
-          <Typography variant="h3">Exercise 5: Apply to Bio Page</Typography>
-          <Typography>
-            Update your bio page with:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Proper box-sizing reset</li>
-            <li>Consistent padding in sections</li>
-            <li>Margins between elements</li>
-            <li>Cards with borders and rounded corners</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Typography>
-            Box Model Properties
-          </Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Property</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>width/height</TableCell>
-                <TableCell>Content dimensions</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>padding</TableCell>
-                <TableCell>Space inside (content to border)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>border</TableCell>
-                <TableCell>The box edge</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>margin</TableCell>
-                <TableCell>Space outside (between boxes)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>box-sizing</TableCell>
-                <TableCell>How size is calculated</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography>
-            Shorthand Pattern (Clockwise)
-          </Typography>
-          <CodeBlock language="text">{` TOP
- ↓
-LEFT → ───── → RIGHT
- ↓
- BOTTOM`}</CodeBlock>
-          <Typography>
-            padding: top right bottom left;
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Before moving to Module 06:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Understand all box model parts</li>
-            <li>Use box-sizing: border-box</li>
-            <li>Create cards with proper spacing</li>
-            <li>Style bio page with good spacing</li>
-            <li>Get mentor verification</li>
-          </ul>
-          <Typography>
-            Coming Next: Module 06 - Layout &amp; Positioning
-          </Typography>
-          <Typography>
-            You will learn to control where elements appear on the page!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            Master of spacing!
-          </Typography>
-          <Typography>
-            Understanding the box model is key to CSS layouts.
-          </Typography>
-        </div>
-      </section>
-    </div>
+
+    </article>
   );
 }

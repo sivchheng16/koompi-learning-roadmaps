@@ -1,359 +1,370 @@
-
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
+import { cn } from "@/lib/utils";
 
 export default function Module03LinuxTerminal() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+  const [selected, setSelected] = useState<string | null>(null);
+  const CORRECT = "pwd";
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Linux Terminal Fundamentals</Typography>
-          <Typography variant="lead">
-            Track 00: Mastering the Command Line Interface (CLI)
-          </Typography>
-        </div>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Header */}
+      <section>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">Linux Terminal Fundamentals</h1>
+        <p className="mt-3 text-muted-foreground text-base">
+          The terminal is the most powerful tool on your computer. Instead of clicking icons, you type commands — and with commands you can do in seconds what would take minutes with a mouse.
+        </p>
       </section>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Understand what the terminal is and why it's powerful</li>
-            <li>Navigate the file system using commands</li>
-            <li>Create, move, copy, and delete files and folders</li>
-            <li>Feel confident using the command line</li>
-          </ul>
+      {/* What is the terminal */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">What Is the Terminal?</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          The <strong>terminal</strong> (also called the <strong>shell</strong> or <strong>command line</strong>) is a text interface to your operating system. You type a command, press Enter, and the shell executes it. On KOOMPI Linux the default shell is <strong>bash</strong>.
+        </p>
+
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-foreground">GUI (click)</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Terminal (type)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[
+                ["Double-click a folder to open it", "cd Documents/"],
+                ["Right-click → New Folder", "mkdir my-project"],
+                ["Drag a file to move it", "mv file.txt Documents/"],
+                ["Delete key / Trash", "rm file.txt"],
+                ["Limited to menu options", "Full control of the system"],
+              ].map(([gui, cli]) => (
+                <tr key={gui} className="hover:bg-stone-50/50">
+                  <td className="px-4 py-3 text-muted-foreground">{gui}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-foreground">{cli}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">The prompt — what you see when you open a terminal</div>
+          <div className="px-5 py-4 space-y-3 leading-relaxed">
+            <div><span className="text-green-400">student@koompi</span>:<span className="text-blue-400">~</span>$ </div>
+            <div className="text-stone-400 text-xs space-y-1">
+              <div><span className="text-green-400">student</span> — your username</div>
+              <div><span className="text-stone-300">koompi</span> — computer name (hostname)</div>
+              <div><span className="text-blue-400">~</span> — current directory (~ means home)</div>
+              <div><span className="text-stone-300">$</span> — ready for your command</div>
+            </div>
+          </div>
+        </div>
+
+        <p className="text-sm text-muted-foreground">
+          Open a terminal on KOOMPI with <kbd className="bg-stone-100 border border-stone-300 rounded px-1.5 py-0.5 text-xs font-mono">Ctrl</kbd> + <kbd className="bg-stone-100 border border-stone-300 rounded px-1.5 py-0.5 text-xs font-mono">Alt</kbd> + <kbd className="bg-stone-100 border border-stone-300 rounded px-1.5 py-0.5 text-xs font-mono">T</kbd>, or search for "Terminal" in the application menu.
+        </p>
       </section>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: Introduction to the Terminal</Typography>
-          <Typography variant="h3">What is the Terminal?</Typography>
-          <Typography>
-            The <strong>terminal</strong> (also called <strong>command line</strong> or <strong>shell</strong>) is a text-based way to control your computer. Instead of clicking with a mouse, you type commands.
-          </Typography>
-
-          <Typography variant="h4">GUI vs Terminal</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>GUI (Graphical)</TableHead>
-                <TableHead>Terminal (Command Line)</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Click with mouse</TableCell>
-                <TableCell>Type commands</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>See icons and windows</TableCell>
-                <TableCell>See text</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Beginner-friendly</TableCell>
-                <TableCell>Powerful for experts</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Limited to what menus offer</TableCell>
-                <TableCell>Full control of system</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-
-          <Typography variant="h3">Why Developers Use the Terminal</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Reason</TableHead>
-                <TableHead>Explanation</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell><strong>Speed</strong></TableCell>
-                <TableCell>Typing is faster than clicking through menus</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><strong>Power</strong></TableCell>
-                <TableCell>Access to features not available in GUI</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><strong>Automation</strong></TableCell>
-                <TableCell>Run scripts to repeat tasks automatically</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><strong>Remote</strong></TableCell>
-                <TableCell>Control servers anywhere in the world</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-
-          <Typography variant="h3">Opening the Terminal</Typography>
-          <Typography>
-            How to open terminal on KOOMPI:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Press <code>Ctrl + Alt + T</code></li>
-            <li>Or search for "Terminal" in applications</li>
-          </ul>
-          <Typography>
-            When you open the terminal, you see a <strong>prompt</strong>:
-          </Typography>
-          <CodeBlock language="bash">{`username@koompi:~$`}</CodeBlock>
-          <Typography>
-            This shows:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li><code>username</code> — Your user name</li>
-            <li><code>koompi</code> — Your computer's name</li>
-            <li><code>~</code> — Your current location (home directory)</li>
-            <li><code>$</code> — Ready for your command</li>
-          </ul>
-        </div>
-      </section>
-
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Basic Navigation Commands</Typography>
-          <Typography variant="h3">Your File System is a Tree</Typography>
-          <Typography>
-            Think of your files as a tree structure:
-          </Typography>
-          <CodeBlock language="text">{`/                    (root - the top)
-├── home/            (home directories)
-│   └── student/     (your home folder)
+      {/* File system tree */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">The File System Tree</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Linux organizes everything in a single tree starting at <code className="bg-stone-100 px-1 rounded text-xs font-mono">/</code> (root). Your personal files live in <code className="bg-stone-100 px-1 rounded text-xs font-mono">/home/your-username/</code>, abbreviated as <code className="bg-stone-100 px-1 rounded text-xs font-mono">~</code>.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Linux directory structure</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`/                      ← root — the very top
+├── home/              ← all user home folders
+│   └── student/       ← your home (~)
 │       ├── Documents/
 │       ├── Downloads/
 │       ├── Desktop/
-│       └── projects/
-├── etc/             (system configuration)
-├── usr/             (user programs)
-└── var/             (logs and data)`}</CodeBlock>
-
-          <Typography variant="h3">Navigation Commands</Typography>
-          
-          <Typography variant="h4"><code>pwd</code> — Print Working Directory</Typography>
-          <Typography>
-            Shows where you currently are.
-          </Typography>
-          <CodeBlock language="bash">{`$ pwd
-/home/student`}</CodeBlock>
-          <Typography>
-            <strong>Remember</strong>: pwd = "Present Working Directory"
-          </Typography>
-
-          <Typography variant="h4"><code>ls</code> — List</Typography>
-          <Typography>
-            Shows what's in the current directory.
-          </Typography>
-          <CodeBlock language="bash">{`$ ls
-Desktop Documents Downloads Music Pictures projects`}</CodeBlock>
-
-          <Typography variant="h3">Useful variations of <code>ls</code>:</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Command</TableHead>
-                <TableHead>What it does</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell><code>ls</code></TableCell>
-                <TableCell>List files and folders</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>ls -l</code></TableCell>
-                <TableCell>Long format (details)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>ls -a</code></TableCell>
-                <TableCell>Show hidden files (starting with .)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>ls -la</code></TableCell>
-                <TableCell>Both long format and hidden files</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-
-          <Typography variant="h4"><code>cd</code> — Change Directory</Typography>
-          <Typography>Move to a different folder.</Typography>
-          <CodeBlock language="bash">{`cd Documents # Go into Documents folder
-cd .. # Go up one level (parent folder)
-cd ~ # Go to your home folder
-cd / # Go to the root of the system`}</CodeBlock>
-
-          <Typography variant="h3">Path Types</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Example</TableHead>
-                <TableHead>Meaning</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell><strong>Absolute</strong></TableCell>
-                <TableCell><code>/home/student/Documents</code></TableCell>
-                <TableCell>Full path from root</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><strong>Relative</strong></TableCell>
-                <TableCell><code>Documents</code></TableCell>
-                <TableCell>Path from where you are now</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>..</code></TableCell>
-                <TableCell><code>cd ..</code></TableCell>
-                <TableCell>Parent directory</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>~</code></TableCell>
-                <TableCell><code>cd ~</code></TableCell>
-                <TableCell>Home directory</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+│       └── projects/  ← where we will put our code
+├── etc/               ← system configuration files
+├── usr/               ← installed programs
+└── var/               ← logs, temporary data`}</pre>
         </div>
       </section>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Working with Files and Folders</Typography>
-          
-          <Typography variant="h3">Creating Directories</Typography>
-          <Typography variant="h4"><code>mkdir</code> — Make Directory</Typography>
-          <CodeBlock language="bash">{`mkdir my_project # Create a folder called "my_project"
-mkdir -p projects/web/css # Create nested folders`}</CodeBlock>
+      {/* Navigation commands */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Navigation Commands</h2>
 
-          <Typography variant="h3">Creating Files</Typography>
-          <Typography variant="h4"><code>touch</code> — Create Empty File</Typography>
-          <CodeBlock language="bash">{`touch index.html # Create an empty file
-touch style.css script.js # Create multiple files`}</CodeBlock>
-
-          <Typography variant="h3">Viewing File Contents</Typography>
-          <Typography variant="h4"><code>cat</code> — Concatenate (Display File)</Typography>
-          <CodeBlock language="bash">{`cat index.html # Show file contents`}</CodeBlock>
-          <Typography variant="h4"><code>less</code> — View Long Files</Typography>
-          <Typography>Scroll through long files (press Q to exit).</Typography>
-          <CodeBlock language="bash">{`less long_file.txt`}</CodeBlock>
-
-          <Typography variant="h3">Copying, Moving, Removing</Typography>
-          
-          <Typography variant="h4"><code>cp</code> — Copy</Typography>
-          <CodeBlock language="bash">{`cp file.txt backup.txt # Copy file
-cp -r folder1 folder2 # Copy folder (recursive)`}</CodeBlock>
-
-          <Typography variant="h4"><code>mv</code> — Move (also Rename)</Typography>
-          <CodeBlock language="bash">{`mv old_name.txt new_name.txt # Rename a file
-mv file.txt Documents/ # Move file to Documents`}</CodeBlock>
-
-          <Typography variant="h4"><code>rm</code> — Remove (Delete)</Typography>
-          <CodeBlock language="bash">{`rm file.txt # Delete a file
-rm -r folder # Delete a folder and contents`}</CodeBlock>
-          <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl mb-6">
-            <Typography className="text-red-500 font-bold mb-0">
-              WARNING: There is NO undo for rm! Deleted files are gone forever.
-            </Typography>
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2"><code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">pwd</code> — Print Working Directory</h3>
+            <p className="text-sm text-muted-foreground mb-3">Shows the full path of the folder you are currently inside. Use this whenever you feel lost.</p>
+            <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+              <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+              <div className="px-5 py-4 space-y-1 leading-relaxed">
+                <div><span className="text-green-400">$</span> pwd</div>
+                <div className="text-stone-400">/home/student</div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Shortcuts & Speed</Typography>
-          <Typography variant="h3">Tab Completion — Your Best Friend</Typography>
-          <Typography>
-            Press <strong>Tab</strong> to auto-complete folder and file names:
-          </Typography>
-          <CodeBlock language="bash">{`cd Doc[TAB] # Completes to: cd Documents/`}</CodeBlock>
-          
-          <Typography variant="h3">Common Shortcuts</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Shortcut</TableHead>
-                <TableHead>Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell><code>Ctrl + C</code></TableCell>
-                <TableCell>Cancel current command</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>Ctrl + L</code></TableCell>
-                <TableCell>Clear screen</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>Up / Down Arrows</code></TableCell>
-                <TableCell>Navigate command history</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2"><code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">ls</code> — List</h3>
+            <p className="text-sm text-muted-foreground mb-3">Lists the files and folders in the current directory.</p>
+            <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+              <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+              <div className="px-5 py-4 space-y-1 leading-relaxed">
+                <div><span className="text-green-400">$</span> ls</div>
+                <div className="text-stone-400">Desktop  Documents  Downloads  Music  projects</div>
+                <div className="mt-2"><span className="text-green-400">$</span> ls -la</div>
+                <div className="text-stone-400">total 40</div>
+                <div className="text-stone-400">drwxr-xr-x  8 student student 4096 Apr 24 09:00 <span className="text-blue-400">.</span></div>
+                <div className="text-stone-400">drwxr-xr-x  3 root    root    4096 Apr 20 10:00 <span className="text-blue-400">..</span></div>
+                <div className="text-stone-400">-rw-r--r--  1 student student  220 Apr 20 10:00 .bashrc</div>
+                <div className="text-stone-400">drwxr-xr-x  2 student student 4096 Apr 23 14:30 <span className="text-blue-400">projects</span></div>
+              </div>
+            </div>
+            <div className="mt-3 overflow-x-auto rounded-xl border border-border">
+              <table className="w-full text-sm">
+                <thead className="bg-stone-50 border-b border-border">
+                  <tr>
+                    <th className="text-left px-4 py-2 font-medium text-foreground font-mono text-xs">Flag</th>
+                    <th className="text-left px-4 py-2 font-medium text-foreground">What it adds</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {[
+                    ["ls", "Simple list"],
+                    ["ls -l", "Long format: permissions, size, date"],
+                    ["ls -a", "Show hidden files (names start with .)"],
+                    ["ls -la", "Long format + hidden files"],
+                  ].map(([cmd, what]) => (
+                    <tr key={cmd} className="hover:bg-stone-50/50">
+                      <td className="px-4 py-2 font-mono text-xs text-foreground">{cmd}</td>
+                      <td className="px-4 py-2 text-muted-foreground">{what}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <div className="mt-20 pt-10 border-t border-white/5">
-            <Typography variant="h2">Module Summary</Typography>
-            <Typography variant="h3">Key Vocabulary</Typography>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>English</TableHead>
-                  <TableHead>Khmer</TableHead>
-                  <TableHead>Meaning</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Terminal</TableCell>
-                  <TableCell>ភិរម្យ (Terminal)</TableCell>
-                  <TableCell>Text-based interface to control computer</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Shell</TableCell>
-                  <TableCell>សែល (Shell)</TableCell>
-                  <TableCell>The program that interprets your commands</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Directory</TableCell>
-                  <TableCell>ថត (Directory)</TableCell>
-                  <TableCell>Another word for folder</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Path</TableCell>
-                  <TableCell>ផ្លូវ (Path)</TableCell>
-                  <TableCell>The location of a file or folder</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <Typography variant="h3">What You Learned</Typography>
-            <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-              <li>How the terminal differs from a GUI</li>
-              <li>Navigating the system with <code>cd</code>, <code>ls</code>, and <code>pwd</code></li>
-              <li>Creating and managing files/folders with <code>mkdir</code>, <code>touch</code>, <code>cp</code>, <code>mv</code>, and <code>rm</code></li>
-              <li>Using shortcuts like Tab completion to work faster</li>
-            </ul>
-            <div className="mt-12 p-8 glass-panel rounded-3xl text-center border border-white/5">
-              <Typography variant="h4" className="text-primary">Coming Next</Typography>
-              <Typography variant="lead" className="italic">Module 03 - File Management & Organization</Typography>
-              <Typography>You will learn best practices for organizing your files like a pro!</Typography>
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2"><code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">cd</code> — Change Directory</h3>
+            <p className="text-sm text-muted-foreground mb-3">Moves you into a different folder.</p>
+            <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+              <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+              <div className="px-5 py-4 space-y-1 leading-relaxed">
+                <div><span className="text-green-400">$</span> cd Documents         <span className="text-stone-500"># go into Documents</span></div>
+                <div><span className="text-green-400">$</span> cd ..                 <span className="text-stone-500"># go up one level</span></div>
+                <div><span className="text-green-400">$</span> cd ~                  <span className="text-stone-500"># go to home directory</span></div>
+                <div><span className="text-green-400">$</span> cd /                  <span className="text-stone-500"># go to root</span></div>
+                <div><span className="text-green-400">$</span> cd ~/projects/myapp   <span className="text-stone-500"># absolute path from home</span></div>
+              </div>
             </div>
           </div>
         </div>
       </section>
-    </div>
+
+      {/* Creating files and dirs */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Creating Files and Directories</h2>
+
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2"><code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">mkdir</code> — Make Directory</h3>
+            <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+              <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+              <div className="px-5 py-4 space-y-1 leading-relaxed">
+                <div><span className="text-green-400">$</span> mkdir my-project</div>
+                <div><span className="text-green-400">$</span> mkdir -p projects/web/css  <span className="text-stone-500"># -p creates nested folders</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2"><code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">touch</code> — Create an Empty File</h3>
+            <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+              <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+              <div className="px-5 py-4 space-y-1 leading-relaxed">
+                <div><span className="text-green-400">$</span> touch index.html</div>
+                <div><span className="text-green-400">$</span> touch style.css script.js  <span className="text-stone-500"># multiple files at once</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2"><code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">cat</code> — Display File Contents</h3>
+            <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+              <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+              <div className="px-5 py-4 space-y-1 leading-relaxed">
+                <div><span className="text-green-400">$</span> cat index.html</div>
+                <div className="text-stone-400">&lt;!DOCTYPE html&gt;</div>
+                <div className="text-stone-400">&lt;html lang="en"&gt; ...</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2"><code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">rm</code> — Remove (Delete)</h3>
+            <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+              <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+              <div className="px-5 py-4 space-y-1 leading-relaxed">
+                <div><span className="text-green-400">$</span> rm old-file.txt         <span className="text-stone-500"># delete a file</span></div>
+                <div><span className="text-green-400">$</span> rm -r old-folder/       <span className="text-stone-500"># delete a folder and all its contents</span></div>
+              </div>
+            </div>
+            <div className="mt-2 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+              <strong>Warning:</strong> <code className="bg-red-100 px-1 rounded text-xs font-mono">rm</code> is permanent. There is no Recycle Bin. Always double-check the path before pressing Enter.
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2"><code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">man</code> — Manual</h3>
+            <p className="text-sm text-muted-foreground mb-3">Shows the full documentation for any command. Press <kbd className="bg-stone-100 border border-stone-300 rounded px-1 py-0.5 text-xs font-mono">q</kbd> to exit.</p>
+            <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+              <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+              <div className="px-5 py-4 space-y-1 leading-relaxed">
+                <div><span className="text-green-400">$</span> man ls    <span className="text-stone-500"># manual page for ls</span></div>
+                <div><span className="text-green-400">$</span> man mkdir <span className="text-stone-500"># manual page for mkdir</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Speed tips */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Work Faster</h2>
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Shortcut</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">What it does</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[
+                ["Tab", "Auto-complete file/folder names — use this constantly"],
+                ["↑ / ↓ arrows", "Scroll through previous commands"],
+                ["Ctrl + C", "Cancel the current running command"],
+                ["Ctrl + L", "Clear the screen (same as typing clear)"],
+                ["Ctrl + A / E", "Jump to start / end of the current line"],
+              ].map(([key, action]) => (
+                <tr key={key} className="hover:bg-stone-50/50">
+                  <td className="px-4 py-3 font-mono text-xs text-foreground">{key}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{action}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Tab completion in action</div>
+          <div className="px-5 py-4 space-y-1 leading-relaxed">
+            <div><span className="text-green-400">$</span> cd Doc<span className="text-yellow-400">[Tab]</span></div>
+            <div className="text-stone-400">→ cd Documents/     (auto-completed!)</div>
+            <div className="mt-2"><span className="text-green-400">$</span> ls ~/pro<span className="text-yellow-400">[Tab]</span></div>
+            <div className="text-stone-400">→ ls ~/projects/</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick reference */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Quick Reference</h2>
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-foreground font-mono text-xs">Command</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Meaning</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Example</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[
+                ["pwd", "Print current directory", "pwd"],
+                ["ls", "List files", "ls -la"],
+                ["cd", "Change directory", "cd ~/projects"],
+                ["mkdir", "Make directory", "mkdir my-app"],
+                ["touch", "Create empty file", "touch index.html"],
+                ["cat", "Display file contents", "cat README.md"],
+                ["rm", "Remove file", "rm old.txt"],
+                ["rm -r", "Remove folder", "rm -r dist/"],
+                ["man", "Read manual", "man ls"],
+              ].map(([cmd, meaning, ex]) => (
+                <tr key={cmd} className="hover:bg-stone-50/50">
+                  <td className="px-4 py-3 font-mono text-xs text-foreground">{cmd}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{meaning}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{ex}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Knowledge check */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Knowledge Check</h2>
+        <p className="text-sm text-muted-foreground">
+          Which command shows what directory you are currently in?
+        </p>
+        <div className="flex flex-col gap-3">
+          {[
+            "ls",
+            "pwd",
+            "cd",
+            "cat",
+          ].map((opt) => (
+            <button
+              key={opt}
+              onClick={() => {
+                setSelected(opt);
+                if (opt === CORRECT) notifyChallengePassed(moduleId ?? "");
+              }}
+              className={cn(
+                "text-left px-5 py-3.5 rounded-xl border text-sm font-sans transition-all",
+                selected === opt
+                  ? opt === CORRECT
+                    ? "border-green-400 bg-green-50 text-green-800"
+                    : "border-red-300 bg-red-50 text-red-800"
+                  : "border-border hover:border-primary/40 hover:bg-primary/5 text-foreground"
+              )}
+            >
+              <code className="font-mono">{opt}</code>
+            </button>
+          ))}
+        </div>
+        {selected && selected !== CORRECT && (
+          <p className="text-sm text-red-600">Not quite — <code className="bg-stone-100 px-1 rounded text-xs font-mono">ls</code> lists files, <code className="bg-stone-100 px-1 rounded text-xs font-mono">cd</code> changes directories, <code className="bg-stone-100 px-1 rounded text-xs font-mono">cat</code> reads files. Which one <em>prints your location</em>?</p>
+        )}
+        {selected === CORRECT && (
+          <p className="text-sm text-green-700">Correct! <code className="bg-stone-100 px-1 rounded text-xs font-mono">pwd</code> stands for <strong>Print Working Directory</strong>. Run it any time you need to know where you are in the file system.</p>
+        )}
+      </section>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">Click <strong>Complete &amp; Next</strong> below to continue.</p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">Complete the challenge above to unlock the next lesson.</p>
+          </div>
+        )}
+      </section>
+
+    </article>
   );
 }

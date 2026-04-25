@@ -1,456 +1,290 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
-export default function Module02AsyncJavaScript() {
-  return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Asynchronous JavaScript</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 04: JavaScript Advanced</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Understand synchronous vs asynchronous code</li>
-            <li>Use callbacks and understand callback hell</li>
-            <li>Work with Promises</li>
-            <li>Master async/await syntax</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: Sync vs Async</Typography>
-          <Typography variant="h3">Synchronous Code</Typography>
-          <Typography>
-            Runs line by line, each waits for the previous:
-          </Typography>
-          <CodeBlock language="javascript">{`console.log("First");
+const EXPLORE_SYNC = `// Synchronous — runs line by line
+console.log("First");
 console.log("Second");
 console.log("Third");
-// Output:
-// First
-// Second
-// Third`}</CodeBlock>
-          <Typography variant="h3">Asynchronous Code</Typography>
-          <Typography>
-            Some operations don&apos;t wait:
-          </Typography>
-          <CodeBlock language="javascript">{`console.log("First");
+// Output: First, Second, Third (in order)`;
+
+const EXPLORE_PROMISES = `// Creating a Promise
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// .then / .catch chain
+delay(500)
+  .then(() => {
+    console.log("500ms passed");
+    return "next value";
+  })
+  .then(val => console.log("Chained:", val))
+  .catch(err => console.error("Error:", err))
+  .finally(() => console.log("Always runs"));`;
+
+const EXPLORE_ASYNC = `// async / await — reads like synchronous code
+function fakeRequest(value) {
+  return new Promise(resolve =>
+    setTimeout(() => resolve(value), 300)
+  );
+}
+
+async function loadData() {
+  console.log("Fetching...");
+  const result = await fakeRequest("Hello from server!");
+  console.log("Got:", result);
+
+  // Error handling
+  try {
+    const data = await fakeRequest("more data");
+    console.log("Also got:", data);
+  } catch (err) {
+    console.error("Failed:", err);
+  }
+}
+
+loadData();`;
+
+const CHALLENGE_STARTER = `// Write an async function called "wait" that:
+//  1. Uses "new Promise(resolve => setTimeout(resolve, 1000))" to pause for 1 second
+//  2. Logs "Done!" after the wait
+// Then call wait() to run it.
+
+async function wait() {
+  // your code here
+}
+
+wait();
+`;
+
+const challenge = {
+  prompt:
+    "Write an async function that uses `new Promise(resolve => setTimeout(resolve, 1000))` to wait 1 second. Your code must contain `async`, `await`, and `new Promise`.",
+  check(_html: string, _css: string, js: string) {
+    if (!/\basync\b/.test(js))
+      return { passed: false, message: "Your function needs the `async` keyword." };
+    if (!/\bawait\b/.test(js))
+      return { passed: false, message: "Use `await` to pause until the Promise resolves." };
+    if (!/new\s+Promise/.test(js))
+      return { passed: false, message: "Create the delay with `new Promise(resolve => setTimeout(resolve, 1000))`." };
+    return { passed: true, message: "Async/await mastered — you just wrote non-blocking code!" };
+  },
+};
+
+export default function Module02AsyncJavaScript() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
+  return (
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Header */}
+      <section className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary/60">
+          Track 04 · JavaScript Advanced
+        </p>
+        <h1 className="text-4xl font-serif text-foreground">Asynchronous JavaScript</h1>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          Almost everything that makes a web app interesting — fetching data, waiting for a user,
+          reading a file — is asynchronous. This lesson walks you through the event loop,
+          Promises, and the <code className="font-mono text-sm">async/await</code> syntax that makes
+          async code as readable as synchronous code.
+        </p>
+      </section>
+
+      {/* The Event Loop */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Why Async Exists</h2>
+        <p className="text-base text-muted-foreground">
+          JavaScript runs on a single thread. Without async, any slow operation — a network
+          request, a timer, a large computation — would freeze the entire page. The <em>event
+          loop</em> lets JavaScript hand slow work to the browser or Node.js, continue running
+          other code, then come back when the slow work is done.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Sync vs async execution
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`console.log("A");
+
 setTimeout(() => {
- console.log("Second");
-}, 2000);
-console.log("Third");
-// Output:
-// First
-// Third
-// Second (after 2 seconds)`}</CodeBlock>
-          <Typography variant="h3">Why Async Matters</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>ASYNC IS ESSENTIAL FOR:</li>
-            <li>• Fetching data from servers</li>
-            <li>• Reading/writing files</li>
-            <li>• User interactions</li>
-            <li>• Timers and animations</li>
-            <li>• Database operations</li>
-            <li>Without async, your app would FREEZE during these operations!</li>
-          </ul>
+  console.log("B — after 0 ms");
+}, 0);
+
+console.log("C");
+
+// Output: A, C, B
+// Even with 0 ms, setTimeout is async — B runs after the current call stack clears.`}</pre>
         </div>
+
+        <CodePlayground mode="js" starter={{ js: EXPLORE_SYNC }} height="160px" />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Callbacks</Typography>
-          <Typography variant="h3">What is a Callback?</Typography>
-          <Typography>
-            A function passed to another function to be called later:
-          </Typography>
-          <CodeBlock language="javascript">{`function greet(name, callback) {
- console.log(\`Hello, \${name}!\`);
- callback();
-}
-function sayGoodbye() {
- console.log("Goodbye!");
-}
-greet("Sokha", sayGoodbye);
-// Hello, Sokha!
-// Goodbye!`}</CodeBlock>
-          <Typography variant="h3">Async Callbacks</Typography>
-          <CodeBlock language="javascript">{`function fetchUser(userId, callback) {
- setTimeout(() => {
- const user = { id: userId, name: "Sokha" };
- callback(user);
- }, 1000);
-}
-fetchUser(1, (user) => {
- console.log(user); // { id: 1, name: "Sokha" }
-});`}</CodeBlock>
-          <Typography variant="h3">Callback Hell</Typography>
-          <Typography>
-            Nested callbacks become unreadable:
-          </Typography>
-          <CodeBlock language="javascript">{`getUser(userId, (user) => {
- getPosts(user.id, (posts) => {
- getComments(posts[0].id, (comments) => {
- getLikes(comments[0].id, (likes) => {
- // This is callback hell!
- console.log(likes);
- });
- });
- });
-});`}</CodeBlock>
-          <Typography>
-            This is why we have Promises!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Promises</Typography>
-          <Typography variant="h3">What is a Promise?</Typography>
-          <Typography>
-            A Promise represents a value that may be available now, later, or never.
-          </Typography>
-          <CodeBlock language="javascript">{`const promise = new Promise((resolve, reject) => {
- // Async operation
- setTimeout(() => {
- const success = true;
- if (success) {
- resolve("Data loaded!");
- } else {
- reject("Error loading data");
- }
- }, 1000);
-});`}</CodeBlock>
-          <Typography variant="h3">Promise States</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>PROMISE STATES</li>
-            <li>PENDING ► FULFILLED (resolved with value)</li>
-            <li>(waiting)</li>
-            <li>► REJECTED (rejected with error)</li>
-            <li>Once settled (fulfilled or rejected), cannot change</li>
-          </ul>
-          <Typography variant="h3">Using Promises</Typography>
-          <CodeBlock language="javascript">{`const promise = fetchData();
-promise
- .then(data => {
- console.log("Success:", data);
- })
- .catch(error => {
- console.log("Error:", error);
- })
- .finally(() => {
- console.log("Done (success or fail)");
- });`}</CodeBlock>
-          <Typography variant="h3">Chaining Promises</Typography>
-          <CodeBlock language="javascript">{`fetchUser(1)
- .then(user => {
- console.log(user);
- return fetchPosts(user.id);
- })
- .then(posts => {
- console.log(posts);
- return fetchComments(posts[0].id);
- })
- .then(comments => {
- console.log(comments);
- })
- .catch(error => {
- console.log("Error:", error);
- });`}</CodeBlock>
-          <Typography>
-            Much cleaner than callback hell!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Creating Promises</Typography>
-          <Typography variant="h3">Basic Promise</Typography>
-          <CodeBlock language="javascript">{`function delay(ms) {
- return new Promise(resolve => {
- setTimeout(resolve, ms);
- });
-}
-delay(2000).then(() => {
- console.log("2 seconds passed!");
-});`}</CodeBlock>
-          <Typography variant="h3">Promise with Data</Typography>
-          <CodeBlock language="javascript">{`function fetchUser(id) {
- return new Promise((resolve, reject) => {
- setTimeout(() => {
- if (id > 0) {
- resolve({ id, name: "Sokha" });
- } else {
- reject("Invalid ID");
- }
- }, 1000);
- });
-}
-fetchUser(1)
- .then(user => console.log(user))
- .catch(err => console.log(err));`}</CodeBlock>
-          <Typography variant="h3">Promise.all</Typography>
-          <Typography>
-            Wait for multiple promises:
-          </Typography>
-          <CodeBlock language="javascript">{`const promise1 = fetchUser(1);
-const promise2 = fetchUser(2);
-const promise3 = fetchUser(3);
-Promise.all([promise1, promise2, promise3])
- .then(users => {
- console.log(users); // Array of all users
- })
- .catch(error => {
- console.log("One failed:", error);
- });`}</CodeBlock>
-          <Typography variant="h3">Promise.race</Typography>
-          <Typography>
-            First to complete wins:
-          </Typography>
-          <CodeBlock language="javascript">{`Promise.race([
- fetchFromServer1(),
- fetchFromServer2()
-])
-.then(result => {
- console.log("First result:", result);
-});`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Async/Await</Typography>
-          <Typography variant="h3">The Modern Way</Typography>
-          <Typography>
-            Async/await makes async code look synchronous:
-          </Typography>
-          <CodeBlock language="javascript">{`// With Promises
-function getData() {
- return fetchUser(1)
- .then(user => fetchPosts(user.id))
- .then(posts => console.log(posts));
-}
-// With async/await
-async function getData() {
- const user = await fetchUser(1);
- const posts = await fetchPosts(user.id);
- console.log(posts);
-}`}</CodeBlock>
-          <Typography variant="h3">async Keyword</Typography>
-          <Typography>
-            Makes a function return a Promise:
-          </Typography>
-          <CodeBlock language="javascript">{`async function greet() {
- return "Hello!";
-}
-greet().then(message => console.log(message)); // "Hello!"`}</CodeBlock>
-          <Typography variant="h3">await Keyword</Typography>
-          <Typography>
-            Pauses execution until Promise resolves:
-          </Typography>
-          <CodeBlock language="javascript">{`async function loadData() {
- console.log("Loading...");
- const data = await fetchData(); // Waits here
- console.log("Data:", data);
- return data;
-}`}</CodeBlock>
-          <Typography variant="h3">Error Handling with try/catch</Typography>
-          <CodeBlock language="javascript">{`async function loadUser(id) {
- try {
- const user = await fetchUser(id);
- const posts = await fetchPosts(user.id);
- return { user, posts };
- } catch (error) {
- console.error("Failed:", error);
- throw error; // Re-throw if needed
- }
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Practical Examples</Typography>
-          <Typography variant="h3">Sequential vs Parallel</Typography>
-          <CodeBlock language="javascript">{`// Sequential - one after another (slower)
-async function sequential() {
- const user1 = await fetchUser(1); // Wait 1s
- const user2 = await fetchUser(2); // Wait 1s
- const user3 = await fetchUser(3); // Wait 1s
- // Total: 3 seconds
-}
-// Parallel - all at once (faster)
-async function parallel() {
- const [user1, user2, user3] = await Promise.all([
- fetchUser(1),
- fetchUser(2),
- fetchUser(3)
- ]);
- // Total: 1 second (all run together)
-}`}</CodeBlock>
-          <Typography variant="h3">Loading Indicator</Typography>
-          <CodeBlock language="javascript">{`async function loadDataWithUI() {
- const loadingDiv = document.getElementById("loading");
- const contentDiv = document.getElementById("content");
- try {
- loadingDiv.style.display = "block";
- contentDiv.style.display = "none";
- const data = await fetchData();
- contentDiv.innerHTML = renderData(data);
- contentDiv.style.display = "block";
- } catch (error) {
- contentDiv.innerHTML = \`<p class="error">\${error.message}</p>\`;
- contentDiv.style.display = "block";
- } finally {
- loadingDiv.style.display = "none";
- }
-}`}</CodeBlock>
-          <Typography variant="h3">Retry Logic</Typography>
-          <CodeBlock language="javascript">{`async function fetchWithRetry(url, maxRetries = 3) {
- for (let i = 0; i < maxRetries; i++) {
- try {
- const response = await fetch(url);
- return await response.json();
- } catch (error) {
- console.log(\`Attempt \${i + 1} failed\`);
- if (i === maxRetries - 1) throw error;
- await delay(1000); // Wait before retry
- }
- }
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Common Patterns</Typography>
-          <Typography variant="h3">Async in Array Methods</Typography>
-          <CodeBlock language="javascript">{`// WRONG - forEach doesn't wait
-urls.forEach(async url => {
- await fetch(url); // These run in parallel, not sequential
+
+      {/* Callbacks */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Callbacks (Brief)</h2>
+        <p className="text-base text-muted-foreground">
+          The original async pattern: pass a function to be called later. Simple for single
+          operations, but deeply nested callbacks become unreadable — the so-called
+          "callback hell."
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Callback hell — why we moved on
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`getUser(id, (user) => {
+  getPosts(user.id, (posts) => {
+    getComments(posts[0].id, (comments) => {
+      getLikes(comments[0].id, (likes) => {
+        // Four levels deep — and this is still simple!
+        console.log(likes);
+      });
+    });
+  });
 });
-// RIGHT - for...of for sequential
-for (const url of urls) {
- await fetch(url);
+
+// Promises and async/await solve this.`}</pre>
+        </div>
+      </section>
+
+      {/* Promises */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Promises</h2>
+        <p className="text-base text-muted-foreground">
+          A Promise is an object that represents a value which may arrive now, later, or never.
+          It has three states: <em>pending</em>, <em>fulfilled</em>, or <em>rejected</em>.
+          Once settled it never changes state.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Creating and consuming a Promise
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`// Create
+function fetchUser(id) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (id > 0) resolve({ id, name: "Sokha" });
+      else reject(new Error("Invalid ID"));
+    }, 1000);
+  });
 }
-// RIGHT - Promise.all for parallel
-await Promise.all(urls.map(url => fetch(url)));`}</CodeBlock>
-          <Typography variant="h3">Immediately Invoked Async Function</Typography>
-          <CodeBlock language="javascript">{`(async () => {
- const data = await fetchData();
- console.log(data);
-})();`}</CodeBlock>
-          <Typography variant="h3">Top-Level Await (ES2022+)</Typography>
-          <Typography>
-            In modules, you can use await at the top level:
-          </Typography>
-          <CodeBlock language="javascript">{`// In a module file
-const data = await fetchData();
-export { data };`}</CodeBlock>
+
+// Consume — .then / .catch chain
+fetchUser(1)
+  .then(user => {
+    console.log(user);         // { id: 1, name: "Sokha" }
+    return user.name;          // passes to next .then
+  })
+  .then(name => console.log("Name:", name))
+  .catch(err => console.error("Oops:", err.message))
+  .finally(() => console.log("Request finished"));
+
+// Run multiple in parallel
+Promise.all([fetchUser(1), fetchUser(2), fetchUser(3)])
+  .then(([u1, u2, u3]) => console.log(u1, u2, u3));`}</pre>
         </div>
+
+        <CodePlayground mode="js" starter={{ js: EXPLORE_PROMISES }} height="280px" />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Convert Callback to Promise</Typography>
-          <Typography>
-            Convert this callback-based function to return a Promise:
-          </Typography>
-          <CodeBlock language="javascript">{`function loadData(callback) {
- setTimeout(() => {
- callback({ name: "Data" });
- }, 1000);
-}`}</CodeBlock>
-          <Typography variant="h3">Exercise 2: Promise Chain</Typography>
-          <Typography>
-            Create a promise chain that:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Fetches a user</li>
-            <li>Fetches their posts</li>
-            <li>Fetches comments on first post</li>
-            <li>Logs the comments</li>
-          </ul>
-          <Typography variant="h3">Exercise 3: Async/Await Conversion</Typography>
-          <Typography>
-            Convert the promise chain from Exercise 2 to async/await.
-          </Typography>
-          <Typography variant="h3">Exercise 4: Parallel Loading</Typography>
-          <Typography>
-            Load 3 different data sources in parallel using Promise.all.
-          </Typography>
-          <Typography variant="h3">Exercise 5: Error Handling</Typography>
-          <Typography>
-            Add proper error handling to the async function with user feedback.
-          </Typography>
+
+      {/* Async/await */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">async / await</h2>
+        <p className="text-base text-muted-foreground">
+          The <code className="font-mono text-sm">async</code> keyword makes a function return a
+          Promise. Inside it, <code className="font-mono text-sm">await</code> pauses execution
+          until the awaited Promise settles — without blocking the main thread.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            The modern pattern
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`// Promise chain version
+function loadData() {
+  return fetchUser(1)
+    .then(user => fetchPosts(user.id))
+    .then(posts => console.log(posts));
+}
+
+// async/await version — same logic, easier to read
+async function loadData() {
+  const user  = await fetchUser(1);
+  const posts = await fetchPosts(user.id);
+  console.log(posts);
+}
+
+// Error handling with try/catch
+async function safeLoad(id) {
+  try {
+    const user = await fetchUser(id);
+    return user;
+  } catch (err) {
+    console.error("Failed:", err.message);
+    throw err; // re-throw if the caller needs to know
+  }
+}
+
+// Sequential vs parallel
+async function sequential() {
+  const a = await fetch("/one");   // waits
+  const b = await fetch("/two");   // then waits again → slower
+}
+
+async function parallel() {
+  const [a, b] = await Promise.all([fetch("/one"), fetch("/two")]); // both at once
+}`}</pre>
         </div>
+
+        <CodePlayground mode="js" starter={{ js: EXPLORE_ASYNC }} height="300px" />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Concept</TableHead>
-                <TableHead>Syntax</TableHead>
-                <TableHead>Use Case</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Callback</TableCell>
-                <TableCell>fn(callback)</TableCell>
-                <TableCell>Legacy, simple cases</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Promise</TableCell>
-                <TableCell>.then().catch()</TableCell>
-                <TableCell>Chained async</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>async/await</TableCell>
-                <TableCell>async/await</TableCell>
-                <TableCell>Modern, readable</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Promise.all</TableCell>
-                <TableCell>Promise.all([])</TableCell>
-                <TableCell>Parallel execution</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
+
+      {/* Challenge */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Challenge</h2>
+        <p className="text-base text-muted-foreground">
+          Write an async function called <code className="font-mono text-sm">wait</code> that
+          creates a real 1-second delay using{" "}
+          <code className="font-mono text-sm">{"new Promise(resolve => setTimeout(resolve, 1000))"}</code>,
+          awaits it, then logs <code className="font-mono text-sm">"Done!"</code>.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{ js: CHALLENGE_STARTER }}
+          height="220px"
+          challenge={challenge}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Coming Next: Module 04 - Working with APIs
-          </Typography>
-          <Typography>
-            You will learn to fetch real data from web APIs!
-          </Typography>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            Async unlocks the web!
-          </Typography>
-          <Typography>
-            Almost everything interesting is asynchronous.
-          </Typography>
-        </div>
-      </section>
-    </div>
+
+    </article>
   );
 }

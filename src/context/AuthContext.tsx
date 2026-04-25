@@ -1,152 +1,71 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { authApi } from '../lib/api';
-import { toast } from 'sonner';
-import { formatStudentDate } from '../lib/dateUtils';
-
-export interface User {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role?: string;
-  updatedAt?: string;
-  lastLogin?: string;
-}
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { getKidAuth, getStoredUser, getStoredToken, clearSession, KIDUser } from "../lib/kidAuth";
+import { toast } from "sonner";
 
 interface AuthContextType {
-  user: User | null;
+  user: KIDUser | null;
   loading: boolean;
-  isAuthModalOpen: boolean;
-  signIn: (data: any) => Promise<void>;
-  signUp: (data: any) => Promise<void>;
-  signOut: () => Promise<void>;
-  openAuthModal: (action?: () => void) => void;
-  closeAuthModal: () => void;
+  login: () => Promise<void>;
+  logout: () => void;
+  refreshUser: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<KIDUser | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
 
   useEffect(() => {
-    const initializeAuth = () => {
-      const savedUser = localStorage.getItem('auth_user');
-      const savedToken = localStorage.getItem('auth_token');
+    // Restore session from localStorage on mount
+    const stored = getStoredUser();
+    if (stored) setUser(stored);
+    setLoading(false);
 
-      if (savedUser && savedToken) {
-        try {
-          setUser(JSON.parse(savedUser));
-        } catch (e) {
-          console.error("Failed to parse user data", e);
-          localStorage.removeItem('auth_user');
-          localStorage.removeItem('auth_token');
-        }
-      }
-      setLoading(false);
+    // Listen for cross-tab logout
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "kid_user" && !e.newValue) setUser(null);
     };
-
-    initializeAuth();
-
-    // Listen for cross-component auth changes (e.g. 401 errors)
-    const handleAuthChange = () => {
-      setUser(null);
-    };
-
-    window.addEventListener('auth-status-changed', handleAuthChange);
-    return () => window.removeEventListener('auth-status-changed', handleAuthChange);
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  const signIn = async (data: any) => {
+  const login = async () => {
     try {
-      const response = await authApi.signIn(data);
-      if (response.token && response.students) {
-        localStorage.setItem('auth_token', response.token);
-        localStorage.setItem('auth_user', JSON.stringify(response.students));
-        setUser(response.students);
-        toast.success("Welcome back!");
-        
-        // Execute pending action if it exists
-        if (pendingAction) {
-          pendingAction();
-          setPendingAction(null);
-        }
-        setIsAuthModalOpen(false);
-      }
-    } catch (error: any) {
-      toast.error(error.message || "Login failed");
-      throw error;
+      const auth = getKidAuth();
+      const url = await auth.createLoginUrl({ scope: ["profile.basic", "profile.contact"] });
+      window.location.href = url;
+    } catch (err) {
+      toast.error("Could not reach KOOMPI ID. Please try again.");
     }
   };
 
-  const signUp = async (data: any) => {
-    try {
-      const response = await authApi.signUp(data);
-      if (response.token && response.students) {
-        localStorage.setItem('auth_token', response.token);
-        localStorage.setItem('auth_user', JSON.stringify(response.students));
-        setUser(response.students);
-        toast.success("Account created successfully!");
-
-        // Execute pending action if it exists
-        if (pendingAction) {
-          pendingAction();
-          setPendingAction(null);
-        }
-        setIsAuthModalOpen(false);
-      }
-    } catch (error: any) {
-      toast.error(error.message || "Registration failed");
-      throw error;
-    }
+  const refreshUser = () => {
+    setUser(getStoredUser());
   };
 
-  const signOut = async () => {
-    try {
-      await authApi.signOut();
-    } catch (error) {
-      console.error("Logout failed at server, cleaning up local state", error);
-    } finally {
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('auth_user');
-      setUser(null);
-      toast.info("Logged out successfully");
-    }
-  };
-
-  const openAuthModal = (action?: () => void) => {
-    if (action) setPendingAction(() => action);
-    setIsAuthModalOpen(true);
-  };
-
-  const closeAuthModal = () => {
-    setIsAuthModalOpen(false);
-    setPendingAction(null);
+  const logout = () => {
+    clearSession();
+    setUser(null);
+    toast.success("Signed out.");
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      loading, 
-      isAuthModalOpen, 
-      signIn, 
-      signUp, 
-      signOut, 
-      openAuthModal, 
-      closeAuthModal 
-    }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
+}
+
+// Expose setUser so the callback page can push user in without re-mounting
+export function useAuthSetter() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuthSetter must be used within AuthProvider");
+  return ctx;
 }

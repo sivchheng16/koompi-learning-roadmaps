@@ -1,517 +1,237 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Module01Introduction() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Introduction to React</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Hook */}
+      <section className="space-y-4">
+        <div className="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold tracking-wide uppercase">
+          Module 01 — React Fundamentals
+        </div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          Introduction to React
+        </h1>
+        <p className="text-lg text-muted-foreground leading-relaxed">
+          React is the JavaScript library that powers Facebook, Instagram, Netflix,
+          Airbnb, and Notion. Instead of manually updating the DOM one piece at a
+          time, you describe what the UI should look like — React figures out the
+          minimum set of changes needed. In this lesson you'll understand why React
+          exists and write your first component.
+        </p>
+        <div className="grid grid-cols-3 gap-4 pt-2">
+          {[
+            { label: "Components", desc: "Reusable pieces of UI" },
+            { label: "Declarative", desc: "Describe what, not how" },
+            { label: "Virtual DOM", desc: "Only updates what changed" },
+          ].map(({ label, desc }) => (
+            <div
+              key={label}
+              className="rounded-xl border border-border bg-stone-50 px-4 py-3 text-center"
+            >
+              <p className="font-mono font-bold text-foreground">{label}</p>
+              <p className="text-xs text-muted-foreground mt-1">{desc}</p>
+            </div>
+          ))}
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 06: React Fundamentals</Typography>
+
+      {/* Concept */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">JSX — HTML inside JavaScript</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          React uses <strong>JSX</strong> — a syntax that looks like HTML but lives inside a
+          JavaScript function. The browser never sees JSX directly; a tool called Babel
+          compiles it to regular <code className="font-mono bg-stone-100 px-1 rounded">React.createElement()</code> calls.
+          A few JSX rules differ from HTML:
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-2 pr-6 font-semibold text-foreground">HTML</th>
+                <th className="text-left py-2 font-semibold text-foreground">JSX equivalent</th>
+              </tr>
+            </thead>
+            <tbody className="text-muted-foreground">
+              <tr className="border-b border-border/50">
+                <td className="py-2 pr-6 font-mono">class="container"</td>
+                <td className="py-2 font-mono">className="container"</td>
+              </tr>
+              <tr className="border-b border-border/50">
+                <td className="py-2 pr-6 font-mono">&lt;br&gt;</td>
+                <td className="py-2 font-mono">&lt;br /&gt; (must self-close)</td>
+              </tr>
+              <tr className="border-b border-border/50">
+                <td className="py-2 pr-6 font-mono">onclick="fn()"</td>
+                <td className="py-2 font-mono">onClick={"{fn}"}</td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-6 font-mono">for="email"</td>
+                <td className="py-2 font-mono">htmlFor="email"</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Understand what React is and why it&apos;s popular</li>
-            <li>Set up a React development environment</li>
-            <li>Understand JSX syntax</li>
-            <li>Create your first React component</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: What is React?</Typography>
-          <Typography variant="h3">React Defined</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>WHAT IS REACT?</li>
-            <li>React is a JavaScript LIBRARY for building user interfaces.</li>
-            <li>Created by: Facebook (2013)</li>
-            <li>Used by: Instagram, Facebook, Netflix, Airbnb, Discord, Notion</li>
-            <li>KEY CONCEPTS:</li>
-            <li>COMPONENTS</li>
-            <li>Build UI from small, reusable pieces</li>
-            <li>DECLARATIVE</li>
-            <li>Describe WHAT you want, not HOW to do it</li>
-            <li>VIRTUAL DOM</li>
-            <li>Only updates what changed (fast!)</li>
-            <li>ONE-WAY DATA FLOW</li>
-            <li>Data flows from parent to child</li>
-          </ul>
-          <Typography variant="h3">Why React?</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Benefit</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Component-Based</TableCell>
-                <TableCell>Break UI into reusable pieces</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Fast Updates</TableCell>
-                <TableCell>Virtual DOM minimizes real DOM changes</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Large Ecosystem</TableCell>
-                <TableCell>Tons of libraries and tools</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Job Market</TableCell>
-                <TableCell>#1 most wanted frontend skill</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Learn Once</TableCell>
-                <TableCell>Use for web, mobile (React Native)</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Setting Up</Typography>
-          <Typography variant="h3">Create a React App with Vite</Typography>
-          <Typography>
-            Vite is fast and modern:
-          </Typography>
-          <CodeBlock language="bash">{`# Create new project
-npm create vite@latest my-react-app -- --template react
-# Navigate to project
-cd my-react-app
-# Install dependencies
-npm install
-# Start development server
-npm run dev`}</CodeBlock>
-          <Typography variant="h3">Project Structure</Typography>
-          <CodeBlock language="text">{`my-react-app/
-├── node_modules/
-├── public/
-│ └── vite.svg
-├── src/
-│ ├── assets/
-│ ├── App.css
-│ ├── App.jsx ← Main component
-│ ├── index.css
-│ └── main.jsx ← Entry point
-├── index.html
-├── package.json
-└── vite.config.js`}</CodeBlock>
-          <Typography variant="h3">Key Files</Typography>
-          <Typography>
-            main.jsx - Entry point:
-          </Typography>
-          <CodeBlock language="jsx">{`import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-ReactDOM.createRoot(document.getElementById('root')).render(
- <React.StrictMode>
- <App />
- </React.StrictMode>,
-)`}</CodeBlock>
-          <Typography>
-            App.jsx - Main component:
-          </Typography>
-          <CodeBlock language="jsx">{`function App() {
- return (
- <div>
- <h1>Hello React!</h1>
- </div>
- )
-}
-export default App`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Understanding JSX</Typography>
-          <Typography variant="h3">What is JSX?</Typography>
-          <Typography>
-            JSX = JavaScript XML
-          </Typography>
-          <Typography>
-            It lets you write HTML-like code in JavaScript:
-          </Typography>
-          <CodeBlock language="jsx">{`// This is JSX
-const element = <h1>Hello, World!</h1>;
-// It compiles to:
-const element = React.createElement('h1', null, 'Hello, World!');`}</CodeBlock>
-          <Typography variant="h3">JSX Rules</Typography>
-          <CodeBlock language="jsx">{`// 1. Single Root Element
-// Wrong
-return (
- <h1>Title</h1>
- <p>Content</p>
-)
-// Correct
-return (
- <div>
- <h1>Title</h1>
- <p>Content</p>
- </div>
-)
-// Or use Fragment
-return (
- <>
- <h1>Title</h1>
- <p>Content</p>
- </>
-)`}</CodeBlock>
-          <CodeBlock language="jsx">{`// 2. Close All Tags
-<br /> // Self-closing
-<img /> // Self-closing
-<div></div> // Paired`}</CodeBlock>
-          <CodeBlock language="jsx">{`// 3. className instead of class
-<div className="container"> // 
-<div class="container"> // `}</CodeBlock>
-          <CodeBlock language="jsx">{`// 4. camelCase for attributes
-<button onClick={handleClick}> // 
-<button onclick={handleClick}> // 
-<label htmlFor="email"> // 
-<label for="email"> // `}</CodeBlock>
-          <Typography variant="h3">JavaScript in JSX</Typography>
-          <Typography>
-            Use curly braces {} for JavaScript:
-          </Typography>
-          <CodeBlock language="jsx">{`const name = "Sokha";
-const items = ["Apple", "Banana", "Orange"];
-function App() {
- return (
- <div>
- {/* Variables */}
- <h1>Hello, {name}!</h1>
- {/* Expressions */}
- <p>2 + 2 = {2 + 2}</p>
- {/* Function calls */}
- <p>Uppercase: {name.toUpperCase()}</p>
- {/* Ternary */}
- <p>{name ? \`Welcome, \${name}\` : 'Please log in'}</p>
- {/* Lists */}
- <ul>
- {items.map(item => <li key={item}>{item}</li>)}
- </ul>
- </div>
- );
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Creating Components</Typography>
-          <Typography variant="h3">Function Components</Typography>
-          <CodeBlock language="jsx">{`// Simple component
-function Welcome() {
- return <h1>Welcome to React!</h1>;
-}
-// With arrow function
-const Welcome = () => {
- return <h1>Welcome to React!</h1>;
-};
-// Shorthand (implicit return)
-const Welcome = () => <h1>Welcome to React!</h1>;`}</CodeBlock>
-          <Typography variant="h3">Using Components</Typography>
-          <CodeBlock language="jsx">{`function App() {
- return (
- <div>
- <Welcome />
- <Welcome />
- <Welcome />
- </div>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">Component with Logic</Typography>
-          <CodeBlock language="jsx">{`function Greeting() {
- const hour = new Date().getHours();
- let greeting;
- if (hour < 12) {
- greeting = "Good morning";
- } else if (hour < 18) {
- greeting = "Good afternoon";
- } else {
- greeting = "Good evening";
- }
- return <h1>{greeting}!</h1>;
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Component Organization</Typography>
-          <Typography variant="h3">One Component Per File</Typography>
-          <CodeBlock language="jsx">{`// components/Header.jsx
-function Header() {
- return (
- <header>
- <h1>My App</h1>
- <nav>
- <a href="/">Home</a>
- <a href="/about">About</a>
- </nav>
- </header>
- );
-}
-export default Header;`}</CodeBlock>
-          <CodeBlock language="jsx">{`// components/Footer.jsx
-function Footer() {
- return (
- <footer>
- <p>&copy; 2024 KOOMPI</p>
- </footer>
- );
-}
-export default Footer;`}</CodeBlock>
-          <CodeBlock language="jsx">{`// App.jsx
-import Header from './components/Header';
-import Footer from './components/Footer';
-function App() {
- return (
- <div>
- <Header />
- <main>
- <p>Main content here</p>
- </main>
- <Footer />
- </div>
- );
-}
-export default App;`}</CodeBlock>
-          <Typography variant="h3">Project Structure</Typography>
-          <CodeBlock language="text">{`src/
-├── components/
-│ ├── Header.jsx
-│ ├── Footer.jsx
-│ ├── Button.jsx
-│ └── Card.jsx
-├── pages/
-│ ├── Home.jsx
-│ └── About.jsx
-├── App.jsx
-└── main.jsx`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Styling Components</Typography>
-          <Typography variant="h3">CSS Files</Typography>
-          <CodeBlock language="jsx">{`// Button.jsx
-import './Button.css';
-function Button({ children }) {
- return <button className="btn">{children}</button>;
-}`}</CodeBlock>
-          <CodeBlock language="css">{`/* Button.css */
-.btn {
- padding: 10px 20px;
- background: #3498db;
- color: white;
- border: none;
- border-radius: 5px;
- cursor: pointer;
-}
-.btn:hover {
- background: #2980b9;
-}`}</CodeBlock>
-          <Typography variant="h3">Inline Styles</Typography>
-          <CodeBlock language="jsx">{`function Card() {
- const cardStyle = {
- backgroundColor: 'white',
- padding: '20px',
- borderRadius: '10px',
- boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
- };
- return (
- <div style={cardStyle}>
- <h2>Card Title</h2>
- </div>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">CSS Modules</Typography>
-          <CodeBlock language="jsx">{`// Button.module.css
-.button {
- padding: 10px 20px;
-}
-// Button.jsx
-import styles from './Button.module.css';
-function Button() {
- return <button className={styles.button}>Click</button>;
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Your First React App</Typography>
-          <Typography variant="h3">Create a Simple Greeting App</Typography>
-          <CodeBlock language="jsx">{`// App.jsx
-import './App.css';
-function Header() {
- return (
- <header className="header">
- <h1> Welcome to Cambodia</h1>
- </header>
- );
-}
-function Greeting() {
- const name = "KOOMPI Apprentice";
- const hour = new Date().getHours();
- let timeGreeting;
- if (hour < 12) timeGreeting = "Good morning";
- else if (hour < 18) timeGreeting = "Good afternoon";
- else timeGreeting = "Good evening";
- return (
- <div className="greeting">
- <h2>{timeGreeting}, {name}!</h2>
- <p>Welcome to your React journey.</p>
- </div>
- );
-}
-function Features() {
- const features = [
- "Component-based architecture",
- "Virtual DOM for fast updates",
- "Rich ecosystem",
- "Great developer experience"
- ];
- return (
- <div className="features">
- <h3>Why React?</h3>
- <ul>
- {features.map((feature, index) => (
- <li key={index}>{feature}</li>
- ))}
- </ul>
- </div>
- );
-}
-function Footer() {
- return (
- <footer className="footer">
- <p>Built with React </p>
- </footer>
- );
-}
-function App() {
- return (
- <div className="app">
- <Header />
- <main>
- <Greeting />
- <Features />
- </main>
- <Footer />
- </div>
- );
-}
-export default App;`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Setup</Typography>
-          <Typography>
-            Create a new React project with Vite and run it.
-          </Typography>
-          <Typography variant="h3">Exercise 2: JSX Practice</Typography>
-          <Typography>
-            Create a component that displays:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Your name</li>
-            <li>A list of 3 hobbies</li>
-            <li>The current date</li>
-          </ul>
-          <Typography variant="h3">Exercise 3: Multiple Components</Typography>
-          <Typography>
-            Create these components in separate files:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Header.jsx</li>
-            <li>Main.jsx</li>
-            <li>Footer.jsx</li>
-          </ul>
-          <Typography>
-            Import and use them in App.jsx.
-          </Typography>
-          <Typography variant="h3">Exercise 4: Styling</Typography>
-          <Typography>
-            Add CSS to make your components look nice.
-          </Typography>
-          <Typography variant="h3">Exercise 5: Dynamic Content</Typography>
-          <Typography>
-            Create a component that shows different content based on the time of day.
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Concept</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>React</TableCell>
-                <TableCell>Library for building UIs</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Component</TableCell>
-                <TableCell>Reusable piece of UI</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>JSX</TableCell>
-                <TableCell>HTML-like syntax in JavaScript</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Vite</TableCell>
-                <TableCell>Fast build tool</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>{}</TableCell>
-                <TableCell>JavaScript expressions in JSX</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Coming Next: Module 03 - Components &amp; Props
-          </Typography>
-          <Typography>
-            You will learn to pass data between components!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            You&apos;re now a React developer!
-          </Typography>
-          <Typography>
-            Components are the building blocks.
-          </Typography>
-        </div>
-      </section>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Your first component</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          A React component is just a JavaScript function that returns JSX. The name must
+          start with a capital letter. React auto-mounts an <code className="font-mono bg-stone-100 px-1 rounded">App</code> component
+          at the root of the page — so every app starts there.
+        </p>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`function App() {
+  return (
+    <div>
+      <h1>Hello, Cambodia! 🇰🇭</h1>
+      <p>Built with React.</p>
     </div>
+  );
+}`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">The Virtual DOM</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          When state changes, React doesn't re-draw the whole page. It computes a
+          diff between the old Virtual DOM (a lightweight copy) and the new one,
+          then applies only the minimal changes to the real DOM. That's why React
+          apps feel fast even with complex UIs.
+        </p>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          {[
+            "State changes → React re-renders the component in memory",
+            "React diffs the previous and next Virtual DOM trees",
+            "Only the changed nodes are updated in the real browser DOM",
+            "Result: fewer repaints, smoother user experience",
+          ].map((item) => (
+            <li key={item} className="flex items-start gap-2">
+              <CheckCircle2 size={15} className="text-blue-500 mt-0.5 shrink-0" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Example */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Live example — try editing it</h2>
+        <p className="text-sm text-muted-foreground">
+          The playground runs React 18 in the browser. The preview updates as you type.
+          Try changing the text inside the tags.
+        </p>
+        <CodePlayground
+          mode="react"
+          starter={{
+            js: `function App() {
+  return (
+    <div style={{ fontFamily: "system-ui", padding: "24px" }}>
+      <h1 style={{ color: "#2563eb" }}>Hello from React!</h1>
+      <p style={{ color: "#555" }}>
+        I am a component. Edit me in the JS panel.
+      </p>
+      <ul>
+        <li>Components are reusable</li>
+        <li>JSX looks like HTML</li>
+        <li>className instead of class</li>
+      </ul>
+    </div>
+  );
+}`,
+          }}
+        />
+      </section>
+
+      {/* Try it */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Try it yourself</h2>
+        <p className="text-sm text-muted-foreground">
+          Modify the starter below. Add a second paragraph with your name inside it.
+          Remember: one root element wrapping everything, <code className="font-mono bg-stone-100 px-1 rounded">className</code> not <code className="font-mono bg-stone-100 px-1 rounded">class</code>.
+        </p>
+        <CodePlayground
+          mode="react"
+          starter={{
+            js: `function App() {
+  return (
+    <div style={{ fontFamily: "system-ui", padding: "24px" }}>
+      <h1>My React Page</h1>
+      {/* Add a <p> with your name below */}
+    </div>
+  );
+}`,
+          }}
+        />
+      </section>
+
+      {/* Challenge */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Challenge</h2>
+        <p className="text-sm text-muted-foreground">
+          Write an <code className="font-mono bg-stone-100 px-1 rounded">App</code> component that returns a{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">&lt;div&gt;</code> containing both an{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">&lt;h1&gt;</code> (your page title) and a{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">&lt;p&gt;</code> (a short description). Both elements
+          must be present inside a single root element.
+        </p>
+        <CodePlayground
+          mode="react"
+          starter={{
+            js: `// Define your App component here.
+// It must return a <div> with an <h1> and a <p> inside.
+function App() {
+  return (
+    <div>
+      {/* your content */}
+    </div>
+  );
+}`,
+          }}
+          challenge={{
+            prompt:
+              "Return a <div> containing an <h1> and a <p> from your App component.",
+            check(_html, _css, js) {
+              if (!js.includes("function App") && !js.includes("const App"))
+                return { passed: false, message: "Define a component named App." };
+              if (!js.includes("<h1"))
+                return { passed: false, message: "Add an <h1> element inside App." };
+              if (!js.includes("<p"))
+                return { passed: false, message: "Add a <p> element inside App." };
+              return { passed: true, message: "Nice work — your first React component is complete!" };
+            },
+          }}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
+      </section>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
+      </section>
+    </article>
   );
 }

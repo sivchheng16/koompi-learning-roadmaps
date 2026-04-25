@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ContactForm } from "@/components/ContactForm";
 import { categories } from "@/constants";
-import NavbarMobile from "@/components/NavbarMobile";
 
 const services = [
   {
@@ -126,7 +125,6 @@ export default function Services() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pt-32 relative overflow-hidden">
-      <NavbarMobile />
       {/* Background Mesh Gradients */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-[5%] right-[10%] w-[50vw] h-[50vw] bg-primary/5 blur-[120px] rounded-full opacity-40" />
@@ -579,7 +577,7 @@ export default function Services() {
                 >
                   <div className="space-y-12">
                     <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed font-sans italic opacity-70">
-                      Collaborate with the KOOMPI technical department to architect exceptional digital experiences. KOOMPI OS continues to evolve for the future of regional development.
+                      Collaborate with the KOOMPI technical department to architect exceptional digital experiences. KOOMPI Academy continues to evolve for the future of regional development.
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">

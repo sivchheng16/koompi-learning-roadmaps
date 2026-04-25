@@ -5,18 +5,18 @@ import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '.
 
 export default function Introduction() {
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
+    <article className="max-w-3xl mx-auto font-sans space-y-10">
+      <div>
+        <div>
           <Typography variant="h1">Introduction: Foundation</Typography>
           <Typography variant="lead">
             Building the essential digital skills required for a career in software engineering.
           </Typography>
         </div>
-      </section>
+      </div>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
+      <div>
+        <div>
           <Typography variant="h2">Level Overview</Typography>
           <Typography>
             Before diving into web development, it is crucial to master the tools of the trade. This level covers the absolute basics of operating systems, typing, and professional file management.
@@ -30,10 +30,10 @@ export default function Introduction() {
             <li>File Management & Organization</li>
           </ul>
         </div>
-      </section>
+      </div>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
+      <div>
+        <div>
           <Typography variant="h2">Learning Objectives</Typography>
           <Typography>
             By completing this level, you will:
@@ -45,10 +45,10 @@ export default function Introduction() {
             <li>Achieve a typing speed of 30+ WPM to ensure productivity</li>
           </ul>
         </div>
-      </section>
+      </div>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
+      <div>
+        <div>
           <Typography variant="h2">Module Index</Typography>
           <Table>
             <TableHeader>
@@ -77,10 +77,10 @@ export default function Introduction() {
             </TableBody>
           </Table>
         </div>
-      </section>
+      </div>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
+      <div>
+        <div>
           <Typography variant="h2">Certification Requirements</Typography>
           <Typography>
             To earn the <strong>Digital Citizen</strong> certificate and move to Track 01 (HTML):
@@ -92,13 +92,13 @@ export default function Introduction() {
             <li>Show an organized project folder structure</li>
           </ul>
         </div>
-      </section>
+      </div>
 
-      <section className="lesson-section">
-        <div className="lesson-content text-center">
+      <div>
+        <div>
           <Typography variant="h3" className="text-primary italic">"The terminal is your superpower. Master it early."</Typography>
         </div>
-      </section>
-    </div>
+      </div>
+    </article>
   );
 }

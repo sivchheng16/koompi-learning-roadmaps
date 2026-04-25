@@ -13,7 +13,16 @@ import { randomBytes } from "crypto";
 import { createClient } from "@supabase/supabase-js";
 import OpenAI from "openai";
 
-const makeSlug = () => randomBytes(6).toString("base64url").slice(0, 8);
+const makeSlug = (title = "") => {
+  const base = title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/[\s-]+/g, "-")
+    .slice(0, 48);
+  const suffix = randomBytes(3).toString("hex");
+  return base ? `${base}-${suffix}` : suffix;
+};
 
 const ai = new OpenAI({
   baseURL: process.env.AI_BASE_URL,
@@ -46,10 +55,29 @@ function extractUserId(req, res, next) {
   try {
     const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
     req.userId = payload.sub || payload._id || payload.id;
+    req.userPayload = payload;
+    // Fire-and-forget: keep user row fresh with latest profile data
+    supabase.from("users").upsert({
+      user_id: req.userId,
+      email: payload.email ?? null,
+      fullname: payload.fullname ?? payload.name ?? null,
+      wallet_address: payload.wallet_address ?? null,
+      last_seen_at: new Date().toISOString(),
+    }, { onConflict: "user_id" }).then(() => {});
     next();
   } catch {
     res.status(401).json({ error: "invalid_token" });
   }
+}
+
+async function requireAdmin(req, res, next) {
+  const { data: user } = await supabase
+    .from("users")
+    .select("is_admin")
+    .eq("user_id", req.userId)
+    .maybeSingle();
+  if (!user?.is_admin) return res.status(403).json({ error: "forbidden" });
+  next();
 }
 
 // ── Token exchange proxy ─────────────────────────────────────────────────────
@@ -74,7 +102,11 @@ app.post("/api/auth/exchange", async (req, res) => {
     });
 
     const tokenData = await tokenRes.json();
-    if (!tokenRes.ok) return res.status(tokenRes.status).json(tokenData);
+    if (!tokenRes.ok) {
+      console.error("KID token exchange failed:", tokenRes.status, JSON.stringify(tokenData));
+      console.error("Sent redirect_uri:", redirect_uri, "client_id:", CLIENT_ID);
+      return res.status(tokenRes.status).json(tokenData);
+    }
 
     const userRes = await fetch(KID_USERINFO_URL, {
       headers: { Authorization: `Bearer ${tokenData.access_token}` },
@@ -273,7 +305,7 @@ app.post("/api/credits/request", extractUserId, async (req, res) => {
 
 // ── AI Generation ─────────────────────────────────────────────────────────────
 app.post("/api/courses/generate/outline", extractUserId, async (req, res) => {
-  const { title, description, level, num_modules } = req.body;
+  const { title, description, level, num_modules, purpose = "learn" } = req.body;
   if (!title || !description || !level || !num_modules) {
     return res.status(400).json({ error: "missing_fields" });
   }
@@ -325,7 +357,9 @@ app.post("/api/courses/generate/outline", extractUserId, async (req, res) => {
       tool_choice: "required",
       messages: [{
         role: "user",
-        content: `Create a ${level} course outline titled "${title}".\nDescription: ${description}\nGenerate exactly ${n} modules. Be specific and practical.`
+        content: purpose === "teach"
+          ? `Create a structured lesson plan outline titled "${title}" for a teacher to deliver to students.\nLevel: ${level}\nDescription: ${description}\nGenerate exactly ${n} modules. Each module should be a self-contained lesson with clear teaching objectives. Be specific and practical.`
+          : `Create a self-directed learning plan titled "${title}" for someone who wants to learn this themselves.\nLevel: ${level}\nDescription: ${description}\nGenerate exactly ${n} modules. Each module should guide the learner through a focused topic with clear goals. Be specific and practical.`
       }]
     });
 
@@ -342,7 +376,7 @@ app.post("/api/courses/generate/outline", extractUserId, async (req, res) => {
 });
 
 app.post("/api/courses/generate/module", extractUserId, async (req, res) => {
-  const { course_title, course_level, module_title, module_description } = req.body;
+  const { course_title, course_level, module_title, module_description, purpose = "learn" } = req.body;
   if (!course_title || !course_level || !module_title) {
     return res.status(400).json({ error: "missing_fields" });
   }
@@ -387,7 +421,9 @@ app.post("/api/courses/generate/module", extractUserId, async (req, res) => {
       tool_choice: "required",
       messages: [{
         role: "user",
-        content: `Write the lesson content for module "${module_title}" in a ${course_level} course on "${course_title}".\nModule goal: ${module_description ?? module_title}\nInclude: a heading, clear explanations, code examples where relevant, a tip callout, and end with one quiz question. Max 10 blocks total.`
+        content: purpose === "teach"
+          ? `Write a lesson plan for module "${module_title}" from the course "${course_title}" (${course_level} level).\nLesson objective: ${module_description ?? module_title}\nWrite this for a TEACHER to deliver to students. Include: a heading, clear concept explanations the teacher can walk through, a worked code example with annotations, a teaching tip callout, a student exercise or activity, and end with an assessment question to check understanding. Max 10 blocks total.`
+          : `Write self-directed learning content for module "${module_title}" from the course "${course_title}" (${course_level} level).\nLearning goal: ${module_description ?? module_title}\nWrite this for someone learning ON THEIR OWN. Use "you" language. Include: a heading, clear explanations, a hands-on code example to try, a tip or insight callout, a practice task the learner does themselves, and end with a self-check quiz question. Max 10 blocks total.`
       }]
     });
 
@@ -444,7 +480,7 @@ app.post("/api/courses", extractUserId, async (req, res) => {
   }
 
   try {
-    const slug = makeSlug();
+    const slug = makeSlug(title);
 
     const { data: course, error: courseErr } = await supabase
       .from("courses")
@@ -455,7 +491,6 @@ app.post("/api/courses", extractUserId, async (req, res) => {
         description: description?.trim() ?? null,
         level,
         is_public: is_public ?? false,
-        schema_version: 1,
       })
       .select()
       .single();
@@ -472,7 +507,7 @@ app.post("/api/courses", extractUserId, async (req, res) => {
 
     const moduleRows = modules.map((m, i) => ({
       course_id: course.id,
-      order: i + 1,
+      position: i + 1,
       title: m.title,
       duration: m.duration ?? null,
       blocks: m.blocks ?? [],
@@ -550,7 +585,7 @@ app.get("/api/courses/:slug", async (req, res) => {
       .from("course_modules")
       .select("*")
       .eq("course_id", course.id)
-      .order("order", { ascending: true });
+      .order("position", { ascending: true });
     if (modErr) throw modErr;
 
     res.json({ course: { ...course, modules: modules ?? [] } });
@@ -577,6 +612,217 @@ app.delete("/api/courses/:slug", extractUserId, async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     console.error("DELETE /api/courses/:slug error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+// ── Admin API ─────────────────────────────────────────────────────────────────
+
+// GET /api/admin/users
+app.get("/api/admin/users", extractUserId, requireAdmin, async (req, res) => {
+  try {
+    const { data: users, error } = await supabase
+      .from("users")
+      .select("user_id, email, fullname, wallet_address, is_admin, first_seen_at, last_seen_at")
+      .order("first_seen_at", { ascending: false });
+    if (error) throw error;
+
+    const { data: credits } = await supabase.from("user_credits").select("user_id, credits_remaining, credits_used");
+    const { data: courses } = await supabase.from("courses").select("user_id");
+
+    const creditMap = Object.fromEntries((credits ?? []).map(c => [c.user_id, c]));
+    const courseCount = {};
+    for (const c of courses ?? []) courseCount[c.user_id] = (courseCount[c.user_id] ?? 0) + 1;
+
+    const enriched = (users ?? []).map(u => ({
+      ...u,
+      credits_remaining: creditMap[u.user_id]?.credits_remaining ?? null,
+      credits_used: creditMap[u.user_id]?.credits_used ?? null,
+      course_count: courseCount[u.user_id] ?? 0,
+    }));
+
+    res.json({ users: enriched });
+  } catch (err) {
+    console.error("GET /api/admin/users error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+// PATCH /api/admin/users/:userId/credits
+app.patch("/api/admin/users/:targetId/credits", extractUserId, requireAdmin, async (req, res) => {
+  const { targetId } = req.params;
+  const { delta, set } = req.body; // delta = add/subtract, set = override value
+  if (delta == null && set == null) return res.status(400).json({ error: "provide delta or set" });
+
+  try {
+    let updateObj;
+    if (set != null) {
+      updateObj = { credits_remaining: parseInt(set), updated_at: new Date().toISOString() };
+    } else {
+      const { data: current } = await supabase.from("user_credits").select("credits_remaining, credits_used").eq("user_id", targetId).maybeSingle();
+      const cur = current?.credits_remaining ?? 0;
+      const used = current?.credits_used ?? 0;
+      const newVal = Math.max(0, cur + parseInt(delta));
+      const newUsed = delta < 0 ? Math.min(used, used + parseInt(delta)) : used;
+      updateObj = { credits_remaining: newVal, credits_used: Math.max(0, newUsed), updated_at: new Date().toISOString() };
+    }
+
+    await supabase.from("user_credits").upsert({ user_id: targetId, ...updateObj }, { onConflict: "user_id" });
+
+    await supabase.from("audit_log").insert({
+      admin_user_id: req.userId,
+      action: "update_credits",
+      target_user_id: targetId,
+      details: { delta, set, result: updateObj },
+    });
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("PATCH /api/admin/users/:id/credits error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+// GET /api/admin/credit-requests
+app.get("/api/admin/credit-requests", extractUserId, requireAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("credit_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+
+    const userIds = [...new Set((data ?? []).map(r => r.user_id))];
+    const { data: users } = await supabase.from("users").select("user_id, email, fullname").in("user_id", userIds);
+    const userMap = Object.fromEntries((users ?? []).map(u => [u.user_id, u]));
+
+    const enriched = (data ?? []).map(r => ({ ...r, user: userMap[r.user_id] ?? null }));
+    res.json({ requests: enriched });
+  } catch (err) {
+    console.error("GET /api/admin/credit-requests error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+// POST /api/admin/credit-requests/:id/approve
+app.post("/api/admin/credit-requests/:id/approve", extractUserId, requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { data: request, error } = await supabase.from("credit_requests").select("*").eq("id", id).single();
+    if (error || !request) return res.status(404).json({ error: "not_found" });
+    if (request.status !== "pending") return res.status(409).json({ error: "already_resolved" });
+
+    const { data: current } = await supabase.from("user_credits").select("credits_remaining, credits_used").eq("user_id", request.user_id).maybeSingle();
+    const cur = current?.credits_remaining ?? 0;
+
+    await Promise.all([
+      supabase.from("user_credits").upsert({
+        user_id: request.user_id,
+        credits_remaining: cur + request.amount_requested,
+        credits_used: current?.credits_used ?? 0,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "user_id" }),
+      supabase.from("credit_requests").update({ status: "approved" }).eq("id", id),
+      supabase.from("audit_log").insert({
+        admin_user_id: req.userId,
+        action: "approve_credit_request",
+        target_user_id: request.user_id,
+        details: { request_id: id, amount: request.amount_requested },
+      }),
+    ]);
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("POST /api/admin/credit-requests/:id/approve error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+// POST /api/admin/credit-requests/:id/deny
+app.post("/api/admin/credit-requests/:id/deny", extractUserId, requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { data: request, error } = await supabase.from("credit_requests").select("user_id").eq("id", id).single();
+    if (error || !request) return res.status(404).json({ error: "not_found" });
+
+    await Promise.all([
+      supabase.from("credit_requests").update({ status: "denied" }).eq("id", id),
+      supabase.from("audit_log").insert({
+        admin_user_id: req.userId,
+        action: "deny_credit_request",
+        target_user_id: request.user_id,
+        details: { request_id: id },
+      }),
+    ]);
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("POST /api/admin/credit-requests/:id/deny error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+// GET /api/admin/courses
+app.get("/api/admin/courses", extractUserId, requireAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("courses")
+      .select("id, slug, title, description, level, is_public, user_id, created_at")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+
+    const userIds = [...new Set((data ?? []).map(c => c.user_id))];
+    const { data: users } = await supabase.from("users").select("user_id, email, fullname").in("user_id", userIds);
+    const userMap = Object.fromEntries((users ?? []).map(u => [u.user_id, u]));
+
+    const enriched = (data ?? []).map(c => ({ ...c, owner: userMap[c.user_id] ?? null }));
+    res.json({ courses: enriched });
+  } catch (err) {
+    console.error("GET /api/admin/courses error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+// DELETE /api/admin/courses/:slug
+app.delete("/api/admin/courses/:slug", extractUserId, requireAdmin, async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const { data: course } = await supabase.from("courses").select("id, user_id, title").eq("slug", slug).single();
+    if (!course) return res.status(404).json({ error: "not_found" });
+
+    await supabase.from("courses").delete().eq("id", course.id);
+    await supabase.from("audit_log").insert({
+      admin_user_id: req.userId,
+      action: "delete_course",
+      target_user_id: course.user_id,
+      details: { slug, title: course.title },
+    });
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("DELETE /api/admin/courses/:slug error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+// GET /api/admin/audit-log
+app.get("/api/admin/audit-log", extractUserId, requireAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("audit_log")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) throw error;
+
+    const adminIds = [...new Set((data ?? []).map(r => r.admin_user_id))];
+    const { data: admins } = await supabase.from("users").select("user_id, email, fullname").in("user_id", adminIds);
+    const adminMap = Object.fromEntries((admins ?? []).map(u => [u.user_id, u]));
+
+    const enriched = (data ?? []).map(r => ({ ...r, admin: adminMap[r.admin_user_id] ?? null }));
+    res.json({ log: enriched });
+  } catch (err) {
+    console.error("GET /api/admin/audit-log error:", err);
     res.status(500).json({ error: "internal_error" });
   }
 });

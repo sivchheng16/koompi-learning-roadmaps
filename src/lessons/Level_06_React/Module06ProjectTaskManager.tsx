@@ -1,652 +1,303 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Module06ProjectTaskManager() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Project - Task Manager</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Hook */}
+      <section className="space-y-4">
+        <div className="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold tracking-wide uppercase">
+          Module 06 — Capstone Project
+        </div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          Project: Task Manager
+        </h1>
+        <p className="text-lg text-muted-foreground leading-relaxed">
+          This is your capstone for the React track. You'll build a working task manager
+          inside the playground — adding tasks, marking them complete, and deleting them.
+          Everything you've learned comes together here: state, events, list rendering, and
+          conditional styling.
+        </p>
+        <div className="grid grid-cols-2 gap-4 pt-2">
+          {[
+            { label: "useState", desc: "Store tasks array" },
+            { label: "Events", desc: "Add, complete, delete" },
+            { label: "Array methods", desc: "map, filter" },
+            { label: "Conditional style", desc: "Strikethrough done tasks" },
+          ].map(({ label, desc }) => (
+            <div
+              key={label}
+              className="rounded-xl border border-border bg-stone-50 px-4 py-3"
+            >
+              <p className="font-mono font-bold text-foreground text-sm">{label}</p>
+              <p className="text-xs text-muted-foreground mt-1">{desc}</p>
+            </div>
+          ))}
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 06: React Fundamentals</Typography>
-        </div>
+
+      {/* Concept */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Design before you build</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          A task manager needs three pieces of state working together:
+        </p>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          {[
+            "tasks — an array of task objects, each with { id, text, done }.",
+            "inputValue — the controlled text input for the new task.",
+            "Derived data — the filtered list is computed from tasks on every render, not stored separately.",
+          ].map((item) => (
+            <li key={item} className="flex items-start gap-2">
+              <CheckCircle2 size={15} className="text-blue-500 mt-0.5 shrink-0" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Key operations</h2>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`// Add a task
+setTasks([...tasks, { id: Date.now(), text: inputValue, done: false }]);
+
+// Toggle complete
+setTasks(tasks.map(t =>
+  t.id === id ? { ...t, done: !t.done } : t
+));
+
+// Delete a task
+setTasks(tasks.filter(t => t.id !== id));`}
+        </pre>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Overview</Typography>
-          <Typography>
-            Build a complete Task Manager application using everything you&apos;ve learned in React!
-          </Typography>
+
+      {/* Example */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Live example — study the structure</h2>
+        <p className="text-sm text-muted-foreground">
+          Read through this working task manager before building your own version.
+          Notice how all three operations use different array methods — spread for add, map
+          for toggle, filter for delete. Edit it freely.
+        </p>
+        <CodePlayground
+          mode="react"
+          starter={{
+            js: `function App() {
+  const [tasks, setTasks] = React.useState([
+    { id: 1, text: "Learn React components", done: true },
+    { id: 2, text: "Master useState", done: true },
+    { id: 3, text: "Build the task manager", done: false },
+  ]);
+  const [input, setInput] = React.useState("");
+
+  function addTask() {
+    if (!input.trim()) return;
+    setTasks([...tasks, { id: Date.now(), text: input.trim(), done: false }]);
+    setInput("");
+  }
+
+  function toggle(id) {
+    setTasks(tasks.map(t => t.id === id ? { ...t, done: !t.done } : t));
+  }
+
+  function remove(id) {
+    setTasks(tasks.filter(t => t.id !== id));
+  }
+
+  const s = {
+    wrap: { fontFamily: "system-ui", padding: "24px", maxWidth: 480 },
+    row: { display: "flex", gap: 8, marginBottom: 16 },
+    input: { flex: 1, padding: "8px 12px", borderRadius: 8,
+      border: "1px solid #e2e8f0", fontSize: 14 },
+    addBtn: { padding: "8px 16px", background: "#2563eb", color: "#fff",
+      border: "none", borderRadius: 8, cursor: "pointer", fontSize: 14 },
+    item: (done) => ({
+      display: "flex", alignItems: "center", gap: 10,
+      padding: "10px 12px", borderRadius: 10, marginBottom: 8,
+      background: done ? "#f1f5f9" : "#fff",
+      border: "1px solid #e2e8f0"
+    }),
+    text: (done) => ({
+      flex: 1, fontSize: 14,
+      textDecoration: done ? "line-through" : "none",
+      color: done ? "#94a3b8" : "#1e293b"
+    }),
+    del: { background: "none", border: "none", cursor: "pointer",
+      color: "#94a3b8", fontSize: 16 },
+  };
+
+  return (
+    <div style={s.wrap}>
+      <h2 style={{ marginBottom: 16 }}>Task Manager</h2>
+      <div style={s.row}>
+        <input
+          style={s.input}
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && addTask()}
+          placeholder="Add a task..."
+        />
+        <button style={s.addBtn} onClick={addTask}>Add</button>
+      </div>
+      {tasks.map(t => (
+        <div key={t.id} style={s.item(t.done)}>
+          <input type="checkbox" checked={t.done}
+            onChange={() => toggle(t.id)} />
+          <span style={s.text(t.done)}>{t.text}</span>
+          <button style={s.del} onClick={() => remove(t.id)}>✕</button>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Requirements</Typography>
-          <Typography variant="h3">Must Have (Required)</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Feature</TableHead>
-                <TableHead>Skills Demonstrated</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Add new tasks</TableCell>
-                <TableCell>Forms, state</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Mark tasks complete</TableCell>
-                <TableCell>Events, state updates</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Delete tasks</TableCell>
-                <TableCell>Array state manipulation</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Filter tasks</TableCell>
-                <TableCell>Derived state</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Task count display</TableCell>
-                <TableCell>Props, calculations</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Persist to localStorage</TableCell>
-                <TableCell>useEffect</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Responsive design</TableCell>
-                <TableCell>CSS</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Nice to Have (Bonus)</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Feature</TableHead>
-                <TableHead>Skills Shown</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Edit tasks</TableCell>
-                <TableCell>Complex state</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Due dates</TableCell>
-                <TableCell>Date handling</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Priority levels</TableCell>
-                <TableCell>Object state</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Categories/tags</TableCell>
-                <TableCell>Filtering</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Drag and drop</TableCell>
-                <TableCell>Advanced events</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Structure</Typography>
-          <CodeBlock language="text">{`task-manager/
-├── src/
-│ ├── components/
-│ │ ├── TaskForm.jsx
-│ │ ├── TaskList.jsx
-│ │ ├── TaskItem.jsx
-│ │ ├── TaskFilter.jsx
-│ │ └── Header.jsx
-│ ├── hooks/
-│ │ └── useLocalStorage.js
-│ ├── App.jsx
-│ ├── App.css
-│ └── main.jsx
-├── index.html
-└── package.json`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 1: Setup</Typography>
-          <CodeBlock language="bash">{`npm create vite@latest task-manager -- --template react
-cd task-manager
-npm install
-npm run dev`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 2: Custom Hook</Typography>
-          <CodeBlock language="jsx">{`// src/hooks/useLocalStorage.js
-import { useState, useEffect } from 'react';
-export function useLocalStorage(key, initialValue) {
- const [value, setValue] = useState(() => {
- try {
- const item = localStorage.getItem(key);
- return item ? JSON.parse(item) : initialValue;
- } catch {
- return initialValue;
- }
- });
- useEffect(() => {
- localStorage.setItem(key, JSON.stringify(value));
- }, [key, value]);
- return [value, setValue];
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 3: Components</Typography>
-          <Typography variant="h3">Header.jsx</Typography>
-          <CodeBlock language="jsx">{`// src/components/Header.jsx
-export function Header({ taskCount, completedCount }) {
- return (
- <header className="header">
- <h1> Task Manager</h1>
- <p className="stats">
- <span>{taskCount} tasks</span>
- <span>{completedCount} completed</span>
- </p>
- </header>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">TaskForm.jsx</Typography>
-          <CodeBlock language="jsx">{`// src/components/TaskForm.jsx
-import { useState } from 'react';
-export function TaskForm({ onAddTask }) {
- const [text, setText] = useState('');
- const [priority, setPriority] = useState('medium');
- const handleSubmit = (e) => {
- e.preventDefault();
- if (!text.trim()) return;
- onAddTask({
- id: Date.now(),
- text: text.trim(),
- priority,
- completed: false,
- createdAt: new Date().toISOString()
- });
- setText('');
- setPriority('medium');
- };
- return (
- <form className="task-form" onSubmit={handleSubmit}>
- <input
- type="text"
- value={text}
- onChange={(e) => setText(e.target.value)}
- placeholder="What needs to be done?"
- className="task-input"
- />
- <select
- value={priority}
- onChange={(e) => setPriority(e.target.value)}
- className="priority-select"
- >
- <option value="low">Low</option>
- <option value="medium">Medium</option>
- <option value="high">High</option>
- </select>
- <button type="submit" className="add-btn">
- Add Task
- </button>
- </form>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">TaskFilter.jsx</Typography>
-          <CodeBlock language="jsx">{`// src/components/TaskFilter.jsx
-export function TaskFilter({ filter, onFilterChange }) {
- const filters = ['all', 'active', 'completed'];
- return (
- <div className="task-filter">
- {filters.map(f => (
- <button
- key={f}
- className={\`filter-btn \${filter === f ? 'active' : ''}\`}
- onClick={() => onFilterChange(f)}
- >
- {f.charAt(0).toUpperCase() + f.slice(1)}
- </button>
- ))}
- </div>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">TaskItem.jsx</Typography>
-          <CodeBlock language="jsx">{`// src/components/TaskItem.jsx
-export function TaskItem({ task, onToggle, onDelete }) {
- const priorityColors = {
- low: '#10b981',
- medium: '#f59e0b',
- high: '#ef4444'
- };
- return (
- <div className={\`task-item \${task.completed ? 'completed' : ''}\`}>
- <div className="task-content">
- <input
- type="checkbox"
- checked={task.completed}
- onChange={() => onToggle(task.id)}
- className="task-checkbox"
- />
- <span className="task-text">{task.text}</span>
- <span 
- className="priority-badge"
- style={{ backgroundColor: priorityColors[task.priority] }}
- >
- {task.priority}
- </span>
- </div>
- <button 
- className="delete-btn"
- onClick={() => onDelete(task.id)}
- >
- </button>
- </div>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">TaskList.jsx</Typography>
-          <CodeBlock language="jsx">{`// src/components/TaskList.jsx
-import { TaskItem } from './TaskItem';
-export function TaskList({ tasks, onToggle, onDelete }) {
- if (tasks.length === 0) {
- return (
- <div className="empty-state">
- <p>No tasks yet. Add one above!</p>
- </div>
- );
- }
- return (
- <div className="task-list">
- {tasks.map(task => (
- <TaskItem
- key={task.id}
- task={task}
- onToggle={onToggle}
- onDelete={onDelete}
- />
- ))}
- </div>
- );
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 4: Main App</Typography>
-          <CodeBlock language="jsx">{`// src/App.jsx
-import { useState, useMemo } from 'react';
-import { useLocalStorage } from './hooks/useLocalStorage';
-import { Header } from './components/Header';
-import { TaskForm } from './components/TaskForm';
-import { TaskFilter } from './components/TaskFilter';
-import { TaskList } from './components/TaskList';
-import './App.css';
-function App() {
- const [tasks, setTasks] = useLocalStorage('tasks', []);
- const [filter, setFilter] = useState('all');
- // Derived state
- const filteredTasks = useMemo(() => {
- switch (filter) {
- case 'active':
- return tasks.filter(t => !t.completed);
- case 'completed':
- return tasks.filter(t => t.completed);
- default:
- return tasks;
- }
- }, [tasks, filter]);
- const completedCount = tasks.filter(t => t.completed).length;
- // Handlers
- const addTask = (task) => {
- setTasks([task, ...tasks]);
- };
- const toggleTask = (id) => {
- setTasks(tasks.map(task =>
- task.id === id ? { ...task, completed: !task.completed } : task
- ));
- };
- const deleteTask = (id) => {
- setTasks(tasks.filter(task => task.id !== id));
- };
- const clearCompleted = () => {
- setTasks(tasks.filter(task => !task.completed));
- };
- return (
- <div className="app">
- <div className="container">
- <Header 
- taskCount={tasks.length} 
- completedCount={completedCount} 
- />
- <TaskForm onAddTask={addTask} />
- <TaskFilter 
- filter={filter} 
- onFilterChange={setFilter} 
- />
- <TaskList
- tasks={filteredTasks}
- onToggle={toggleTask}
- onDelete={deleteTask}
- />
- {completedCount > 0 && (
- <button 
- className="clear-btn"
- onClick={clearCompleted}
- >
- Clear Completed ({completedCount})
- </button>
- )}
- </div>
- </div>
- );
-}
-export default App;`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 5: Styling</Typography>
-          <CodeBlock language="css">{`/* src/App.css */
-* {
- margin: 0;
- padding: 0;
- box-sizing: border-box;
-}
-:root {
- --primary: #6366f1;
- --primary-dark: #4f46e5;
- --bg: #f8fafc;
- --card-bg: #ffffff;
- --text: #1e293b;
- --text-light: #64748b;
- --border: #e2e8f0;
- --success: #10b981;
- --danger: #ef4444;
-}
-body {
- font-family: 'Segoe UI', sans-serif;
- background: var(--bg);
- color: var(--text);
-}
-.app {
- min-height: 100vh;
- padding: 40px 20px;
-}
-.container {
- max-width: 600px;
- margin: 0 auto;
-}
-/* Header */
-.header {
- text-align: center;
- margin-bottom: 30px;
-}
-.header h1 {
- font-size: 2rem;
- margin-bottom: 10px;
-}
-.stats {
- color: var(--text-light);
-}
-.stats span {
- margin: 0 10px;
-}
-/* Task Form */
-.task-form {
- display: flex;
- gap: 10px;
- margin-bottom: 20px;
- flex-wrap: wrap;
-}
-.task-input {
- flex: 1;
- min-width: 200px;
- padding: 12px 16px;
- border: 2px solid var(--border);
- border-radius: 8px;
- font-size: 1rem;
-}
-.task-input:focus {
- outline: none;
- border-color: var(--primary);
-}
-.priority-select {
- padding: 12px;
- border: 2px solid var(--border);
- border-radius: 8px;
-}
-.add-btn {
- padding: 12px 24px;
- background: var(--primary);
- color: white;
- border: none;
- border-radius: 8px;
- font-size: 1rem;
- cursor: pointer;
- transition: background 0.2s;
-}
-.add-btn:hover {
- background: var(--primary-dark);
-}
-/* Filter */
-.task-filter {
- display: flex;
- gap: 10px;
- margin-bottom: 20px;
-}
-.filter-btn {
- padding: 8px 16px;
- background: var(--card-bg);
- border: 2px solid var(--border);
- border-radius: 20px;
- cursor: pointer;
- transition: all 0.2s;
-}
-.filter-btn.active {
- background: var(--primary);
- border-color: var(--primary);
- color: white;
-}
-/* Task List */
-.task-list {
- display: flex;
- flex-direction: column;
- gap: 10px;
-}
-.empty-state {
- text-align: center;
- padding: 40px;
- color: var(--text-light);
-}
-/* Task Item */
-.task-item {
- display: flex;
- align-items: center;
- justify-content: space-between;
- padding: 15px;
- background: var(--card-bg);
- border-radius: 10px;
- box-shadow: 0 2px 5px rgba(0,0,0,0.05);
- transition: all 0.2s;
-}
-.task-item:hover {
- box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-.task-item.completed .task-text {
- text-decoration: line-through;
- color: var(--text-light);
-}
-.task-content {
- display: flex;
- align-items: center;
- gap: 12px;
- flex: 1;
-}
-.task-checkbox {
- width: 20px;
- height: 20px;
- cursor: pointer;
-}
-.task-text {
- flex: 1;
-}
-.priority-badge {
- padding: 4px 8px;
- border-radius: 12px;
- font-size: 0.75rem;
- color: white;
- text-transform: uppercase;
-}
-.delete-btn {
- background: none;
- border: none;
- font-size: 1.2rem;
- cursor: pointer;
- opacity: 0.5;
- transition: opacity 0.2s;
-}
-.delete-btn:hover {
- opacity: 1;
-}
-/* Clear Button */
-.clear-btn {
- display: block;
- width: 100%;
- padding: 12px;
- margin-top: 20px;
- background: none;
- border: 2px solid var(--danger);
- color: var(--danger);
- border-radius: 8px;
- cursor: pointer;
- transition: all 0.2s;
-}
-.clear-btn:hover {
- background: var(--danger);
- color: white;
-}
-/* Responsive */
-@media (max-width: 480px) {
- .task-form {
- flex-direction: column;
- }
- .task-input,
- .priority-select,
- .add-btn {
- width: 100%;
- }
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Evaluation Criteria</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Criteria</TableHead>
-                <TableHead>Points</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Functionality (40)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Add tasks works</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Complete/delete works</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Filter works</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>localStorage works</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Code Quality (30)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Clean components</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Proper state management</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Custom hooks</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Design (20)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Visual appeal</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Responsive</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Bonus Features (10)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Extra features</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Level Complete</Typography>
-          <Typography>
-            Upon completing this project:
-          </Typography>
-          <Typography>
-            React Fundamentals Badge earned
-Ready for Track 07: Next.js &amp; Tailwind
-Ready for Capstone Project
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            You built a complete React app!
-          </Typography>
-          <Typography>
-            Components, state, hooks, it all comes together.
-          </Typography>
-        </div>
-      </section>
+      ))}
+      <p style={{ fontSize: 12, color: "#94a3b8", marginTop: 12 }}>
+        {tasks.filter(t => !t.done).length} remaining
+      </p>
     </div>
+  );
+}`,
+          }}
+        />
+      </section>
+
+      {/* Challenge */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Challenge — build it yourself</h2>
+        <p className="text-sm text-muted-foreground">
+          Start from the skeleton below and implement the full task manager. Your solution must:
+        </p>
+        <ul className="space-y-1 text-sm text-muted-foreground mb-2">
+          {[
+            "Use useState to store the tasks array.",
+            "Render tasks with .map().",
+            "Include an onClick that marks a task done (strikethrough).",
+            "Include an onClick or .filter() that removes a task.",
+          ].map((item) => (
+            <li key={item} className="flex items-start gap-2">
+              <CheckCircle2 size={14} className="text-blue-400 mt-0.5 shrink-0" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <CodePlayground
+          mode="react"
+          starter={{
+            js: `function App() {
+  const [tasks, setTasks] = React.useState([]);
+  const [input, setInput] = React.useState("");
+
+  // 1. addTask — push a new { id, text, done: false } into tasks
+  function addTask() {
+    if (!input.trim()) return;
+    setTasks([...tasks, { id: Date.now(), text: input.trim(), done: false }]);
+    setInput("");
+  }
+
+  // 2. toggle(id) — flip the done flag on the matching task
+  function toggle(id) {
+    setTasks(tasks.map(t => t.id === id ? { ...t, done: !t.done } : t));
+  }
+
+  // 3. remove(id) — filter out the task with this id
+  function remove(id) {
+    setTasks(tasks.filter(t => t.id !== id));
+  }
+
+  return (
+    <div style={{ fontFamily: "system-ui", padding: "24px", maxWidth: 480 }}>
+      <h2>My Tasks</h2>
+
+      {/* Input row */}
+      <div style={{ display: "flex", gap: 8, margin: "16px 0" }}>
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && addTask()}
+          placeholder="What needs doing?"
+          style={{ flex: 1, padding: "8px 12px", borderRadius: 8,
+            border: "1px solid #e2e8f0", fontSize: 14 }}
+        />
+        <button onClick={addTask}
+          style={{ padding: "8px 16px", background: "#2563eb", color: "#fff",
+            border: "none", borderRadius: 8, cursor: "pointer" }}>
+          Add
+        </button>
+      </div>
+
+      {/* Task list */}
+      {tasks.map(t => (
+        <div key={t.id}
+          style={{ display: "flex", alignItems: "center", gap: 10,
+            padding: "10px 12px", borderRadius: 10, marginBottom: 8,
+            border: "1px solid #e2e8f0", background: t.done ? "#f8fafc" : "#fff" }}>
+          <input type="checkbox" checked={t.done} onChange={() => toggle(t.id)} />
+          <span style={{ flex: 1, fontSize: 14,
+            textDecoration: t.done ? "line-through" : "none",
+            color: t.done ? "#94a3b8" : "#1e293b" }}>
+            {t.text}
+          </span>
+          <button onClick={() => remove(t.id)}
+            style={{ background: "none", border: "none",
+              cursor: "pointer", color: "#94a3b8", fontSize: 16 }}>
+            ✕
+          </button>
+        </div>
+      ))}
+
+      {tasks.length === 0 && (
+        <p style={{ color: "#94a3b8", fontSize: 14 }}>No tasks yet — add one above!</p>
+      )}
+    </div>
+  );
+}`,
+          }}
+          challenge={{
+            prompt:
+              "Build a task manager: add tasks, mark done, delete tasks using useState, map, onClick, and filter.",
+            check(_html, _css, js) {
+              if (!js.includes("useState") && !js.includes("React.useState"))
+                return { passed: false, message: "Use React.useState to store your tasks." };
+              if (!js.includes("map("))
+                return { passed: false, message: "Use .map() to render the task list." };
+              if (!js.includes("onClick"))
+                return { passed: false, message: "Add onClick handlers for your buttons." };
+              if (!js.includes("filter(") && !js.includes("splice"))
+                return { passed: false, message: "Use .filter() to remove tasks from state." };
+              return {
+                passed: true,
+                message:
+                  "React track complete! You built a real app from scratch — components, state, events, and array operations all in one.",
+              };
+            },
+          }}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
+      </section>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
+      </section>
+    </article>
   );
 }

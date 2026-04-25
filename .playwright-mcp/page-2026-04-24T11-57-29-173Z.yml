@@ -1,0 +1,22 @@
+- generic [ref=e3]:
+  - region "Notifications alt+T"
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "KOOMPI KOOMPI" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "KOOMPI" [ref=e7]
+        - generic [ref=e8]: KOOMPI
+      - navigation [ref=e9]:
+        - link "Home (current)" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - text: Home
+          - generic [ref=e11]: (current)
+        - link "Courses" [ref=e12] [cursor=pointer]:
+          - /url: /services
+        - link "About" [ref=e13] [cursor=pointer]:
+          - /url: /about
+        - link "The Vault" [ref=e14] [cursor=pointer]:
+          - /url: /vault
+      - button "Sign in" [ref=e16] [cursor=pointer]
+  - main [ref=e17]:
+    - paragraph [ref=e20]: Loading…

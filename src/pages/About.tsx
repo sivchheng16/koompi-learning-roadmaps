@@ -11,7 +11,6 @@ import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { db } from "../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import NavbarMobile from "@/components/NavbarMobile";
 
 const philosophyItems = [
   {
@@ -71,7 +70,6 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pt-32 relative overflow-hidden ">
-      <NavbarMobile />
       {/* Background Mesh Gradients */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-[10%] right-[5%] w-[40vw] h-[40vw] bg-primary/5 blur-[120px] rounded-full" />
@@ -93,7 +91,7 @@ export default function About() {
               </p>
             </div>
             <h1 className="text-5xl md:text-8xl font-sans font-medium tracking-tighter leading-[0.95] md:leading-[0.85] mb-8 md:mb-12 uppercase text-gradient">
-              KOOMPI OS <br />
+              KOOMPI Academy <br />
               <span className="opacity-50 italic font-light lowercase font-sans text-3xl md:text-5xl lg:text-7xl">designing the future of education.</span>
             </h1>
 
@@ -128,7 +126,7 @@ export default function About() {
             <div className="aspect-[4/5] bg-muted/10 overflow-hidden glass-panel p-4 rounded-[48px] border-white/5 relative z-10 shadow-2xl">
               <img
                 src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1200"
-                alt="KOOMPI OS Architecture"
+                alt="KOOMPI Academy Architecture"
                 className="w-full h-full object-cover rounded-[36px] grayscale group-hover:grayscale-0 transition-all duration-1000 ease-in-out scale-105 group-hover:scale-100"
               />
               {/* Technical Overlay */}
@@ -164,7 +162,7 @@ export default function About() {
                 KOOMPI is a Cambodian-designed operating system and laptop project. We specialize in creating a high-performance, open-source ecosystem that empowers students and professionals to build their own future.
               </p>
               <p className="text-muted-foreground leading-relaxed text-sm font-sans max-w-xl opacity-60">
-                Our journey started with a vision to make computing accessible and powerful. Today, KOOMPI OS serves as a core platform for thousands, providing the tools for coding, design, and system administration in a beautiful, optimized environment.
+                Our journey started with a vision to make computing accessible and powerful. Today, KOOMPI Academy serves as a core platform for thousands, providing the tools for coding, design, and system administration in a beautiful, optimized environment.
               </p>
             </div>
 

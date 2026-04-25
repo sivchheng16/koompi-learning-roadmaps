@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRequireAuth } from "../hooks/useRequireAuth";
-import NavbarMobile from "@/components/NavbarMobile";
 
 export default function GamePortal() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,7 +58,6 @@ export default function GamePortal() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pt-32 pb-12 md:pb-20 relative overflow-hidden">
-      <NavbarMobile />
       {/* Background Mesh Gradients */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-[10%] right-[10%] w-[50vw] h-[50vw] bg-primary/10 blur-[150px] rounded-full" />

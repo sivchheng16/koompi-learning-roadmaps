@@ -1,11 +1,94 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LayoutDashboard, BookOpen, LogOut, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 
 const logo = "/koompi-black.png";
+
+function UserDropdown({ user, logout }: { user: NonNullable<ReturnType<typeof useAuth>["user"]>; logout: () => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="flex items-center gap-2 text-sm font-sans text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <div className="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center text-primary text-xs font-semibold">
+          {user.fullname?.[0] ?? "?"}
+        </div>
+        <span>{user.fullname?.split(" ")[0]}</span>
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 4, scale: 0.97 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-10 w-52 bg-white rounded-xl border border-border shadow-lg overflow-hidden z-50"
+          >
+            {/* User info */}
+            <div className="px-4 py-3 border-b border-border">
+              <p className="text-sm font-semibold text-foreground truncate">{user.fullname}</p>
+              {user.email && <p className="text-xs text-muted-foreground truncate mt-0.5">{user.email}</p>}
+            </div>
+
+            {/* Menu items */}
+            <div className="py-1.5">
+              <Link
+                to="/dashboard"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+              >
+                <LayoutDashboard size={14} className="text-muted-foreground" />
+                Dashboard
+              </Link>
+              <Link
+                to="/my-courses"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+              >
+                <BookOpen size={14} className="text-muted-foreground" />
+                My Courses
+              </Link>
+              <Link
+                to="/profile"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+              >
+                <User size={14} className="text-muted-foreground" />
+                Profile & Credits
+              </Link>
+            </div>
+
+            <div className="border-t border-border py-1.5">
+              <button
+                onClick={() => { logout(); setOpen(false); }}
+                className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-destructive hover:bg-destructive/5 transition-colors"
+              >
+                <LogOut size={14} />
+                Sign out
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export default function TopNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -39,11 +122,7 @@ export default function TopNav() {
         <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
           {/* Logo */}
           <Link to="/dashboard" className="flex items-center gap-2.5 group shrink-0">
-            <img
-              src={logo}
-              alt="KOOMPI Academy"
-              className="h-7 w-auto group-hover:opacity-70 transition-opacity"
-            />
+            <img src={logo} alt="KOOMPI Academy" className="h-7 w-auto group-hover:opacity-70 transition-opacity" />
             <span className="font-sans font-semibold text-sm text-foreground hidden sm:block tracking-widest">
               ACADEMY
             </span>
@@ -59,27 +138,7 @@ export default function TopNav() {
                 >
                   + Create
                 </Link>
-                <Link
-                  to="/my-courses"
-                  className="text-sm font-sans text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  My Courses
-                </Link>
-                <Link
-                  to="/dashboard"
-                  className="flex items-center gap-2 text-sm font-sans text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <div className="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center text-primary text-xs font-semibold">
-                    {user.fullname?.[0] ?? "?"}
-                  </div>
-                  <span>{user.fullname?.split(" ")[0]}</span>
-                </Link>
-                <button
-                  onClick={logout}
-                  className="text-sm font-sans text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Sign out
-                </button>
+                <UserDropdown user={user} logout={logout} />
               </div>
             ) : (
               <button
@@ -145,13 +204,19 @@ export default function TopNav() {
                   >
                     Create
                   </Link>
-                  <p className="text-sm font-sans text-muted-foreground">
-                    Signed in as{" "}
-                    <span className="text-foreground font-medium">{user.fullname}</span>
+                  <Link
+                    to="/profile"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-between py-4 border-b border-border font-serif text-2xl transition-colors text-foreground"
+                  >
+                    Profile
+                  </Link>
+                  <p className="text-sm font-sans text-muted-foreground pt-2">
+                    Signed in as <span className="text-foreground font-medium">{user.fullname}</span>
                   </p>
                   <button
                     onClick={() => { logout(); setMenuOpen(false); }}
-                    className="w-full py-3 px-5 rounded-xl border border-border text-sm font-sans font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors text-left"
+                    className="w-full py-3 px-5 rounded-xl border border-border text-sm font-sans font-medium text-destructive hover:bg-destructive/5 transition-colors text-left"
                   >
                     Sign out
                   </button>

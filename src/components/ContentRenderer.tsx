@@ -58,11 +58,11 @@ function BlockRenderer({ block }: { block: Block }) {
     case "list":
       return block.ordered ? (
         <ol className="list-decimal pl-6 space-y-1.5 text-muted-foreground text-base">
-          {block.items.map((item, i) => <li key={i}>{item}</li>)}
+          {(block.items ?? []).map((item, i) => <li key={i}>{item}</li>)}
         </ol>
       ) : (
         <ul className="list-disc pl-6 space-y-1.5 text-muted-foreground text-base">
-          {block.items.map((item, i) => <li key={i}>{item}</li>)}
+          {(block.items ?? []).map((item, i) => <li key={i}>{item}</li>)}
         </ul>
       );
 
@@ -83,7 +83,7 @@ function QuizBlock({ block }: { block: BlockQuiz }) {
       <p className="font-semibold text-foreground text-sm">🧠 Quiz</p>
       <p className="text-foreground">{block.question}</p>
       <div className="space-y-2">
-        {block.options.map((opt, i) => (
+        {(block.options ?? []).map((opt, i) => (
           <button
             key={i}
             onClick={() => !answered && setSelected(i)}
@@ -104,7 +104,7 @@ function QuizBlock({ block }: { block: BlockQuiz }) {
       </div>
       {answered && (
         <p className={cn("text-sm font-medium", selected === block.answer ? "text-emerald-700" : "text-red-600")}>
-          {selected === block.answer ? "Correct! ✓" : `Incorrect — the answer is: ${block.options[block.answer]}`}
+          {selected === block.answer ? "Correct! ✓" : `Incorrect — the answer is: ${block.options?.[block.answer] ?? ""}`}
         </p>
       )}
     </div>

@@ -5,19 +5,19 @@ import { CodeBlock } from '../../components/ui/CodeBlock';
 import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Introduction() {
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
+    <article className="max-w-3xl mx-auto font-sans space-y-10">
+      <div>
+        <div>
           <Typography variant="h1">Introduction: JavaScript Basics</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track 03: JavaScript Basics</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Level Overview</Typography>
           <Typography>
             JavaScript brings your websites to life! It makes things interactive — clicking buttons, updating content, responding to users.
@@ -38,9 +38,9 @@ export default function Introduction() {
             <li>Project: Interactive Quiz</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Prerequisites</Typography>
           <Typography>
             Before starting this level, you should have:
@@ -52,9 +52,9 @@ export default function Introduction() {
             <li>Earned Web Developer Apprentice Certificate</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">What You&apos;ll Build</Typography>
           <Typography>
             By the end of this level, you will create an interactive quiz application:
@@ -70,9 +70,9 @@ export default function Introduction() {
             <li>[ NEXT QUESTION → ]</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Module Index</Typography>
           <Table>
             <TableHeader>
@@ -126,9 +126,9 @@ export default function Introduction() {
             </TableBody>
           </Table>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">JavaScript Changes Everything</Typography>
           <CodeBlock language="javascript">{`// Just a few lines of JavaScript...
 const button = document.querySelector('#myButton');
@@ -137,9 +137,9 @@ button.addEventListener('click', function() {
 });
 // ...makes your pages respond to users!`}</CodeBlock>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">JavaScript Uses</Typography>
           <Table>
             <TableHeader>
@@ -176,9 +176,9 @@ button.addEventListener('click', function() {
             </TableBody>
           </Table>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track Completion</Typography>
           <Typography>
             To complete Track 03:
@@ -193,9 +193,9 @@ button.addEventListener('click', function() {
             <li>JavaScript Developer Certificate awarded!</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography>
             Time to make your websites interactive!
           </Typography>
@@ -203,7 +203,7 @@ button.addEventListener('click', function() {
             Start with Module 02: Introduction to JavaScript
           </Typography>
         </div>
-      </section>
-    </div>
+      </div>
+    </article>
   );
 }

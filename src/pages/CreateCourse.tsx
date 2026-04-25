@@ -8,7 +8,47 @@ import type { OutlineModule, Block } from "../types/course";
 import { cn } from "@/lib/utils";
 import { Loader2, RefreshCw, ChevronRight, Globe, Lock } from "lucide-react";
 
+const SAMPLE_PROMPTS = [
+  {
+    title: "Introduction to Python",
+    description: "Learn Python from scratch — variables, loops, functions, and file handling. Build small scripts and understand how to think like a programmer.",
+    level: "beginner" as const,
+    modules: 5,
+  },
+  {
+    title: "Web Design with HTML & CSS",
+    description: "Build beautiful, responsive web pages from scratch. Cover semantic HTML, the box model, Flexbox, and mobile-first design principles.",
+    level: "beginner" as const,
+    modules: 6,
+  },
+  {
+    title: "JavaScript for Interactivity",
+    description: "Make web pages come alive. Cover DOM manipulation, events, fetch API, and async programming with real-world mini-projects.",
+    level: "intermediate" as const,
+    modules: 5,
+  },
+  {
+    title: "Linux Command Line Essentials",
+    description: "Master the terminal — navigation, file management, permissions, shell scripting, and productivity tools every developer needs daily.",
+    level: "beginner" as const,
+    modules: 4,
+  },
+  {
+    title: "Git & GitHub for Teams",
+    description: "Version control from first commit to pull requests. Learn branching strategies, resolving conflicts, and collaborating on real projects.",
+    level: "beginner" as const,
+    modules: 4,
+  },
+  {
+    title: "React Fundamentals",
+    description: "Build modern UIs with React — components, props, state, hooks, and routing. Understand the component lifecycle and best practices.",
+    level: "intermediate" as const,
+    modules: 6,
+  },
+];
+
 type Step = "details" | "generating" | "review";
+type Purpose = "teach" | "learn";
 
 interface GeneratedModule extends OutlineModule {
   blocks: Block[];
@@ -31,6 +71,7 @@ export default function CreateCourse() {
   const [generatingOutline, setGeneratingOutline] = useState(false);
   const [outlineReady, setOutlineReady] = useState(false);
 
+  const [purpose, setPurpose] = useState<Purpose>("learn");
   const [isPublic, setIsPublic] = useState(false);
   const [saving, setSaving] = useState(false);
   const [credits, setCredits] = useState<number | null>(null);
@@ -74,6 +115,7 @@ export default function CreateCourse() {
         description: description.trim(),
         level,
         num_modules: numModules,
+        purpose,
       });
       setOutline(outlineMods);
       setOutlineReady(true);
@@ -111,6 +153,7 @@ export default function CreateCourse() {
           course_level: level,
           module_title: mod.title,
           module_description: mod.description,
+          purpose,
         });
         if (controller.signal.aborted) break;
         setModules(prev =>
@@ -196,6 +239,72 @@ export default function CreateCourse() {
               exit={{ opacity: 0, y: -12 }}
               className="space-y-6"
             >
+              {/* Purpose selector */}
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setPurpose("learn")}
+                  className={cn(
+                    "flex flex-col gap-1.5 p-4 rounded-xl border text-left transition-colors",
+                    purpose === "learn"
+                      ? "border-primary bg-primary/5"
+                      : "border-border bg-white hover:border-primary/30"
+                  )}
+                >
+                  <span className="text-xl">🎯</span>
+                  <span className={cn("text-sm font-semibold", purpose === "learn" ? "text-primary" : "text-foreground")}>
+                    Self-directed learning
+                  </span>
+                  <span className="text-xs text-muted-foreground leading-relaxed">
+                    I want to learn this myself. Give me a personal study plan with practice tasks and self-check questions.
+                  </span>
+                </button>
+                <button
+                  onClick={() => setPurpose("teach")}
+                  className={cn(
+                    "flex flex-col gap-1.5 p-4 rounded-xl border text-left transition-colors",
+                    purpose === "teach"
+                      ? "border-primary bg-primary/5"
+                      : "border-border bg-white hover:border-primary/30"
+                  )}
+                >
+                  <span className="text-xl">🧑‍🏫</span>
+                  <span className={cn("text-sm font-semibold", purpose === "teach" ? "text-primary" : "text-foreground")}>
+                    Lesson plan to teach
+                  </span>
+                  <span className="text-xs text-muted-foreground leading-relaxed">
+                    I'm teaching others. Give me structured lesson plans with teaching notes, exercises, and assessments.
+                  </span>
+                </button>
+              </div>
+
+              {/* Sample prompts */}
+              {!title && !description && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <p className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-widest">Start from a template</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {SAMPLE_PROMPTS.map((p, i) => (
+                      <button
+                        key={i}
+                        onClick={() => { setTitle(p.title); setDescription(p.description); setLevel(p.level); setNumModules(p.modules); }}
+                        className="text-left px-4 py-3 rounded-xl border border-border bg-white hover:border-primary/40 hover:bg-primary/5 transition-colors group"
+                      >
+                        <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{p.title}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{p.description}</p>
+                        <div className="flex gap-2 mt-2">
+                          <span className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground/60">{p.level}</span>
+                          <span className="text-[10px] font-mono text-muted-foreground/60">· {p.modules} modules</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-3 my-4">
+                    <div className="flex-1 border-t border-border" />
+                    <span className="text-xs text-muted-foreground">or write your own</span>
+                    <div className="flex-1 border-t border-border" />
+                  </div>
+                </motion.div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Course title</label>
                 <input
@@ -207,7 +316,9 @@ export default function CreateCourse() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">What will students learn?</label>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  {purpose === "teach" ? "What will students learn?" : "What do you want to learn?"}
+                </label>
                 <textarea
                   value={description}
                   onChange={e => setDescription(e.target.value)}

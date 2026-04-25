@@ -1,25 +1,20 @@
-# Build stage
+# Build stage — bakes in public env vars (client_id, redirect_uri)
 FROM node:20-alpine AS build
-
 WORKDIR /app
-
-# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
-
-# Copy source code and build
 COPY . .
 RUN npm run build
 
-# Production stage
-FROM nginx:alpine
+# Runtime stage — Node serves SPA + holds the client_secret
+FROM node:20-alpine AS runtime
+WORKDIR /app
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY server.js package.json ./
 
-# Copy the build output from the build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 3000
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Pass secrets at runtime via docker run -e or docker-compose environment:
+#   KID_CLIENT_ID, KID_CLIENT_SECRET, KID_REDIRECT_URI
+CMD ["node", "server.js"]

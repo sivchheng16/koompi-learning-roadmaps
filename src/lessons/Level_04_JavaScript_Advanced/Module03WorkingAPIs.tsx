@@ -1,466 +1,312 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
-export default function Module03WorkingAPIs() {
-  return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Working with APIs</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 04: JavaScript Advanced</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Understand what APIs are and how they work</li>
-            <li>Use the Fetch API to make HTTP requests</li>
-            <li>Handle JSON data</li>
-            <li>Work with REST APIs</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: What is an API?</Typography>
-          <Typography variant="h3">API Defined</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>WHAT IS AN API?</li>
-            <li>API = Application Programming Interface</li>
-            <li>Think of it as a waiter in a restaurant:</li>
-            <li>YOU (Client) WAITER (API) KITCHEN (Server)</li>
-            <li>&quot;I want pizza&quot; ► Takes order ► Makes pizza</li>
-            <li>Eats pizza ◄ Delivers food ◄ Prepares dish</li>
-            <li>You don&apos;t need to know HOW the kitchen works.</li>
-            <li>The waiter handles the communication.</li>
-          </ul>
-          <Typography variant="h3">Web APIs</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Weather API → Get weather data</li>
-            <li>Maps API → Get location data</li>
-            <li>Social Media APIs → Get posts, profiles</li>
-            <li>Payment APIs → Process payments</li>
-            <li>Your own API → Your app&apos;s data</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: HTTP Basics</Typography>
-          <Typography variant="h3">HTTP Methods</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Method</TableHead>
-                <TableHead>Purpose</TableHead>
-                <TableHead>Example</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>GET</TableCell>
-                <TableCell>Read data</TableCell>
-                <TableCell>Get list of users</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>POST</TableCell>
-                <TableCell>Create data</TableCell>
-                <TableCell>Create new user</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>PUT</TableCell>
-                <TableCell>Update data (replace)</TableCell>
-                <TableCell>Update entire user</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>PATCH</TableCell>
-                <TableCell>Update data (partial)</TableCell>
-                <TableCell>Update user&apos;s email</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>DELETE</TableCell>
-                <TableCell>Remove data</TableCell>
-                <TableCell>Delete user</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">HTTP Status Codes</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Code</TableHead>
-                <TableHead>Meaning</TableHead>
-                <TableHead>When</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>200</TableCell>
-                <TableCell>OK</TableCell>
-                <TableCell>Request succeeded</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>201</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>New resource created</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>400</TableCell>
-                <TableCell>Bad Request</TableCell>
-                <TableCell>Invalid request data</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>401</TableCell>
-                <TableCell>Unauthorized</TableCell>
-                <TableCell>Need to log in</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>403</TableCell>
-                <TableCell>Forbidden</TableCell>
-                <TableCell>Don&apos;t have permission</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>404</TableCell>
-                <TableCell>Not Found</TableCell>
-                <TableCell>Resource doesn&apos;t exist</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>500</TableCell>
-                <TableCell>Server Error</TableCell>
-                <TableCell>Server problem</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: The Fetch API</Typography>
-          <Typography variant="h3">Basic GET Request</Typography>
-          <CodeBlock language="javascript">{`fetch('https://api.example.com/users')
- .then(response => response.json())
- .then(data => console.log(data))
- .catch(error => console.error('Error:', error));`}</CodeBlock>
-          <Typography variant="h3">With Async/Await</Typography>
-          <CodeBlock language="javascript">{`async function getUsers() {
- try {
- const response = await fetch('https://api.example.com/users');
- const data = await response.json();
- console.log(data);
- return data;
- } catch (error) {
- console.error('Error:', error);
- }
-}`}</CodeBlock>
-          <Typography variant="h3">Checking Response</Typography>
-          <CodeBlock language="javascript">{`async function fetchData(url) {
- const response = await fetch(url);
- if (!response.ok) {
- throw new Error(\`HTTP error! Status: \${response.status}\`);
- }
- return response.json();
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Request Options</Typography>
-          <Typography variant="h3">POST Request</Typography>
-          <CodeBlock language="javascript">{`async function createUser(userData) {
- const response = await fetch('https://api.example.com/users', {
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json'
- },
- body: JSON.stringify(userData)
- });
- return response.json();
-}
-// Usage
-createUser({ name: 'Sokha', email: 'sokha@email.com' });`}</CodeBlock>
-          <Typography variant="h3">PUT Request</Typography>
-          <CodeBlock language="javascript">{`async function updateUser(id, userData) {
- const response = await fetch(\`https://api.example.com/users/\${id}\`, {
- method: 'PUT',
- headers: {
- 'Content-Type': 'application/json'
- },
- body: JSON.stringify(userData)
- });
- return response.json();
-}`}</CodeBlock>
-          <Typography variant="h3">DELETE Request</Typography>
-          <CodeBlock language="javascript">{`async function deleteUser(id) {
- const response = await fetch(\`https://api.example.com/users/\${id}\`, {
- method: 'DELETE'
- });
- return response.ok;
-}`}</CodeBlock>
-          <Typography variant="h3">With Authentication</Typography>
-          <CodeBlock language="javascript">{`async function fetchProtectedData() {
- const token = 'your-auth-token';
- const response = await fetch('https://api.example.com/protected', {
- headers: {
- 'Authorization': \`Bearer \${token}\`,
- 'Content-Type': 'application/json'
- }
- });
- return response.json();
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Working with JSON</Typography>
-          <Typography variant="h3">What is JSON?</Typography>
-          <CodeBlock language="javascript">{`// JSON = JavaScript Object Notation
-// A text format for storing and transmitting data
-{
- "name": "Sokha",
- "age": 22,
- "isStudent": true,
- "skills": ["HTML", "CSS", "JavaScript"],
- "address": {
- "city": "Phnom Penh",
- "country": "Cambodia"
- }
-}`}</CodeBlock>
-          <Typography variant="h3">Parsing JSON</Typography>
-          <CodeBlock language="javascript">{`// String to Object
-const jsonString = '{"name": "Sokha", "age": 22}';
-const obj = JSON.parse(jsonString);
-console.log(obj.name); // "Sokha"
-// Object to String
-const data = { name: "Dara", age: 25 };
-const json = JSON.stringify(data);
-console.log(json); // '{"name":"Dara","age":25}'
-// Pretty print
-const prettyJson = JSON.stringify(data, null, 2);`}</CodeBlock>
-          <Typography variant="h3">Handling API Response</Typography>
-          <CodeBlock language="javascript">{`async function displayUsers() {
- try {
- const response = await fetch('https://jsonplaceholder.typicode.com/users');
- const users = await response.json();
- users.forEach(user => {
- console.log(\`\${user.name} - \${user.email}\`);
- });
- } catch (error) {
- console.error('Failed to load users:', error);
- }
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Real API Examples</Typography>
-          <Typography variant="h3">JSONPlaceholder (Practice API)</Typography>
-          <CodeBlock language="javascript">{`// Free fake API for testing
-const API_URL = 'https://jsonplaceholder.typicode.com';
-// Get posts
-async function getPosts() {
- const response = await fetch(\`\${API_URL}/posts\`);
- return response.json();
-}
-// Get single post
+const EXPLORE_FETCH = `// Basic GET with .then
+fetch("https://jsonplaceholder.typicode.com/users/1")
+  .then(response => response.json())
+  .then(user => console.log(user.name, user.email))
+  .catch(err => console.error("Error:", err));`;
+
+const EXPLORE_ASYNC_FETCH = `// Same thing with async/await — much cleaner
 async function getPost(id) {
- const response = await fetch(\`\${API_URL}/posts/\${id}\`);
- return response.json();
+  try {
+    const response = await fetch(
+      \`https://jsonplaceholder.typicode.com/posts/\${id}\`
+    );
+
+    // Always check the status before parsing
+    if (!response.ok) {
+      throw new Error(\`HTTP \${response.status}: \${response.statusText}\`);
+    }
+
+    const post = await response.json();
+    console.log("Title:", post.title);
+    console.log("Body:", post.body);
+    return post;
+  } catch (err) {
+    console.error("Fetch failed:", err.message);
+  }
 }
-// Get post's comments
-async function getPostComments(postId) {
- const response = await fetch(\`\${API_URL}/posts/\${postId}/comments\`);
- return response.json();
-}`}</CodeBlock>
-          <Typography variant="h3">Weather API Example</Typography>
-          <CodeBlock language="javascript">{`const API_KEY = 'your-api-key';
-async function getWeather(city) {
- const url = \`https://api.openweathermap.org/data/2.5/weather?q=\${city}&appid=\${API_KEY}&units=metric\`;
- try {
- const response = await fetch(url);
- if (!response.ok) {
- throw new Error('City not found');
- }
- const data = await response.json();
- return {
- city: data.name,
- temp: data.main.temp,
- description: data.weather[0].description,
- humidity: data.main.humidity
- };
- } catch (error) {
- console.error('Weather fetch failed:', error);
- throw error;
- }
+
+getPost(3);`;
+
+const EXPLORE_JSON = `// JSON.parse — string → object
+const raw = '{"name":"Sokha","score":95}';
+const obj = JSON.parse(raw);
+console.log(obj.name, obj.score);
+
+// JSON.stringify — object → string
+const data = { city: "Phnom Penh", country: "Cambodia" };
+const json = JSON.stringify(data);
+console.log(json);
+
+// Pretty-print with indentation
+console.log(JSON.stringify(data, null, 2));`;
+
+const CHALLENGE_STARTER = `// Fetch the todo at https://jsonplaceholder.typicode.com/todos/1
+// using async/await, then log the result to the console.
+
+async function getTodo() {
+  // your code here
 }
-// Usage
-const weather = await getWeather('Phnom Penh');
-console.log(\`\${weather.city}: \${weather.temp}°C, \${weather.description}\`);`}</CodeBlock>
+
+getTodo();
+`;
+
+const challenge = {
+  prompt:
+    "Fetch `https://jsonplaceholder.typicode.com/todos/1` using async/await and log the result. Your code must contain `fetch(` and `await`.",
+  check(_html: string, _css: string, js: string) {
+    if (!/\bfetch\s*\(/.test(js))
+      return { passed: false, message: "Call `fetch(url)` to make the HTTP request." };
+    if (!/\bawait\b/.test(js))
+      return { passed: false, message: "Use `await` before `fetch(...)` to wait for the response." };
+    return { passed: true, message: "You just consumed a real REST API — that's how every app talks to a server!" };
+  },
+};
+
+export default function Module03WorkingAPIs() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
+  return (
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Header */}
+      <section className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary/60">
+          Track 04 · JavaScript Advanced
+        </p>
+        <h1 className="text-4xl font-serif text-foreground">Working with APIs</h1>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          APIs are how web apps talk to servers. You will learn the browser's built-in{" "}
+          <code className="font-mono text-sm">fetch</code> function, how JSON data flows, and
+          the conventions of REST — the design style behind almost every modern web API.
+        </p>
+      </section>
+
+      {/* What is an API */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">What is an API?</h2>
+        <p className="text-base text-muted-foreground">
+          An <strong>API</strong> (Application Programming Interface) is a contract between two
+          programs. A web API exposes data and actions over HTTP so a browser (or any client)
+          can read, create, update, and delete resources without knowing anything about the
+          server's internals.
+        </p>
+        <p className="text-base text-muted-foreground">
+          Think of a restaurant: you (the client) give an order to the waiter (the API). The
+          waiter goes to the kitchen (the server) and brings back your food (the response). You
+          never see how the kitchen works.
+        </p>
+
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          {[
+            ["Weather API", "Get temperature, forecasts"],
+            ["Maps API", "Geocoding, directions"],
+            ["Payment API", "Charge a card securely"],
+            ["Your own API", "Serve your app's data"],
+          ].map(([name, desc]) => (
+            <div key={name} className="rounded-xl border border-border px-4 py-3">
+              <p className="font-semibold text-foreground">{name}</p>
+              <p className="text-muted-foreground mt-0.5">{desc}</p>
+            </div>
+          ))}
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Building an API Client</Typography>
-          <Typography variant="h3">Reusable API Class</Typography>
-          <CodeBlock language="javascript">{`class ApiClient {
- constructor(baseURL) {
- this.baseURL = baseURL;
- }
- async request(endpoint, options = {}) {
- const url = \`\${this.baseURL}\${endpoint}\`;
- const config = {
- headers: {
- 'Content-Type': 'application/json',
- ...options.headers
- },
- ...options
- };
- if (config.body) {
- config.body = JSON.stringify(config.body);
- }
- const response = await fetch(url, config);
- if (!response.ok) {
- const error = await response.json();
- throw new Error(error.message || 'Request failed');
- }
- return response.json();
- }
- get(endpoint) {
- return this.request(endpoint);
- }
- post(endpoint, data) {
- return this.request(endpoint, {
- method: 'POST',
- body: data
- });
- }
- put(endpoint, data) {
- return this.request(endpoint, {
- method: 'PUT',
- body: data
- });
- }
- delete(endpoint) {
- return this.request(endpoint, {
- method: 'DELETE'
- });
- }
+
+      {/* HTTP basics */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">HTTP Basics</h2>
+        <p className="text-base text-muted-foreground">
+          Every API call is an HTTP request. The <em>method</em> tells the server what action to
+          take; the <em>status code</em> in the response tells you whether it worked.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Common HTTP methods
+          </div>
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-2 font-semibold text-foreground">Method</th>
+                <th className="text-left px-4 py-2 font-semibold text-foreground">Action</th>
+                <th className="text-left px-4 py-2 font-semibold text-foreground">Example</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border text-muted-foreground">
+              {[
+                ["GET", "Read data", "GET /users — list users"],
+                ["POST", "Create data", "POST /users — create a user"],
+                ["PUT", "Replace data", "PUT /users/1 — update whole user"],
+                ["PATCH", "Partial update", "PATCH /users/1 — update one field"],
+                ["DELETE", "Remove data", "DELETE /users/1"],
+              ].map(([m, a, e]) => (
+                <tr key={m}>
+                  <td className="px-4 py-2 font-mono font-semibold text-foreground">{m}</td>
+                  <td className="px-4 py-2">{a}</td>
+                  <td className="px-4 py-2">{e}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Status codes to know
+          </div>
+          <table className="w-full text-sm">
+            <tbody className="divide-y divide-border text-muted-foreground">
+              {[
+                ["200", "OK — request succeeded"],
+                ["201", "Created — new resource made"],
+                ["400", "Bad Request — client sent invalid data"],
+                ["401", "Unauthorized — must log in"],
+                ["403", "Forbidden — logged in but no permission"],
+                ["404", "Not Found — resource doesn't exist"],
+                ["500", "Server Error — something broke on the server"],
+              ].map(([code, msg]) => (
+                <tr key={code}>
+                  <td className="px-4 py-2 font-mono font-semibold text-foreground w-20">{code}</td>
+                  <td className="px-4 py-2">{msg}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Fetch API */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">The Fetch API</h2>
+        <p className="text-base text-muted-foreground">
+          <code className="font-mono text-sm">fetch(url)</code> is built into every modern
+          browser. It returns a Promise that resolves to a <code className="font-mono text-sm">Response</code>{" "}
+          object. You must call <code className="font-mono text-sm">.json()</code> on the response to
+          parse the body — that's a second async step.
+        </p>
+
+        <CodePlayground mode="js" starter={{ js: EXPLORE_FETCH }} height="180px" />
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            The safe async/await pattern
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`async function fetchData(url) {
+  const response = await fetch(url);
+
+  // fetch() only rejects on network failure — not on 404/500.
+  // Always check response.ok yourself.
+  if (!response.ok) {
+    throw new Error(\`HTTP \${response.status}\`);
+  }
+
+  return response.json();
+}`}</pre>
+        </div>
+
+        <CodePlayground mode="js" starter={{ js: EXPLORE_ASYNC_FETCH }} height="300px" />
+      </section>
+
+      {/* JSON */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">JSON</h2>
+        <p className="text-base text-muted-foreground">
+          JSON (JavaScript Object Notation) is the universal data format for web APIs. It looks
+          like a JavaScript object literal but it is always a <em>string</em> when sent over the
+          network. Two functions bridge the two forms.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            JSON.parse and JSON.stringify
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`// Network sends a string → parse into a JS object
+const obj = JSON.parse('{"name":"Sokha","age":22}');
+console.log(obj.name); // "Sokha"
+
+// Sending data → convert to string first
+const body = JSON.stringify({ name: "Dara", age: 25 });
+// '{"name":"Dara","age":25}'
+
+// Readable output for debugging
+console.log(JSON.stringify(obj, null, 2));`}</pre>
+        </div>
+
+        <CodePlayground mode="js" starter={{ js: EXPLORE_JSON }} height="200px" />
+      </section>
+
+      {/* POST, PUT, DELETE */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Sending Data</h2>
+        <p className="text-base text-muted-foreground">
+          For POST, PUT, and PATCH requests you pass an options object to{" "}
+          <code className="font-mono text-sm">fetch</code> with the method, headers, and a JSON-encoded body.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            POST — create a resource
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`async function createPost(data) {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error(\`HTTP \${response.status}\`);
+  return response.json();
 }
-// Usage
-const api = new ApiClient('https://api.example.com');
-const users = await api.get('/users');
-const newUser = await api.post('/users', { name: 'Sokha' });
-await api.delete('/users/1');`}</CodeBlock>
+
+const newPost = await createPost({ title: "Hello", body: "World", userId: 1 });
+console.log(newPost); // includes id assigned by server`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Fetch Users</Typography>
-          <Typography>
-            Fetch users from JSONPlaceholder and display their names.
-          </Typography>
-          <Typography variant="h3">Exercise 2: Create Post</Typography>
-          <Typography>
-            Create a new post using the POST method.
-          </Typography>
-          <Typography variant="h3">Exercise 3: Search Users</Typography>
-          <Typography>
-            Create a function that searches users by name.
-          </Typography>
-          <Typography variant="h3">Exercise 4: Error Handling</Typography>
-          <Typography>
-            Add proper error handling to display user-friendly messages.
-          </Typography>
-          <Typography variant="h3">Exercise 5: Weather Widget</Typography>
-          <Typography>
-            Create a simple weather widget that:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Has an input for city name</li>
-            <li>Fetches weather data</li>
-            <li>Displays temperature and conditions</li>
-          </ul>
-        </div>
+
+      {/* Challenge */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Challenge</h2>
+        <p className="text-base text-muted-foreground">
+          Fetch the todo at{" "}
+          <code className="font-mono text-sm">https://jsonplaceholder.typicode.com/todos/1</code>{" "}
+          using async/await. Log the full result so you can see the JSON in the console.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{ js: CHALLENGE_STARTER }}
+          height="220px"
+          challenge={challenge}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Concept</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>API</TableCell>
-                <TableCell>Interface to get/send data</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>REST</TableCell>
-                <TableCell>Standard for web APIs</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Fetch</TableCell>
-                <TableCell>Browser API for HTTP requests</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>JSON</TableCell>
-                <TableCell>Data format for APIs</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Methods</TableCell>
-                <TableCell>GET, POST, PUT, DELETE</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography>
-            Common Fetch Pattern:
-          </Typography>
-          <CodeBlock language="javascript">{`async function fetchData(url) {
- try {
- const response = await fetch(url);
- if (!response.ok) throw new Error('Failed');
- return await response.json();
- } catch (error) {
- console.error(error);
- throw error;
- }
-}`}</CodeBlock>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Coming Next: Module 05 - Error Handling &amp; Debugging
-          </Typography>
-          <Typography>
-            You will learn to handle errors gracefully and debug effectively!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            APIs connect you to the world!
-          </Typography>
-          <Typography>
-            Every modern app uses APIs.
-          </Typography>
-        </div>
-      </section>
-    </div>
+
+    </article>
   );
 }

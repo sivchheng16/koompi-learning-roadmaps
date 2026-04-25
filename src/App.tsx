@@ -16,6 +16,8 @@ const CertVerification = lazy(() => import('./pages/CertVerification'));
 const CreateCourse = lazy(() => import('./pages/CreateCourse'));
 const MyCourses = lazy(() => import('./pages/MyCourses'));
 const CourseViewer = lazy(() => import('./pages/CourseViewer'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Admin = lazy(() => import('./pages/Admin'));
 
 const PageLoader = () => (
   <div className="h-screen w-full flex flex-col items-center justify-center bg-background">
@@ -51,6 +53,8 @@ function AppContent() {
               <Route path="/cert/:tokenId" element={<CertVerification />} />
               <Route path="/create" element={<CreateCourse />} />
               <Route path="/my-courses" element={<MyCourses />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/admin" element={<Admin />} />
               <Route path="/c/:slug" element={<CourseViewer />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

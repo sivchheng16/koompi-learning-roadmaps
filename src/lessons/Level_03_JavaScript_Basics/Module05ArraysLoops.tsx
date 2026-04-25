@@ -1,475 +1,218 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Module05ArraysLoops() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Arrays &amp; Loops</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Hook */}
+      <section className="space-y-4">
+        <div className="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold tracking-wide uppercase">
+          Module 05 — JavaScript Basics
         </div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          Arrays &amp; Loops
+        </h1>
+        <p className="text-lg text-muted-foreground leading-relaxed">
+          A market in Phnom Penh sells hundreds of items. You don't store each price
+          in a separate variable — you put them in a list. That list is an array.
+          And to do something with every item, you use a loop.
+        </p>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 03: JavaScript Basics</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Create and manipulate arrays</li>
-            <li>Use for, while, and forEach loops</li>
-            <li>Apply array methods (push, pop, map, filter)</li>
-            <li>Iterate through collections</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: Introduction to Arrays</Typography>
-          <Typography variant="h3">What Are Arrays?</Typography>
-          <Typography>
-            Arrays store multiple values in a single variable:
-          </Typography>
-          <CodeBlock language="javascript">{`// Without arrays
-let student1 = "Sokha";
-let student2 = "Dara";
-let student3 = "Bopha";
-// With arrays
-let students = ["Sokha", "Dara", "Bopha"];`}</CodeBlock>
-          <Typography variant="h3">Creating Arrays</Typography>
-          <CodeBlock language="javascript">{`// Array literal (preferred)
-let fruits = ["apple", "banana", "orange"];
-// Empty array
-let emptyArray = [];
-// Mixed types (possible but not recommended)
-let mixed = [1, "hello", true, null];
-// Array of numbers
-let scores = [85, 92, 78, 95, 88];`}</CodeBlock>
-          <Typography variant="h3">Accessing Elements</Typography>
-          <Typography>
-            Arrays are zero-indexed (start at 0):
-          </Typography>
-          <CodeBlock language="javascript">{`let colors = ["red", "green", "blue"];
-console.log(colors[0]); // "red"
-console.log(colors[1]); // "green"
-console.log(colors[2]); // "blue"
-console.log(colors[3]); // undefined (doesn't exist)
-// Last element
-console.log(colors[colors.length - 1]); // "blue"`}</CodeBlock>
-          <Typography variant="h3">Array Length</Typography>
-          <CodeBlock language="javascript">{`let fruits = ["apple", "banana", "orange"];
-console.log(fruits.length); // 3`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Modifying Arrays</Typography>
-          <Typography variant="h3">Changing Elements</Typography>
-          <CodeBlock language="javascript">{`let colors = ["red", "green", "blue"];
-colors[1] = "yellow";
-console.log(colors); // ["red", "yellow", "blue"]`}</CodeBlock>
-          <Typography variant="h3">Adding Elements</Typography>
-          <CodeBlock language="javascript">{`let fruits = ["apple", "banana"];
-// Add to end
-fruits.push("orange");
-console.log(fruits); // ["apple", "banana", "orange"]
-// Add to beginning
-fruits.unshift("mango");
-console.log(fruits); // ["mango", "apple", "banana", "orange"]`}</CodeBlock>
-          <Typography variant="h3">Removing Elements</Typography>
-          <CodeBlock language="javascript">{`let fruits = ["apple", "banana", "orange"];
-// Remove from end
-let last = fruits.pop();
-console.log(last); // "orange"
-console.log(fruits); // ["apple", "banana"]
-// Remove from beginning
-let first = fruits.shift();
-console.log(first); // "apple"
-console.log(fruits); // ["banana"]`}</CodeBlock>
-          <Typography variant="h3">Splice (Add/Remove at Position)</Typography>
-          <CodeBlock language="javascript">{`let colors = ["red", "green", "blue", "yellow"];
-// Remove 1 element at index 2
-colors.splice(2, 1);
-console.log(colors); // ["red", "green", "yellow"]
-// Insert "purple" at index 1
-colors.splice(1, 0, "purple");
-console.log(colors); // ["red", "purple", "green", "yellow"]
-// Replace 1 element at index 0 with "orange"
-colors.splice(0, 1, "orange");
-console.log(colors); // ["orange", "purple", "green", "yellow"]`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: For Loops</Typography>
-          <Typography variant="h3">Basic For Loop</Typography>
-          <CodeBlock language="javascript">{`for (let i = 0; i < 5; i++) {
- console.log(i);
+
+      {/* Concept */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Creating arrays</h2>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`// Array literal — the most common way
+const foods = ["banh mi", "lok lak", "amok", "kuy teav"];
+
+// Access by index (starts at 0)
+document.write(foods[0]); // "banh mi"
+document.write(foods[2]); // "amok"
+
+// Length
+document.write(foods.length); // 4
+
+// Last item
+document.write(foods[foods.length - 1]); // "kuy teav"`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Modifying arrays</h2>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`const items = ["rice", "fish"];
+
+items.push("mango");      // add to end  → ["rice","fish","mango"]
+items.pop();              // remove last → ["rice","fish"]
+items.unshift("bread");   // add to front→ ["bread","rice","fish"]
+items.shift();            // remove first→ ["rice","fish"]`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">The for loop</h2>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`const prices = [1000, 2500, 4000, 8000];
+
+for (let i = 0; i < prices.length; i++) {
+  document.write(prices[i] + " ៛<br>");
 }
-// Output: 0, 1, 2, 3, 4`}</CodeBlock>
-          <Typography variant="h3">Loop Structure</Typography>
-          <CodeBlock language="javascript">{`for (initialization; condition; update) {
- // code to repeat
-}
-// initialization: let i = 0 → runs once at start
-// condition: i < 5 → checked before each iteration
-// update: i++ → runs after each iteration`}</CodeBlock>
-          <Typography variant="h3">Looping Through Arrays</Typography>
-          <CodeBlock language="javascript">{`let fruits = ["apple", "banana", "orange"];
-for (let i = 0; i < fruits.length; i++) {
- console.log(fruits[i]);
-}
-// apple
-// banana
-// orange`}</CodeBlock>
-          <Typography variant="h3">For...of Loop (Simpler!)</Typography>
-          <CodeBlock language="javascript">{`let fruits = ["apple", "banana", "orange"];
-for (let fruit of fruits) {
- console.log(fruit);
-}
-// apple
-// banana
-// orange`}</CodeBlock>
-        </div>
+// 1000 ៛
+// 2500 ៛
+// 4000 ៛
+// 8000 ៛`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">forEach — cleaner iteration</h2>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`const cities = ["Phnom Penh", "Siem Reap", "Battambang"];
+
+cities.forEach((city) => {
+  document.write(\`<p>\${city}</p>\`);
+});`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">map — transform every item</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          <code className="font-mono bg-stone-100 px-1 rounded">.map()</code> creates a <em>new</em> array by running
+          a function on every item. The original is unchanged.
+        </p>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`const pricesKHR = [4000, 8000, 12000];
+
+// Convert to USD (rate: 4100 KHR per USD)
+const pricesUSD = pricesKHR.map((khr) => (khr / 4100).toFixed(2));
+
+document.write(pricesUSD.join(", ")); // "0.98, 1.95, 2.93"`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">filter — keep only what matches</h2>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`const scores = [45, 78, 62, 90, 55, 88];
+
+const passing = scores.filter((s) => s >= 60);
+document.write(passing.join(", ")); // 78, 62, 90, 88`}
+        </pre>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: While Loops</Typography>
-          <Typography variant="h3">While Loop</Typography>
-          <Typography>
-            Repeats while condition is true:
-          </Typography>
-          <CodeBlock language="javascript">{`let count = 0;
-while (count < 5) {
- console.log(count);
- count++;
-}
-// 0, 1, 2, 3, 4`}</CodeBlock>
-          <Typography variant="h3">Do...While Loop</Typography>
-          <Typography>
-            Runs at least once:
-          </Typography>
-          <CodeBlock language="javascript">{`let count = 0;
-do {
- console.log(count);
- count++;
-} while (count < 5);
-// 0, 1, 2, 3, 4`}</CodeBlock>
-          <Typography variant="h3">When to Use Each</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Loop Type</TableHead>
-                <TableHead>Best For</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>for</TableCell>
-                <TableCell>Known number of iterations</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>for...of</TableCell>
-                <TableCell>Arrays and iterables</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>while</TableCell>
-                <TableCell>Unknown iterations, complex conditions</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>do...while</TableCell>
-                <TableCell>Must run at least once</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
+
+      {/* Example */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Live example — market menu with map</h2>
+        <p className="text-sm text-muted-foreground">
+          Watch how <code className="font-mono bg-stone-100 px-1 rounded">.map()</code> turns a plain array into
+          formatted HTML.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{
+            js: `const menu = [
+  { name: "Nom banh chok", price: 2000 },
+  { name: "Banh mi", price: 1500 },
+  { name: "Lok lak", price: 8000 },
+  { name: "Amok trey", price: 10000 },
+];
+
+const rows = menu.map(
+  (item) => \`<p><strong>\${item.name}</strong> — \${item.price} ៛</p>\`
+);
+
+document.write(rows.join(""));`,
+          }}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Array Methods</Typography>
-          <Typography variant="h3">forEach — Do Something with Each Element</Typography>
-          <CodeBlock language="javascript">{`let numbers = [1, 2, 3, 4, 5];
-numbers.forEach(function(num) {
- console.log(num * 2);
+
+      {/* Try it */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Try it yourself</h2>
+        <p className="text-sm text-muted-foreground">
+          Create an array of at least 4 province names. Use{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">forEach</code> to write each one to the page as a
+          list item.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{
+            js: `const provinces = ["Phnom Penh", "Siem Reap", "Battambang", "Kampot"];
+
+document.write("<ul>");
+provinces.forEach((province) => {
+  document.write("<li>" + province + "</li>");
 });
-// 2, 4, 6, 8, 10
-// With arrow function
-numbers.forEach(num => console.log(num * 2));`}</CodeBlock>
-          <Typography variant="h3">map — Transform Each Element</Typography>
-          <CodeBlock language="javascript">{`let numbers = [1, 2, 3, 4, 5];
-let doubled = numbers.map(num => num * 2);
-console.log(doubled); // [2, 4, 6, 8, 10]
-// Original unchanged
-console.log(numbers); // [1, 2, 3, 4, 5]`}</CodeBlock>
-          <Typography variant="h3">filter — Keep Matching Elements</Typography>
-          <CodeBlock language="javascript">{`let numbers = [1, 2, 3, 4, 5, 6];
-let evenNumbers = numbers.filter(num => num % 2 === 0);
-console.log(evenNumbers); // [2, 4, 6]
-// Find students with passing grades
-let scores = [45, 72, 88, 55, 91, 67];
-let passing = scores.filter(score => score >= 60);
-console.log(passing); // [72, 88, 91, 67]`}</CodeBlock>
-          <Typography variant="h3">find — Get First Match</Typography>
-          <CodeBlock language="javascript">{`let users = [
- { name: "Sokha", age: 22 },
- { name: "Dara", age: 25 },
- { name: "Bopha", age: 22 }
-];
-let user = users.find(u => u.name === "Dara");
-console.log(user); // { name: "Dara", age: 25 }`}</CodeBlock>
-          <Typography variant="h3">includes — Check if Element Exists</Typography>
-          <CodeBlock language="javascript">{`let fruits = ["apple", "banana", "orange"];
-console.log(fruits.includes("banana")); // true
-console.log(fruits.includes("grape")); // false`}</CodeBlock>
-          <Typography variant="h3">reduce — Combine to Single Value</Typography>
-          <CodeBlock language="javascript">{`let numbers = [1, 2, 3, 4, 5];
-let sum = numbers.reduce((total, num) => total + num, 0);
-console.log(sum); // 15
-// Initial value is 0, then:
-// 0 + 1 = 1
-// 1 + 2 = 3
-// 3 + 3 = 6
-// 6 + 4 = 10
-// 10 + 5 = 15`}</CodeBlock>
-        </div>
+document.write("</ul>");`,
+          }}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Practical Examples</Typography>
-          <Typography variant="h3">Shopping Cart</Typography>
-          <CodeBlock language="javascript">{`let cart = [
- { name: "Laptop", price: 299 },
- { name: "Mouse", price: 25 },
- { name: "Keyboard", price: 49 }
-];
-// Calculate total
-let total = cart.reduce((sum, item) => sum + item.price, 0);
-console.log(\`Total: \$\${total}\`); // Total: \$373
-// Get item names
-let items = cart.map(item => item.name);
-console.log(items); // ["Laptop", "Mouse", "Keyboard"]
-// Find expensive items
-let expensive = cart.filter(item => item.price > 30);
-console.log(expensive); // Laptop and Keyboard`}</CodeBlock>
-          <Typography variant="h3">Student Grades</Typography>
-          <CodeBlock language="javascript">{`let students = [
- { name: "Sokha", score: 85 },
- { name: "Dara", score: 72 },
- { name: "Bopha", score: 91 },
- { name: "Vanna", score: 58 }
-];
-// Get passing students
-let passing = students.filter(s => s.score >= 60);
-console.log(passing);
-// Get names only
-let names = students.map(s => s.name);
-console.log(names);
-// Calculate average
-let total = students.reduce((sum, s) => sum + s.score, 0);
-let average = total / students.length;
-console.log(\`Average: \${average}\`); // 76.5`}</CodeBlock>
-        </div>
+
+      {/* Challenge */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Challenge</h2>
+        <p className="text-sm text-muted-foreground">
+          Create an array with at least 3 numbers. Use{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">.map()</code> to transform each number (multiply,
+          add, or format it), and store the result in a new variable.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{
+            js: `// Create an array with at least 3 numbers
+const numbers = [10, 25, 40];
+
+// Use .map() to transform them — store in a new variable
+const doubled = numbers.map((n) => n * 2);
+
+document.write(doubled.join(", "));`,
+          }}
+          challenge={{
+            prompt:
+              "Create an array with at least 3 items, use .map() to transform each one, and store the result in a new variable.",
+            check(_html, _css, js) {
+              if (!js.includes("["))
+                return { passed: false, message: "Create an array using [ ]." };
+              if (!js.includes(".map("))
+                return { passed: false, message: "Use .map() to transform the array." };
+              const constCount = (js.match(/\bconst\b/g) ?? []).length;
+              const letCount = (js.match(/\blet\b/g) ?? []).length;
+              if (constCount + letCount < 2)
+                return {
+                  passed: false,
+                  message:
+                    "Store the mapped result in a new variable — you need at least two variable declarations.",
+                };
+              return {
+                passed: true,
+                message: "Challenge complete! You transformed an array with .map().",
+              };
+            },
+          }}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Nested Loops</Typography>
-          <Typography variant="h3">Looping Through 2D Arrays</Typography>
-          <CodeBlock language="javascript">{`let matrix = [
- [1, 2, 3],
- [4, 5, 6],
- [7, 8, 9]
-];
-for (let row of matrix) {
- for (let num of row) {
- console.log(num);
- }
-}
-// 1, 2, 3, 4, 5, 6, 7, 8, 9`}</CodeBlock>
-          <Typography variant="h3">Multiplication Table</Typography>
-          <CodeBlock language="javascript">{`for (let i = 1; i <= 5; i++) {
- let row = "";
- for (let j = 1; j <= 5; j++) {
- row += \`\${i * j}\t\`;
- }
- console.log(row);
-}
-// 1 2 3 4 5
-// 2 4 6 8 10
-// ...`}</CodeBlock>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Array Basics</Typography>
-          <Typography>
-            Create an array of 5 Cambodian provinces. Then:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Print each province</li>
-            <li>Add 2 more provinces</li>
-            <li>Remove the first one</li>
-            <li>Check if &quot;Siem Reap&quot; is in the array</li>
-          </ul>
-          <Typography variant="h3">Exercise 2: Sum Array</Typography>
-          <Typography>
-            Write a function that takes an array of numbers and returns their sum.
-          </Typography>
-          <Typography variant="h3">Exercise 3: Find Maximum</Typography>
-          <Typography>
-            Write a function that finds the largest number in an array (without using Math.max).
-          </Typography>
-          <Typography variant="h3">Exercise 4: Filter Practice</Typography>
-          <Typography>
-            Given an array of ages, filter to find:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>All adults (18+)</li>
-            <li>All teenagers (13-19)</li>
-          </ul>
-          <Typography variant="h3">Exercise 5: Todo List Data</Typography>
-          <Typography>
-            Create an array of todo objects with task and done properties. Write functions to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>List all tasks</li>
-            <li>List only incomplete tasks</li>
-            <li>Mark a task as done</li>
-            <li>Count completed tasks</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Typography>
-            Array Methods
-          </Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Method</TableHead>
-                <TableHead>Purpose</TableHead>
-                <TableHead>Returns</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>push()</TableCell>
-                <TableCell>Add to end</TableCell>
-                <TableCell>New length</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>pop()</TableCell>
-                <TableCell>Remove from end</TableCell>
-                <TableCell>Removed element</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>map()</TableCell>
-                <TableCell>Transform all</TableCell>
-                <TableCell>New array</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>filter()</TableCell>
-                <TableCell>Keep matches</TableCell>
-                <TableCell>New array</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>find()</TableCell>
-                <TableCell>Get first match</TableCell>
-                <TableCell>Element or undefined</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>forEach()</TableCell>
-                <TableCell>Loop through</TableCell>
-                <TableCell>undefined</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>reduce()</TableCell>
-                <TableCell>Combine to one</TableCell>
-                <TableCell>Single value</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>includes()</TableCell>
-                <TableCell>Check existence</TableCell>
-                <TableCell>Boolean</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography>
-            Loop Types
-          </Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Syntax</TableHead>
-                <TableHead>Best For</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>for</TableCell>
-                <TableCell>for (let i=0; i&lt;n; i++)</TableCell>
-                <TableCell>Index needed</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>for...of</TableCell>
-                <TableCell>for (let x of arr)</TableCell>
-                <TableCell>Simple iteration</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>forEach</TableCell>
-                <TableCell>arr.forEach(fn)</TableCell>
-                <TableCell>Array operations</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>while</TableCell>
-                <TableCell>while (cond)</TableCell>
-                <TableCell>Unknown iterations</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Before moving to Module 07:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Create and manipulate arrays</li>
-            <li>Use all loop types</li>
-            <li>Apply map, filter, reduce</li>
-            <li>Complete all exercises</li>
-            <li>Get mentor verification</li>
-          </ul>
-          <Typography>
-            Coming Next: Module 07 - DOM Manipulation
-          </Typography>
-          <Typography>
-            You will learn to change web pages with JavaScript!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            Collections power your apps!
-          </Typography>
-          <Typography>
-            Arrays hold all your data.
-          </Typography>
-        </div>
-      </section>
-    </div>
+    </article>
   );
 }

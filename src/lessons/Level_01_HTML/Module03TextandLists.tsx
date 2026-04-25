@@ -1,534 +1,257 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
-export default function Module03TextandLists() {
-  return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Text Content &amp; Lists</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 01: HTML Fundamentals</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Use heading tags to create content hierarchy</li>
-            <li>Format paragraphs and text properly</li>
-            <li>Add emphasis with bold and italic text</li>
-            <li>Create ordered, unordered, and description lists</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: Headings - Creating Content Hierarchy</Typography>
-          <Typography variant="h3">The Six Heading Levels</Typography>
-          <Typography>
-            HTML provides six levels of headings, from &lt;h1&gt; (most important) to &lt;h6&gt; (least important).
-          </Typography>
-          <CodeBlock language="html">{`<h1>This is Heading 1 - The Main Title</h1>
-<h2>This is Heading 2 - Major Section</h2>
-<h3>This is Heading 3 - Subsection</h3>
-<h4>This is Heading 4 - Sub-subsection</h4>
-<h5>This is Heading 5 - Minor heading</h5>
-<h6>This is Heading 6 - Smallest heading</h6>`}</CodeBlock>
-          <Typography variant="h3">Heading Hierarchy</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>HEADING HIERARCHY</li>
-            <li>&lt;h1&gt; Learn Web Development at KOOMPI MAIN TITLE</li>
-            <li>(only ONE per page)</li>
-            <li>&lt;h2&gt; Track 02: Web Development MAJOR SECTION</li>
-            <li>&lt;h3&gt; Level 1: HTML Fundamentals SUBSECTION</li>
-            <li>&lt;h4&gt; Module 1: Getting Started SUB-SUBSECTION</li>
-            <li>&lt;h4&gt; Module 2: Document Structure</li>
-            <li>&lt;h3&gt; Level 2: CSS Styling</li>
-            <li>&lt;h2&gt; Track 03: Business Skills</li>
-          </ul>
-          <Typography variant="h3">Important Rules for Headings</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Rule</TableHead>
-                <TableHead>Why</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Only ONE &lt;h1&gt; per page</TableCell>
-                <TableCell>The page should have one main topic</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Don&apos;t skip levels</TableCell>
-                <TableCell>Go h1 → h2 → h3, not h1 → h3</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Use for structure, not size</TableCell>
-                <TableCell>Don&apos;t use h3 just because it looks smaller</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Make them descriptive</TableCell>
-                <TableCell>&quot;Our Services&quot; not &quot;Section 2&quot;</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Example: Article Structure</Typography>
-          <CodeBlock language="html">{`<article>
- <h1>The Complete Guide to Learning HTML</h1>
- <h2>Introduction</h2>
- <p>HTML is the foundation of web development...</p>
- <h2>Getting Started</h2>
- <h3>What You Need</h3>
- <p>A text editor and a browser...</p>
- <h3>Your First Page</h3>
- <p>Create a file called index.html...</p>
- <h2>Basic Elements</h2>
- <h3>Text Elements</h3>
- <h4>Headings</h4>
- <p>There are six levels of headings...</p>
- <h4>Paragraphs</h4>
- <p>Use the p tag for paragraphs...</p>
- <h2>Conclusion</h2>
- <p>You now know the basics of HTML...</p>
-</article>`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Paragraphs and Text Blocks</Typography>
-          <Typography variant="h3">The &lt;p&gt; Element</Typography>
-          <Typography>
-            The &lt;p&gt; element defines a paragraph of text.
-          </Typography>
-          <CodeBlock language="html">{`<p>This is a paragraph. Browsers automatically add space before and after paragraphs.</p>
-<p>This is another paragraph. Notice there's space between them.</p>`}</CodeBlock>
-          <Typography variant="h3">Line Breaks</Typography>
-          <Typography>
-            To break a line without starting a new paragraph, use &lt;br&gt;:
-          </Typography>
-          <CodeBlock language="html">{`<p>
- KOOMPI Company<br>
- Phnom Penh, Cambodia<br>
- info@koompi.com
-</p>`}</CodeBlock>
-          <Typography>
-            Note: &lt;br&gt; is a void element (no closing tag).
-          </Typography>
-          <Typography variant="h3">Horizontal Rule</Typography>
-          <Typography>
-            The &lt;hr&gt; element creates a horizontal line, useful for separating sections:
-          </Typography>
-          <CodeBlock language="html">{`<h2>Section One</h2>
-<p>Content of section one...</p>
-<hr>
-<h2>Section Two</h2>
-<p>Content of section two...</p>`}</CodeBlock>
-          <Typography variant="h3">Preformatted Text</Typography>
-          <Typography>
-            The &lt;pre&gt; element preserves spaces and line breaks exactly as written:
-          </Typography>
-          <CodeBlock language="html">{`<pre>
- Name: Sokha
- Age: 22
- Country: Cambodia
-</pre>`}</CodeBlock>
-          <Typography>
-            This displays with the exact spacing, unlike normal HTML which collapses multiple spaces.
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Text Formatting and Emphasis</Typography>
-          <Typography variant="h3">Semantic vs Presentational Elements</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Semantic (Use These)</TableHead>
-                <TableHead>Presentational (Avoid)</TableHead>
-                <TableHead>Visual Effect</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>&lt;strong&gt;</TableCell>
-                <TableCell>&lt;b&gt;</TableCell>
-                <TableCell>Bold</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>&lt;em&gt;</TableCell>
-                <TableCell>&lt;i&gt;</TableCell>
-                <TableCell>Italic</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography>
-            Why semantic? Screen readers say &quot;emphasized&quot; for &lt;em&gt; but just &quot;italic&quot; for &lt;i&gt;.
-          </Typography>
-          <Typography variant="h3">Strong (Bold/Important)</Typography>
-          <Typography>
-            Use &lt;strong&gt; for text with strong importance:
-          </Typography>
-          <CodeBlock language="html">{`<p><strong>Warning:</strong> Do not delete system files!</p>
-<p>The deadline is <strong>December 31, 2024</strong>.</p>`}</CodeBlock>
-          <Typography variant="h3">Emphasis (Italic)</Typography>
-          <Typography>
-            Use &lt;em&gt; for text with emphasis:
-          </Typography>
-          <CodeBlock language="html">{`<p>You <em>must</em> complete all exercises.</p>
-<p>The word <em>semantic</em> means meaningful.</p>`}</CodeBlock>
-          <Typography variant="h3">Combining Formatting</Typography>
-          <Typography>
-            You can nest formatting elements:
-          </Typography>
-          <CodeBlock language="html">{`<p>This is <strong><em>very important</em></strong>.</p>`}</CodeBlock>
-          <Typography variant="h3">Other Text Elements</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Element</TableHead>
-                <TableHead>Purpose</TableHead>
-                <TableHead>Example</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>&lt;mark&gt;</TableCell>
-                <TableCell>Highlighted text</TableCell>
-                <TableCell>&lt;mark&gt;highlighted&lt;/mark&gt;</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>&lt;small&gt;</TableCell>
-                <TableCell>Smaller text (fine print)</TableCell>
-                <TableCell>&lt;small&gt;Terms apply&lt;/small&gt;</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>&lt;del&gt;</TableCell>
-                <TableCell>Deleted text (strikethrough)</TableCell>
-                <TableCell>&lt;del&gt;old price&lt;/del&gt;</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>&lt;ins&gt;</TableCell>
-                <TableCell>Inserted text (underline)</TableCell>
-                <TableCell>&lt;ins&gt;new text&lt;/ins&gt;</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>&lt;sub&gt;</TableCell>
-                <TableCell>Subscript</TableCell>
-                <TableCell>H&lt;sub&gt;2&lt;/sub&gt;O</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>&lt;sup&gt;</TableCell>
-                <TableCell>Superscript</TableCell>
-                <TableCell>x&lt;sup&gt;2&lt;/sup&gt;</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>&lt;code&gt;</TableCell>
-                <TableCell>Code snippet</TableCell>
-                <TableCell>&lt;code&gt;console.log()&lt;/code&gt;</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Example: Formatted Article</Typography>
-          <CodeBlock language="html">{`<article>
- <h1>HTML Text Formatting</h1>
- <p>HTML provides many ways to format text. The most common are 
- <strong>bold</strong> and <em>italic</em>.</p>
- <p><strong>Important:</strong> Use semantic elements like 
- <code>&lt;strong&gt;</code> instead of <code>&lt;b&gt;</code>.</p>
- <p>Water is written as H<sub>2</sub>O in chemistry.</p>
- <p>The area formula is πr<sup>2</sup>.</p>
- <p><small>© 2024 KOOMPI. All rights reserved.</small></p>
-</article>`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Unordered Lists</Typography>
-          <Typography variant="h3">What is an Unordered List?</Typography>
-          <Typography>
-            An unordered list displays items with bullet points. Order doesn&apos;t matter.
-          </Typography>
-          <CodeBlock language="html">{`<ul>
- <li>Rice</li>
- <li>Fish</li>
- <li>Vegetables</li>
-</ul>`}</CodeBlock>
-          <Typography>
-            Displays as:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Rice</li>
-            <li>Fish</li>
-            <li>Vegetables</li>
-          </ul>
-          <Typography variant="h3">When to Use Unordered Lists</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Good Use Cases</TableHead>
-                <TableHead>Bad Use Cases</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Shopping list</TableCell>
-                <TableCell>Step-by-step instructions</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Feature list</TableCell>
-                <TableCell>Numbered procedures</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Navigation menu</TableCell>
-                <TableCell>Rankings</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Example: Skills List</Typography>
-          <CodeBlock language="html">{`<h2>My Skills</h2>
+const EXPLORE_HTML = `<h1>Learning HTML</h1>
+<h2>Why it matters</h2>
+<p>
+  HTML gives your content <strong>meaning</strong>, not just looks.
+  A browser, a screen reader, and a search engine all read
+  the same file — good markup works for all three.
+</p>
+
+<h2>Things I already know</h2>
 <ul>
- <li>HTML</li>
- <li>CSS</li>
- <li>Linux Terminal</li>
- <li>Basic English</li>
-</ul>`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Ordered Lists</Typography>
-          <Typography variant="h3">What is an Ordered List?</Typography>
-          <Typography>
-            An ordered list displays items with numbers. Order matters.
-          </Typography>
-          <CodeBlock language="html">{`<ol>
- <li>Turn on computer</li>
- <li>Open text editor</li>
- <li>Create new file</li>
- <li>Write HTML code</li>
- <li>Save and preview</li>
-</ol>`}</CodeBlock>
-          <Typography>
-            Displays as:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Turn on computer</li>
-            <li>Open text editor</li>
-            <li>Create new file</li>
-            <li>Write HTML code</li>
-            <li>Save and preview</li>
-          </ul>
-          <Typography variant="h3">Ordered List Attributes</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Attribute</TableHead>
-                <TableHead>Purpose</TableHead>
-                <TableHead>Example</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>type</TableCell>
-                <TableCell>Number style</TableCell>
-                <TableCell>type=&quot;A&quot;, type=&quot;a&quot;, type=&quot;I&quot;, type=&quot;i&quot;</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>start</TableCell>
-                <TableCell>Starting number</TableCell>
-                <TableCell>start=&quot;5&quot;</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>reversed</TableCell>
-                <TableCell>Count backwards</TableCell>
-                <TableCell>&lt;ol reversed&gt;</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Examples with Attributes</Typography>
-          <CodeBlock language="html">{`<!-- Letters instead of numbers -->
-<ol type="A">
- <li>First item</li> <!-- Displays as A. -->
- <li>Second item</li> <!-- Displays as B. -->
-</ol>
-<!-- Start from different number -->
-<ol start="5">
- <li>Fifth item</li> <!-- Displays as 5. -->
- <li>Sixth item</li> <!-- Displays as 6. -->
-</ol>
-<!-- Roman numerals -->
-<ol type="I">
- <li>Chapter One</li> <!-- Displays as I. -->
- <li>Chapter Two</li> <!-- Displays as II. -->
-</ol>`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Nested Lists</Typography>
-          <Typography variant="h3">Lists Inside Lists</Typography>
-          <Typography>
-            You can put lists inside other lists:
-          </Typography>
-          <CodeBlock language="html">{`<h2>Web Development Curriculum</h2>
-<ol>
- <li>HTML Fundamentals
- <ul>
- <li>Document Structure</li>
- <li>Text Content</li>
- <li>Links and Images</li>
- </ul>
- </li>
- <li>CSS Styling
- <ul>
- <li>Selectors</li>
- <li>Box Model</li>
- <li>Layout</li>
- </ul>
- </li>
- <li>JavaScript
- <ul>
- <li>Variables</li>
- <li>Functions</li>
- <li>DOM</li>
- </ul>
- </li>
-</ol>`}</CodeBlock>
-          <Typography variant="h3">Proper Nesting</Typography>
-          <Typography>
-            Important: The nested list goes INSIDE the &lt;li&gt; element:
-          </Typography>
-          <CodeBlock language="html">{`<!-- CORRECT -->
-<ul>
- <li>Item
- <ul>
- <li>Nested item</li>
- </ul>
- </li>
+  <li>How to open a text editor</li>
+  <li>What a tag looks like</li>
+  <li>The basic page skeleton</li>
 </ul>
-<!-- WRONG -->
-<ul>
- <li>Item</li>
- <ul>
- <li>Nested item</li>
- </ul>
-</ul>`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Description Lists</Typography>
-          <Typography variant="h3">What is a Description List?</Typography>
-          <Typography>
-            A description list pairs terms with their definitions.
-          </Typography>
-          <CodeBlock language="html">{`<dl>
- <dt>HTML</dt>
- <dd>HyperText Markup Language - the structure of web pages</dd>
- <dt>CSS</dt>
- <dd>Cascading Style Sheets - the styling of web pages</dd>
- <dt>JavaScript</dt>
- <dd>A programming language - adds interactivity to web pages</dd>
-</dl>`}</CodeBlock>
-          <Typography variant="h3">Description List Elements</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Element</TableHead>
-                <TableHead>Meaning</TableHead>
-                <TableHead>Purpose</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>&lt;dl&gt;</TableCell>
-                <TableCell>Description List</TableCell>
-                <TableCell>Container for all items</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>&lt;dt&gt;</TableCell>
-                <TableCell>Description Term</TableCell>
-                <TableCell>The word/term being defined</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>&lt;dd&gt;</TableCell>
-                <TableCell>Description Details</TableCell>
-                <TableCell>The explanation/definition</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Multiple Definitions</Typography>
-          <Typography>
-            A term can have multiple definitions:
-          </Typography>
-          <CodeBlock language="html">{`<dl>
- <dt>JavaScript</dt>
- <dd>A programming language for web development</dd>
- <dd>Can run in browsers and on servers (Node.js)</dd>
- <dd>Originally created in 1995</dd>
-</dl>`}</CodeBlock>
-          <Typography variant="h3">Use Cases for Description Lists</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Good Use</TableHead>
-                <TableHead>Example</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Glossary</TableCell>
-                <TableCell>Technical terms and definitions</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>FAQ</TableCell>
-                <TableCell>Question and answer pairs</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Metadata</TableCell>
-                <TableCell>Key-value pairs like &quot;Author: Sokha&quot;</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Heading Practice</Typography>
-          <Typography>Create a page about Cambodia with proper heading structure.</Typography>
-          
-          <Typography variant="h3">Exercise 2: Format This Text</Typography>
-          <Typography>Take plain text and add HTML formatting using strong, em, and lists.</Typography>
 
-          <div className="mt-20 pt-10 border-t border-white/5">
-            <Typography variant="h2">Module Summary</Typography>
-            <Typography variant="h3">Key Rules</Typography>
-            <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-              <li>Only one &lt;h1&gt; per page</li>
-              <li>Don't skip heading levels</li>
-              <li>Use semantic elements (&lt;strong&gt; not &lt;b&gt;)</li>
-              <li>Nested lists go inside &lt;li&gt; elements</li>
-            </ul>
-            <Typography variant="h3">Next Steps</Typography>
-            <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-              <li>Complete all exercises</li>
-              <li>Get mentor verification</li>
-            </ul>
-          </div>
+<h2>Steps to build a page</h2>
+<ol>
+  <li>Create the HTML file</li>
+  <li>Add the document structure</li>
+  <li>Write the content</li>
+  <li>Open it in a browser</li>
+</ol>
+
+<blockquote>
+  <p>"The best time to learn HTML was yesterday. The second best time is now."</p>
+</blockquote>`;
+
+const CHALLENGE_STARTER = `<!-- Create an ordered list of exactly 3 things you want to learn.
+     Use <ol> for the list and <li> for each item. -->
+`;
+
+function parseHtml(raw: string): Document {
+  return new DOMParser().parseFromString(
+    `<!DOCTYPE html><html><body>${raw}</body></html>`,
+    "text/html"
+  );
+}
+
+const challenge = {
+  prompt:
+    "Create an <ol> (ordered list) with exactly 3 <li> items. Each item should be something you want to learn.",
+  check(htmlCode: string, _css: string, _js: string) {
+    const doc = parseHtml(htmlCode);
+
+    const ol = doc.querySelector("ol");
+    if (!ol)
+      return { passed: false, message: "No <ol> found yet. Ordered lists start with the <ol> tag." };
+
+    const items = ol.querySelectorAll(":scope > li");
+    if (items.length === 0)
+      return { passed: false, message: "Your <ol> needs <li> items inside it." };
+
+    if (items.length < 3)
+      return {
+        passed: false,
+        message: `You have ${items.length} item${items.length === 1 ? "" : "s"} — add ${3 - items.length} more to reach exactly 3.`,
+      };
+
+    if (items.length > 3)
+      return {
+        passed: false,
+        message: `You have ${items.length} items — the challenge asks for exactly 3. Remove ${items.length - 3}.`,
+      };
+
+    for (let i = 0; i < items.length; i++) {
+      if (!items[i].textContent?.trim()) {
+        return { passed: false, message: `Item ${i + 1} is empty — write something you want to learn.` };
+      }
+    }
+
+    return { passed: true, message: "Challenge complete! Three things to learn, ready to go." };
+  },
+};
+
+export default function Module03TextandLists() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
+  return (
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* ── 1. Hook ────────────────────────────────────────── */}
+      <section>
+        <p className="text-xl md:text-2xl text-foreground leading-relaxed font-serif">
+          Text is 90% of the web — and the difference between a heading and a paragraph is not just size,
+          it is meaning that search engines, screen readers, and your future self will depend on.
+        </p>
+      </section>
+
+      {/* ── 2. Concept ─────────────────────────────────────── */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-serif text-foreground">Hierarchy, emphasis, and order</h2>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          HTML gives you six heading levels (
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">h1</code> through{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">h6</code>), a paragraph tag (
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">p</code>), and two emphasis tags
+          that look the same but mean different things:{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;strong&gt;</code> marks
+          content as <strong>important</strong>, while{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;em&gt;</code> marks it as{" "}
+          <em>stressed</em>. Screen readers change their tone for both.
+        </p>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          For grouped content, you choose between two list types. An{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;ul&gt;</code> (unordered
+          list) uses bullet points — use it when sequence does not matter, like a list of skills. An{" "}
+          <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;ol&gt;</code> (ordered list)
+          uses numbers — use it when sequence matters, like steps in a process. Every item in both goes
+          inside an <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;li&gt;</code> tag.
+        </p>
+        <div className="rounded-xl bg-stone-50 border border-border px-6 py-5 space-y-2 text-sm font-mono text-foreground leading-relaxed">
+          <div><span className="text-[#c2622d]">h1–h6</span> — headings, largest to smallest (only one h1 per page)</div>
+          <div><span className="text-[#c2622d]">p</span> — paragraph of prose text</div>
+          <div><span className="text-[#c2622d]">strong</span> — important text (renders bold)</div>
+          <div><span className="text-[#c2622d]">em</span> — stressed text (renders italic)</div>
+          <div><span className="text-[#c2622d]">blockquote</span> — a quotation from another source</div>
+          <div><span className="text-[#c2622d]">ul / ol / li</span> — bullet list / numbered list / list item</div>
         </div>
       </section>
-    </div>
+
+      {/* ── 3. Example ─────────────────────────────────────── */}
+      <section className="space-y-5">
+        <h2 className="text-2xl font-serif text-foreground">Text and lists in action</h2>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          Here is a short article that uses every element from this lesson. Read the comments — each one
+          explains the choice.
+        </p>
+        <div className="rounded-xl border border-border overflow-hidden">
+          <div className="px-5 py-2.5 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            article.html
+          </div>
+          <pre className="px-6 py-5 text-sm font-mono leading-relaxed text-foreground overflow-x-auto bg-[#fafaf9]">
+{`<h1>Getting Started with Linux</h1>    ← one h1, the page title
+
+<p>
+  Linux is <strong>free</strong>,       ← strong = important fact
+  <strong>open source</strong>, and
+  used on most of the world's servers.
+</p>
+
+<h2>Why developers choose it</h2>       ← h2 starts a new section
+
+<ul>                                    ← order doesn't matter here
+  <li>Full control over the system</li>
+  <li>No licence fees</li>
+  <li>Huge community and documentation</li>
+</ul>
+
+<h2>How to install it</h2>
+
+<ol>                                    ← order matters: steps
+  <li>Download an ISO image</li>
+  <li>Write it to a USB drive</li>
+  <li>Boot from the USB</li>
+  <li>Follow the installer</li>
+</ol>
+
+<h2>A word from Linus Torvalds</h2>
+
+<blockquote>
+  <p>
+    "Software is like sex: it's better when it's <em>free</em>."
+  </p>                                  ← em = verbal stress
+</blockquote>`}
+          </pre>
+        </div>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          <li className="flex gap-2">
+            <span className="text-primary font-mono shrink-0">ul</span>
+            items where swapping the order would not change the meaning
+          </li>
+          <li className="flex gap-2">
+            <span className="text-primary font-mono shrink-0">ol</span>
+            steps, rankings, or any sequence where position carries meaning
+          </li>
+          <li className="flex gap-2">
+            <span className="text-primary font-mono shrink-0">strong vs b</span>
+            use <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">strong</code> — it has semantic weight; <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">b</code> is purely visual
+          </li>
+          <li className="flex gap-2">
+            <span className="text-primary font-mono shrink-0">em vs i</span>
+            same rule — <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">em</code> means stress; <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">i</code> is just italic styling
+          </li>
+        </ul>
+      </section>
+
+      {/* ── 4. Try it ──────────────────────────────────────── */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-serif text-foreground">Try it</h2>
+          <p className="text-base text-muted-foreground mt-1">
+            A page is already built below. Try wrapping a word in{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;strong&gt;</code>, changing the
+            heading levels, or converting the{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;ul&gt;</code> to an{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;ol&gt;</code> and back.
+          </p>
+        </div>
+        <CodePlayground
+          mode="html"
+          starter={{ html: EXPLORE_HTML }}
+          height="380px"
+        />
+      </section>
+
+      {/* ── 5. Challenge ───────────────────────────────────── */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-serif text-foreground">Challenge</h2>
+          <p className="text-base text-muted-foreground mt-1">
+            Create an ordered list — <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;ol&gt;</code> —
+            with <strong className="text-foreground">exactly 3</strong>{" "}
+            <code className="text-sm bg-stone-100 px-1.5 py-0.5 rounded">&lt;li&gt;</code> items about
+            things you want to learn. The check counts your items and tells you if something is off.
+          </p>
+        </div>
+        <CodePlayground
+          mode="html"
+          starter={{ html: CHALLENGE_STARTER }}
+          height="280px"
+          challenge={challenge}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
+      </section>
+
+      {/* ── 6. Gate ────────────────────────────────────────── */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
+      </section>
+
+    </article>
   );
 }

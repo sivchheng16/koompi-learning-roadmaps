@@ -1,441 +1,301 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
-export default function Module04ErrorHandling() {
-  return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Error Handling &amp; Debugging</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 04: JavaScript Advanced</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Handle errors gracefully with try/catch</li>
-            <li>Create custom error types</li>
-            <li>Debug code effectively</li>
-            <li>Use browser developer tools</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: Types of Errors</Typography>
-          <Typography variant="h3">JavaScript Error Types</Typography>
-          <CodeBlock language="javascript">{`// SyntaxError - Invalid code structure
-const x = ; // Unexpected token
-// ReferenceError - Using undefined variable
-console.log(undefinedVar);
-// TypeError - Wrong type operation
-null.toString();
-const notFunc = 5;
-notFunc();
-// RangeError - Number out of range
-const arr = new Array(-1);
-// URIError - Invalid URI
-decodeURI('%');`}</CodeBlock>
-          <Typography variant="h3">Runtime vs Syntax Errors</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>When</TableHead>
-                <TableHead>Can Catch?</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Syntax Error</TableCell>
-                <TableCell>Before running</TableCell>
-                <TableCell>No (fix code)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Runtime Error</TableCell>
-                <TableCell>While running</TableCell>
-                <TableCell>Yes (try/catch)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Logic Error</TableCell>
-                <TableCell>While running</TableCell>
-                <TableCell>No (wrong results)</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Try/Catch/Finally</Typography>
-          <Typography variant="h3">Basic Try/Catch</Typography>
-          <CodeBlock language="javascript">{`try {
- // Code that might fail
- const result = riskyOperation();
- console.log(result);
-} catch (error) {
- // Handle the error
- console.error('Something went wrong:', error.message);
-}`}</CodeBlock>
-          <Typography variant="h3">The Finally Block</Typography>
-          <Typography>
-            Runs whether success or failure:
-          </Typography>
-          <CodeBlock language="javascript">{`try {
- const data = await fetchData();
- displayData(data);
-} catch (error) {
- showErrorMessage(error);
+const EXPLORE_TRY = `// try / catch / finally
+function divide(a, b) {
+  if (b === 0) throw new Error("Cannot divide by zero");
+  return a / b;
+}
+
+try {
+  console.log(divide(10, 2));  // 5
+  console.log(divide(10, 0));  // throws
+} catch (err) {
+  console.error("Caught:", err.message);
 } finally {
- // Always runs
- hideLoadingSpinner();
-}`}</CodeBlock>
-          <Typography variant="h3">Error Object Properties</Typography>
-          <CodeBlock language="javascript">{`try {
- throw new Error('Something failed');
-} catch (error) {
- console.log(error.name); // "Error"
- console.log(error.message); // "Something failed"
- console.log(error.stack); // Stack trace
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Throwing Errors</Typography>
-          <Typography variant="h3">Throw Statement</Typography>
-          <CodeBlock language="javascript">{`function divide(a, b) {
- if (b === 0) {
- throw new Error('Cannot divide by zero');
- }
- return a / b;
+  console.log("This always runs");
+}`;
+
+const EXPLORE_CUSTOM = `// Custom error class
+class ValidationError extends Error {
+  constructor(message, field) {
+    super(message);
+    this.name = "ValidationError";
+    this.field = field;
+  }
 }
+
+function validateAge(age) {
+  if (typeof age !== "number") throw new TypeError("Age must be a number");
+  if (age < 0) throw new ValidationError("Age cannot be negative", "age");
+  if (age > 150) throw new ValidationError("Age is unreasonably large", "age");
+  return age;
+}
+
 try {
- const result = divide(10, 0);
-} catch (error) {
- console.log(error.message); // "Cannot divide by zero"
-}`}</CodeBlock>
-          <Typography variant="h3">Throwing Different Types</Typography>
-          <CodeBlock language="javascript">{`// Throw error object
-throw new Error('Generic error');
-// Throw specific error type
-throw new TypeError('Expected a number');
-throw new RangeError('Value out of range');
-// Throw custom object
-throw {
- code: 'VALIDATION_ERROR',
- message: 'Invalid email format',
- field: 'email'
-};`}</CodeBlock>
-          <Typography variant="h3">Re-throwing Errors</Typography>
-          <CodeBlock language="javascript">{`try {
- processData();
-} catch (error) {
- if (error.code === 'NETWORK_ERROR') {
- // Handle network error
- showOfflineMessage();
- } else {
- // Re-throw others
- throw error;
- }
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Custom Error Classes</Typography>
-          <Typography variant="h3">Creating Custom Errors</Typography>
-          <CodeBlock language="javascript">{`class ValidationError extends Error {
- constructor(message, field) {
- super(message);
- this.name = 'ValidationError';
- this.field = field;
- }
+  validateAge(-5);
+} catch (err) {
+  if (err instanceof ValidationError) {
+    console.error(\`Field "\${err.field}": \${err.message}\`);
+  } else {
+    throw err; // re-throw unknown errors
+  }
+}`;
+
+const EXPLORE_ASYNC_ERROR = `// Async error handling
+async function loadUser(id) {
+  try {
+    const res = await fetch(
+      \`https://jsonplaceholder.typicode.com/users/\${id}\`
+    );
+    if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+    return await res.json();
+  } catch (err) {
+    console.error("loadUser failed:", err.message);
+    return null; // fallback value
+  }
 }
-class NetworkError extends Error {
- constructor(message, statusCode) {
- super(message);
- this.name = 'NetworkError';
- this.statusCode = statusCode;
- }
+
+loadUser(1).then(u => console.log(u?.name ?? "Not found"));
+loadUser(9999).then(u => console.log(u?.name ?? "Not found"));`;
+
+const CHALLENGE_STARTER = `// Write a function "checkPositive(n)" that:
+//   • Throws a new Error("Must be positive") if n is negative.
+//   • Returns n if it is non-negative.
+// Then call it twice inside a try/catch:
+//   • Once with a positive number (should succeed).
+//   • Once with a negative number (should be caught).
+
+function checkPositive(n) {
+  // your code
 }
-// Usage
-function validateEmail(email) {
- if (!email.includes('@')) {
- throw new ValidationError('Invalid email format', 'email');
- }
-}
+
 try {
- validateEmail('invalid-email');
-} catch (error) {
- if (error instanceof ValidationError) {
- console.log(\`Field \${error.field}: \${error.message}\`);
- }
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Async Error Handling</Typography>
-          <Typography variant="h3">With Promises</Typography>
-          <CodeBlock language="javascript">{`fetchData()
- .then(data => process(data))
- .then(result => display(result))
- .catch(error => {
- // Catches error from any .then()
- console.error('Pipeline failed:', error);
- });`}</CodeBlock>
-          <Typography variant="h3">With Async/Await</Typography>
-          <CodeBlock language="javascript">{`async function loadData() {
- try {
- const response = await fetch(url);
- if (!response.ok) {
- throw new NetworkError('Request failed', response.status);
- }
- const data = await response.json();
- return data;
- } catch (error) {
- if (error instanceof NetworkError) {
- showNetworkError(error);
- } else {
- showGenericError(error);
- }
- throw error; // Re-throw if caller needs to know
- }
-}`}</CodeBlock>
-          <Typography variant="h3">Error Boundaries Pattern</Typography>
-          <CodeBlock language="javascript">{`async function safeOperation(operation, fallback) {
- try {
- return await operation();
- } catch (error) {
- console.error('Operation failed:', error);
- return fallback;
- }
+  // your calls here
+} catch (err) {
+  console.error("Caught:", err.message);
 }
-// Usage
-const users = await safeOperation(
- () => fetchUsers(),
- [] // Fallback to empty array
-);`}</CodeBlock>
+`;
+
+const challenge = {
+  prompt:
+    "Write a function that `throw`s an Error for negative numbers, then call it inside `try` / `catch`.",
+  check(_html: string, _css: string, js: string) {
+    if (!/\bthrow\b/.test(js))
+      return { passed: false, message: "Use `throw new Error(...)` to raise the error." };
+    if (!/\btry\b/.test(js))
+      return { passed: false, message: "Wrap the call in a `try` block." };
+    if (!/\bcatch\b/.test(js))
+      return { passed: false, message: "Add a `catch` block to handle the error." };
+    return { passed: true, message: "Solid error handling — your code now fails safely!" };
+  },
+};
+
+export default function Module04ErrorHandling() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
+  return (
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Header */}
+      <section className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary/60">
+          Track 04 · JavaScript Advanced
+        </p>
+        <h1 className="text-4xl font-serif text-foreground">Error Handling</h1>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          Things go wrong. Networks fail, users type invalid input, third-party APIs return
+          unexpected shapes. Robust code anticipates these situations and fails gracefully
+          rather than crashing silently. This lesson covers try/catch/finally, the Error object,
+          custom error classes, and async error patterns.
+        </p>
+      </section>
+
+      {/* Types of errors */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Types of Errors</h2>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-2 font-semibold text-foreground">Type</th>
+                <th className="text-left px-4 py-2 font-semibold text-foreground">When it happens</th>
+                <th className="text-left px-4 py-2 font-semibold text-foreground">Can catch?</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border text-muted-foreground">
+              {[
+                ["SyntaxError", "Invalid code — won't even parse", "No — fix the code"],
+                ["ReferenceError", "Variable doesn't exist", "Yes"],
+                ["TypeError", "Wrong type: null.foo, 5()", "Yes"],
+                ["RangeError", "Number out of valid range", "Yes"],
+                ["Network Error", "fetch() can't reach server", "Yes"],
+                ["Logic Error", "Code runs but gives wrong answer", "No — fix the logic"],
+              ].map(([t, w, c]) => (
+                <tr key={t}>
+                  <td className="px-4 py-2 font-mono text-foreground">{t}</td>
+                  <td className="px-4 py-2">{w}</td>
+                  <td className="px-4 py-2">{c}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Debugging Techniques</Typography>
-          <Typography variant="h3">Console Methods</Typography>
-          <CodeBlock language="javascript">{`console.log('Basic message');
-console.error('Error message');
-console.warn('Warning message');
-console.info('Info message');
-// Table for arrays/objects
-console.table([
- { name: 'Sokha', age: 22 },
- { name: 'Dara', age: 25 }
-]);
-// Grouping
-console.group('User Details');
-console.log('Name: Sokha');
-console.log('Age: 22');
-console.groupEnd();
-// Timing
-console.time('operation');
-// ... code to measure
-console.timeEnd('operation'); // operation: 123.45ms
-// Counting
-console.count('clicked'); // clicked: 1
-console.count('clicked'); // clicked: 2
-// Assert
-console.assert(1 === 2, 'This will show because condition is false');`}</CodeBlock>
-          <Typography variant="h3">Debugger Statement</Typography>
-          <CodeBlock language="javascript">{`function calculateTotal(items) {
- let total = 0;
- for (const item of items) {
- debugger; // Browser pauses here
- total += item.price * item.quantity;
- }
- return total;
-}`}</CodeBlock>
-          <Typography variant="h3">Browser DevTools</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>DEVTOOLS FEATURES</li>
-            <li>CONSOLE TAB</li>
-            <li>• View logs and errors</li>
-            <li>• Execute JavaScript</li>
-            <li>• Test expressions</li>
-            <li>SOURCES TAB</li>
-            <li>• Set breakpoints</li>
-            <li>• Step through code</li>
-            <li>• Watch variables</li>
-            <li>• View call stack</li>
-            <li>NETWORK TAB</li>
-            <li>• See all requests</li>
-            <li>• Check response data</li>
-            <li>• Debug API calls</li>
-            <li>ELEMENTS TAB</li>
-            <li>• Inspect DOM</li>
-            <li>• See computed styles</li>
-            <li>• Debug layout</li>
-          </ul>
+
+      {/* try/catch/finally */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">try / catch / finally</h2>
+        <p className="text-base text-muted-foreground">
+          Wrap risky code in a <code className="font-mono text-sm">try</code> block. If anything
+          inside it throws, control jumps immediately to <code className="font-mono text-sm">catch</code>.
+          The <code className="font-mono text-sm">finally</code> block runs regardless — perfect
+          for cleanup like hiding a loading spinner.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Structure
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`try {
+  // code that might throw
+  const data = JSON.parse(rawInput);
+  process(data);
+} catch (err) {
+  // err.name    — e.g. "SyntaxError"
+  // err.message — human-readable description
+  // err.stack   — call stack at the point of throw
+  console.error(err.name + ":", err.message);
+} finally {
+  hideSpinner(); // always runs
+}`}</pre>
         </div>
+
+        <CodePlayground mode="js" starter={{ js: EXPLORE_TRY }} height="260px" />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Best Practices</Typography>
-          <Typography variant="h3">Error Handling Patterns</Typography>
-          <CodeBlock language="javascript">{`// 1. Always handle async errors
-async function fetchData() {
- try {
- const data = await api.get('/data');
- return { success: true, data };
- } catch (error) {
- return { success: false, error: error.message };
- }
+
+      {/* Throwing errors */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Throwing Errors</h2>
+        <p className="text-base text-muted-foreground">
+          Use <code className="font-mono text-sm">throw</code> to signal a problem intentionally.
+          Always throw an <code className="font-mono text-sm">Error</code> object (or a subclass) — never a
+          plain string — so callers get a stack trace.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Throw and re-throw
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`// Throw from a validation function
+function requireEmail(email) {
+  if (!email.includes("@")) {
+    throw new TypeError("Invalid email address");
+  }
 }
-// 2. Provide user-friendly messages
-function getUserMessage(error) {
- const messages = {
- NETWORK_ERROR: 'Please check your internet connection',
- NOT_FOUND: 'The requested item was not found',
- UNAUTHORIZED: 'Please log in to continue',
- DEFAULT: 'Something went wrong. Please try again.'
- };
- return messages[error.code] || messages.DEFAULT;
+
+// Re-throw errors you can't handle
+try {
+  processData();
+} catch (err) {
+  if (err.name === "NetworkError") {
+    showOfflineBanner();
+  } else {
+    throw err; // let the caller deal with unexpected errors
+  }
+}`}</pre>
+        </div>
+      </section>
+
+      {/* Custom errors */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Custom Error Classes</h2>
+        <p className="text-base text-muted-foreground">
+          Extend the built-in <code className="font-mono text-sm">Error</code> class to create
+          domain-specific errors that carry extra fields. Callers can then use{" "}
+          <code className="font-mono text-sm">instanceof</code> to handle each type differently.
+        </p>
+
+        <CodePlayground mode="js" starter={{ js: EXPLORE_CUSTOM }} height="320px" />
+      </section>
+
+      {/* Async error handling */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Async Error Handling</h2>
+        <p className="text-base text-muted-foreground">
+          Async functions throw errors the same way sync functions do — just use{" "}
+          <code className="font-mono text-sm">try/catch</code> around your <code className="font-mono text-sm">await</code> calls.
+          Remember: <code className="font-mono text-sm">fetch()</code> only rejects on network failure,
+          not on HTTP 4xx/5xx — check <code className="font-mono text-sm">response.ok</code> yourself.
+        </p>
+
+        <CodePlayground mode="js" starter={{ js: EXPLORE_ASYNC_ERROR }} height="280px" />
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Defensive programming pattern
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`// Safe wrapper — always returns something useful
+async function safeGet(url, fallback = null) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+    return await res.json();
+  } catch (err) {
+    console.error("safeGet:", err.message);
+    return fallback;
+  }
 }
-// 3. Log errors for debugging
-function handleError(error, context) {
- console.error(\`Error in \${context}:\`, error);
- // In production, send to error tracking service
- if (window.errorTracker) {
- window.errorTracker.capture(error, { context });
- }
-}
-// 4. Fail gracefully
-function renderData(data) {
- if (!data || !Array.isArray(data)) {
- return '<p>No data available</p>';
- }
- return data.map(item => \`<div>\${item.name}</div>\`).join('');
-}`}</CodeBlock>
-          <Typography variant="h3">Debugging Checklist</Typography>
-          <CodeBlock language="text">{`□ Read the error message carefully
-□ Check the line number in the stack trace
-□ Verify variable values with console.log
-□ Check for typos
-□ Verify data types
-□ Check API response format
-□ Test with simple inputs first
-□ Use browser DevTools breakpoints
-□ Check network tab for failed requests
-□ Google the exact error message`}</CodeBlock>
+
+const users = await safeGet("/api/users", []); // empty array if it fails`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Try/Catch Practice</Typography>
-          <Typography>
-            Wrap a fetch call in try/catch with proper error handling.
-          </Typography>
-          <Typography variant="h3">Exercise 2: Custom Error</Typography>
-          <Typography>
-            Create a AuthenticationError class with properties for code and message.
-          </Typography>
-          <Typography variant="h3">Exercise 3: Debug a Bug</Typography>
-          <Typography>
-            Find and fix the bug:
-          </Typography>
-          <CodeBlock language="javascript">{`function sumArray(numbers) {
- let total;
- for (let i = 0; i <= numbers.length; i++) {
- total += numbers[i];
- }
- return total;
-}`}</CodeBlock>
-          <Typography variant="h3">Exercise 4: Error Boundary</Typography>
-          <Typography>
-            Create a function that safely parses JSON with a fallback value.
-          </Typography>
-          <Typography variant="h3">Exercise 5: Full Error Handling</Typography>
-          <Typography>
-            Create a user registration form with:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Validation errors</li>
-            <li>Network error handling</li>
-            <li>User-friendly error messages</li>
-          </ul>
-        </div>
+
+      {/* Challenge */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Challenge</h2>
+        <p className="text-base text-muted-foreground">
+          Write a function <code className="font-mono text-sm">checkPositive(n)</code> that throws a
+          new <code className="font-mono text-sm">Error</code> if <code className="font-mono text-sm">n</code> is
+          negative. Call it twice inside a <code className="font-mono text-sm">try/catch</code> — once
+          with a positive number and once with a negative one — and log the caught error message.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{ js: CHALLENGE_STARTER }}
+          height="260px"
+          challenge={challenge}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Concept</TableHead>
-                <TableHead>Purpose</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>try/catch</TableCell>
-                <TableCell>Catch runtime errors</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>finally</TableCell>
-                <TableCell>Always execute cleanup</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>throw</TableCell>
-                <TableCell>Create errors intentionally</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Custom errors</TableCell>
-                <TableCell>Specific error types</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>console</TableCell>
-                <TableCell>Debug output</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>debugger</TableCell>
-                <TableCell>Pause execution</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Coming Next: Module 06 - Project: Weather Dashboard
-          </Typography>
-          <Typography>
-            You will build a complete application using everything learned!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            Errors are information!
-          </Typography>
-          <Typography>
-            Good error handling makes great apps.
-          </Typography>
-        </div>
-      </section>
-    </div>
+
+    </article>
   );
 }

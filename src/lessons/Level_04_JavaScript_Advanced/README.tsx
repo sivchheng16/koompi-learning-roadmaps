@@ -5,19 +5,19 @@ import { CodeBlock } from '../../components/ui/CodeBlock';
 import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Introduction() {
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
+    <article className="max-w-3xl mx-auto font-sans space-y-10">
+      <div>
+        <div>
           <Typography variant="h1">Introduction: JavaScript Advanced</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track 04: JavaScript Advanced</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Level Overview</Typography>
           <Typography>
             Take your JavaScript skills further! Learn advanced concepts that power real-world applications.
@@ -36,9 +36,9 @@ export default function Introduction() {
             <li>Project: Weather Dashboard</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Prerequisites</Typography>
           <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
             <li>Completed Track 03: JavaScript Basics</li>
@@ -46,9 +46,9 @@ export default function Introduction() {
             <li>Comfortable with functions, arrays, DOM</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">What You&apos;ll Build</Typography>
           <Typography>
             A Weather Dashboard that fetches real weather data:
@@ -65,9 +65,9 @@ export default function Introduction() {
             <li>31° 29° 27° 30° 32°</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Module Index</Typography>
           <Table>
             <TableHeader>
@@ -111,9 +111,9 @@ export default function Introduction() {
             </TableBody>
           </Table>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Key Concepts</Typography>
           <Typography variant="h3">ES6+ Features</Typography>
           <CodeBlock language="javascript">{`// Destructuring
@@ -140,9 +140,9 @@ const add = (a, b) => a + b;`}</CodeBlock>
  .then(data => console.log(data))
  .catch(error => console.error(error));`}</CodeBlock>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track Completion</Typography>
           <Typography>
             To complete Track 04:
@@ -156,9 +156,9 @@ const add = (a, b) => a + b;`}</CodeBlock>
             <li>JavaScript Advanced Badge earned</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography>
             Real apps need real data!
           </Typography>
@@ -166,7 +166,7 @@ const add = (a, b) => a + b;`}</CodeBlock>
             Start with Module 02: ES6+ Features
           </Typography>
         </div>
-      </section>
-    </div>
+      </div>
+    </article>
   );
 }

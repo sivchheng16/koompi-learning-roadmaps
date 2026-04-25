@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface LayoutContextType {
-  isSidebarCollapsed: boolean;
-  setIsSidebarCollapsed: (value: boolean) => void;
   isMobileSidebarOpen: boolean;
   setIsMobileSidebarOpen: (value: boolean) => void;
 }
@@ -10,18 +8,10 @@ interface LayoutContextType {
 const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
 
 export const LayoutProvider = ({ children }: { children: ReactNode }) => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   return (
-    <LayoutContext.Provider
-      value={{
-        isSidebarCollapsed,
-        setIsSidebarCollapsed,
-        isMobileSidebarOpen,
-        setIsMobileSidebarOpen,
-      }}
-    >
+    <LayoutContext.Provider value={{ isMobileSidebarOpen, setIsMobileSidebarOpen }}>
       {children}
     </LayoutContext.Provider>
   );

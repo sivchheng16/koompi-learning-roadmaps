@@ -5,19 +5,19 @@ import { CodeBlock } from '../../components/ui/CodeBlock';
 import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Introduction() {
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
+    <article className="max-w-3xl mx-auto font-sans space-y-10">
+      <div>
+        <div>
           <Typography variant="h1">Introduction: CSS Styling</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track 02: CSS Styling</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Level Overview</Typography>
           <Typography>
             CSS (Cascading Style Sheets) controls how your HTML looks. Colors, fonts, layouts, spacing — all done with CSS.
@@ -38,9 +38,9 @@ export default function Introduction() {
             <li>Project: Styled Portfolio</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Prerequisites</Typography>
           <Typography>
             Before starting this level, you should have:
@@ -51,9 +51,9 @@ export default function Introduction() {
             <li>Earned HTML Fundamentals Badge</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">What You&apos;ll Build</Typography>
           <Typography>
             By the end of this level, you will transform your plain HTML bio page into a beautifully styled portfolio:
@@ -71,9 +71,9 @@ export default function Introduction() {
             <li>Professional &amp; impressive!</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Module Index</Typography>
           <Table>
             <TableHeader>
@@ -127,9 +127,9 @@ export default function Introduction() {
             </TableBody>
           </Table>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">CSS Changes Everything</Typography>
           <CodeBlock language="css">{`/* Just a few lines of CSS... */
 body {
@@ -144,9 +144,9 @@ h1 {
 }
 /* ...transforms your entire page! */`}</CodeBlock>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track Completion</Typography>
           <Typography>
             To complete Track 02:
@@ -161,9 +161,9 @@ h1 {
             <li>Web Developer Apprentice Certificate awarded!</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography>
             Time to make your websites beautiful!
           </Typography>
@@ -171,7 +171,7 @@ h1 {
             Start with Module 02: Introduction to CSS
           </Typography>
         </div>
-      </section>
-    </div>
+      </div>
+    </article>
   );
 }

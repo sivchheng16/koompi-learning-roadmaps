@@ -1,493 +1,252 @@
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
+import { cn } from "@/lib/utils";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Module04APIRoutes() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+  const [selected, setSelected] = useState<string | null>(null);
+  const CORRECT = "app/api/route-name/route.ts";
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">API Routes</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Header */}
+      <section>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">API Routes</h1>
+        <p className="mt-3 text-muted-foreground text-base">
+          Next.js lets you write backend HTTP endpoints inside your project using Route Handlers. No separate Express server needed — your frontend and backend live in one codebase and deploy together.
+        </p>
+      </section>
+
+      {/* Where routes live */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Where Route Handlers Live</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          A file named <code className="bg-stone-100 px-1 rounded text-xs font-mono">route.ts</code> inside the <code className="bg-stone-100 px-1 rounded text-xs font-mono">app/</code> directory creates an API endpoint at that URL path. It must export named functions for each HTTP method.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">File tree → API URL</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`app/
+└── api/
+    ├── hello/
+    │   └── route.ts      →  GET  /api/hello
+    ├── products/
+    │   ├── route.ts      →  GET/POST  /api/products
+    │   └── [id]/
+    │       └── route.ts  →  GET/PUT/DELETE  /api/products/42
+    └── auth/
+        └── login/
+            └── route.ts  →  POST  /api/auth/login`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 07: Next.js &amp; Tailwind</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Create API endpoints in Next.js</li>
-            <li>Handle different HTTP methods</li>
-            <li>Connect to databases</li>
-            <li>Build a complete CRUD API</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: What are API Routes?</Typography>
-          <Typography variant="h3">Full-Stack in One Project</Typography>
-          <CodeBlock language="text">{`┌─────────────────────────────────────────────────────────────────────────────┐
-│ NEXT.JS = FRONTEND + BACKEND │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ │
-│ TRADITIONAL: NEXT.JS: │
-│ ════════════ ════════ │
-│ │
-│ Frontend (React) ←──→ Backend (Express) │
-│ Separate project Separate project │
-│ Different deploy Different deploy │
-│ │
-│ Frontend (React) │
-│ + │
-│ Backend (API Routes) │
-│ ───────────────────── │
-│ ONE project, ONE deploy │
-│ │
-└─────────────────────────────────────────────────────────────────────────────┘`}</CodeBlock>
-          <Typography variant="h3">API Route Location</Typography>
-          <CodeBlock language="text">{`app/
-├── api/
-│ ├── hello/
-│ │ └── route.js → GET /api/hello
-│ ├── users/
-│ │ ├── route.js → /api/users
-│ │ └── [id]/
-│ │ └── route.js → /api/users/123
-│ └── products/
-│ └── route.js → /api/products`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Basic API Route</Typography>
-          <Typography variant="h3">Simple GET Endpoint</Typography>
-          <CodeBlock language="jsx">{`// app/api/hello/route.js
-import { NextResponse } from 'next/server';
+
+      {/* Basic GET */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">A Simple GET Handler</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Export an <code className="bg-stone-100 px-1 rounded text-xs font-mono">async function GET()</code>. Use <code className="bg-stone-100 px-1 rounded text-xs font-mono">NextResponse.json()</code> to return JSON. Test it in the browser at the matching URL.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">app/api/hello/route.ts</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`import { NextResponse } from 'next/server';
+
 export async function GET() {
- return NextResponse.json({ message: 'Hello, World!' });
-}`}</CodeBlock>
-          <Typography>
-            Test it: http://localhost:3000/api/hello
-          </Typography>
-          <Typography variant="h3">With Dynamic Data</Typography>
-          <CodeBlock language="jsx">{`// app/api/time/route.js
-import { NextResponse } from 'next/server';
-export async function GET() {
- return NextResponse.json({
- time: new Date().toISOString(),
- timezone: 'Asia/Phnom_Penh'
- });
-}`}</CodeBlock>
+  return NextResponse.json({
+    message: 'Hello from the server!',
+    timestamp: new Date().toISOString(),
+  });
+}
+
+// Visit http://localhost:3000/api/hello to see the JSON`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: HTTP Methods</Typography>
-          <Typography variant="h3">All Methods in One File</Typography>
-          <CodeBlock language="jsx">{`// app/api/products/route.js
-import { NextResponse } from 'next/server';
-// Simulated database
+
+      {/* CRUD example */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">GET + POST in One File</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Export one function per HTTP method in the same <code className="bg-stone-100 px-1 rounded text-xs font-mono">route.ts</code>. Next.js dispatches by method name automatically.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">app/api/products/route.ts</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`import { NextRequest, NextResponse } from 'next/server';
+
+// In-memory store (use a real DB in production)
 let products = [
- { id: 1, name: 'Laptop', price: 299 },
- { id: 2, name: 'Mouse', price: 25 },
+  { id: 1, name: 'KOOMPI E13', price: 299 },
+  { id: 2, name: 'Wireless Mouse', price: 25 },
 ];
-// GET - List all products
+
+// GET /api/products
 export async function GET() {
- return NextResponse.json(products);
+  return NextResponse.json(products);
 }
-// POST - Create new product
-export async function POST(request) {
- const body = await request.json();
- const newProduct = {
- id: products.length + 1,
- name: body.name,
- price: body.price
- };
- products.push(newProduct);
- return NextResponse.json(newProduct, { status: 201 });
-}`}</CodeBlock>
-          <Typography variant="h3">Dynamic Route Methods</Typography>
-          <CodeBlock language="jsx">{`// app/api/products/[id]/route.js
-import { NextResponse } from 'next/server';
-// GET single product
-export async function GET(request, { params }) {
- const id = parseInt(params.id);
- const product = products.find(p => p.id === id);
- if (!product) {
- return NextResponse.json(
- { error: 'Product not found' },
- { status: 404 }
- );
- }
- return NextResponse.json(product);
+
+// POST /api/products
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const newProduct = {
+    id: products.length + 1,
+    name: body.name,
+    price: body.price,
+  };
+  products.push(newProduct);
+  return NextResponse.json(newProduct, { status: 201 });
+}`}</pre>
+        </div>
+      </section>
+
+      {/* Dynamic route handler */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Dynamic Route Handlers</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Dynamic segments work exactly like page routes. The second argument to the handler provides <code className="bg-stone-100 px-1 rounded text-xs font-mono">params</code> with the URL values.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">app/api/products/[id]/route.ts</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`import { NextRequest, NextResponse } from 'next/server';
+
+// GET /api/products/42
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const product = products.find(p => p.id === Number(params.id));
+  if (!product) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+  return NextResponse.json(product);
 }
-// PUT - Update product
-export async function PUT(request, { params }) {
- const id = parseInt(params.id);
- const body = await request.json();
- const index = products.findIndex(p => p.id === id);
- if (index === -1) {
- return NextResponse.json(
- { error: 'Product not found' },
- { status: 404 }
- );
- }
- products[index] = { ...products[index], ...body };
- return NextResponse.json(products[index]);
-}
-// DELETE - Remove product
-export async function DELETE(request, { params }) {
- const id = parseInt(params.id);
- const index = products.findIndex(p => p.id === id);
- if (index === -1) {
- return NextResponse.json(
- { error: 'Product not found' },
- { status: 404 }
- );
- }
- products.splice(index, 1);
- return NextResponse.json({ success: true });
-}`}</CodeBlock>
+
+// DELETE /api/products/42
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const index = products.findIndex(p => p.id === Number(params.id));
+  if (index === -1) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+  products.splice(index, 1);
+  return NextResponse.json({ success: true });
+}`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Request &amp; Response</Typography>
-          <Typography variant="h3">Reading Request Data</Typography>
-          <CodeBlock language="jsx">{`export async function POST(request) {
- // JSON body
- const body = await request.json();
- // URL search params
- const { searchParams } = new URL(request.url);
- const query = searchParams.get('q');
- // Headers
- const authHeader = request.headers.get('authorization');
- // Cookies
- const cookies = request.cookies;
- const token = cookies.get('token');
- return NextResponse.json({ body, query, authHeader });
-}`}</CodeBlock>
-          <Typography variant="h3">Response Options</Typography>
-          <CodeBlock language="jsx">{`// JSON response
-return NextResponse.json(data);
-// With status code
-return NextResponse.json(data, { status: 201 });
-// With headers
-return NextResponse.json(data, {
- headers: {
- 'Cache-Control': 'max-age=3600'
- }
-});
-// Redirect
-return NextResponse.redirect(new URL('/login', request.url));
-// Error response
-return NextResponse.json(
- { error: 'Not Found' },
- { status: 404 }
-);`}</CodeBlock>
+
+      {/* Request data */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Reading Request Data</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          <code className="bg-stone-100 px-1 rounded text-xs font-mono">NextRequest</code> extends the standard Web API Request with Next.js helpers for cookies and URL search params.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`export async function POST(request: NextRequest) {
+  // JSON body
+  const body = await request.json();
+
+  // URL query params — e.g. /api/search?q=laptop
+  const { searchParams } = new URL(request.url);
+  const query = searchParams.get('q');
+
+  // Request headers
+  const auth = request.headers.get('authorization');
+
+  // Cookies
+  const token = request.cookies.get('session')?.value;
+
+  return NextResponse.json({ body, query, auth, token });
+}`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Database Connection</Typography>
-          <Typography variant="h3">Using a JSON File (Simple)</Typography>
-          <CodeBlock language="jsx">{`// lib/db.js
-import fs from 'fs/promises';
-import path from 'path';
-const dbPath = path.join(process.cwd(), 'data', 'db.json');
-export async function readDB() {
- const data = await fs.readFile(dbPath, 'utf8');
- return JSON.parse(data);
-}
-export async function writeDB(data) {
- await fs.writeFile(dbPath, JSON.stringify(data, null, 2));
-}`}</CodeBlock>
-          <Typography variant="h3">Using with API Route</Typography>
-          <CodeBlock language="jsx">{`// app/api/todos/route.js
-import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
-export async function GET() {
- const db = await readDB();
- return NextResponse.json(db.todos);
-}
-export async function POST(request) {
- const body = await request.json();
- const db = await readDB();
- const newTodo = {
- id: Date.now(),
- text: body.text,
- completed: false
- };
- db.todos.push(newTodo);
- await writeDB(db);
- return NextResponse.json(newTodo, { status: 201 });
-}`}</CodeBlock>
+
+      {/* API Routes vs Server Actions */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">API Routes vs Server Actions</h2>
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Use API Routes when…</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Use Server Actions when…</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[
+                ["Building a public REST API consumed by mobile apps", "Handling form submissions within your own app"],
+                ["A third-party service needs to call your endpoint (webhook)", "Mutating data triggered by a button click"],
+                ["You need fine-grained control over request/response headers", "You want the simplest possible form handling with no API boilerplate"],
+              ].map(([api, sa]) => (
+                <tr key={api} className="hover:bg-stone-50/50">
+                  <td className="px-4 py-3 text-muted-foreground">{api}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{sa}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Authentication Example</Typography>
-          <Typography variant="h3">Login Endpoint</Typography>
-          <CodeBlock language="jsx">{`// app/api/auth/login/route.js
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-// In real app, use proper auth library and database
-const users = [
- { id: 1, email: 'sokha@example.com', password: 'password123' }
-];
-export async function POST(request) {
- const { email, password } = await request.json();
- // Find user
- const user = users.find(u => u.email === email && u.password === password);
- if (!user) {
- return NextResponse.json(
- { error: 'Invalid credentials' },
- { status: 401 }
- );
- }
- // Set cookie (in real app, use proper JWT)
- cookies().set('session', user.id.toString(), {
- httpOnly: true,
- secure: process.env.NODE_ENV === 'production',
- maxAge: 60 * 60 * 24 * 7 // 1 week
- });
- return NextResponse.json({
- user: { id: user.id, email: user.email }
- });
-}`}</CodeBlock>
-          <Typography variant="h3">Protected Route</Typography>
-          <CodeBlock language="jsx">{`// app/api/profile/route.js
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-export async function GET() {
- const session = cookies().get('session');
- if (!session) {
- return NextResponse.json(
- { error: 'Unauthorized' },
- { status: 401 }
- );
- }
- // Fetch user by session
- // ... 
- return NextResponse.json({ user: { /* user data */ } });
-}`}</CodeBlock>
+
+      {/* Knowledge check */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Knowledge Check</h2>
+        <p className="text-sm text-muted-foreground">
+          Where does a GET route handler live in Next.js App Router?
+        </p>
+        <div className="flex flex-col gap-3">
+          {[
+            "pages/api/route-name.ts",
+            "app/api/route-name/route.ts",
+            "src/handlers/route-name.ts",
+            "app/route-name/handler.ts",
+          ].map((opt) => (
+            <button
+              key={opt}
+              onClick={() => {
+                setSelected(opt);
+                if (opt === CORRECT) notifyChallengePassed(moduleId ?? "");
+              }}
+              className={cn(
+                "text-left px-5 py-3.5 rounded-xl border text-sm font-sans transition-all",
+                selected === opt
+                  ? opt === CORRECT
+                    ? "border-green-400 bg-green-50 text-green-800"
+                    : "border-red-300 bg-red-50 text-red-800"
+                  : "border-border hover:border-primary/40 hover:bg-primary/5 text-foreground"
+              )}
+            >
+              {opt}
+            </button>
+          ))}
         </div>
+        {selected && selected !== CORRECT && (
+          <p className="text-sm text-red-600">Not quite — the Pages Router used <code className="bg-stone-100 px-1 rounded text-xs font-mono">pages/api/</code>, but the App Router requires a special filename inside the folder.</p>
+        )}
+        {selected === CORRECT && (
+          <p className="text-sm text-green-700">Correct! In the App Router, route handlers must be in a file named exactly <code className="bg-stone-100 px-1 rounded text-xs font-mono">route.ts</code> (or <code className="bg-stone-100 px-1 rounded text-xs font-mono">route.js</code>) inside the <code className="bg-stone-100 px-1 rounded text-xs font-mono">app/</code> directory.</p>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Complete CRUD Example</Typography>
-          <Typography variant="h3">Task Manager API</Typography>
-          <CodeBlock language="jsx">{`// data/db.json
-{
- "tasks": []
-}`}</CodeBlock>
-          <CodeBlock language="jsx">{`// app/api/tasks/route.js
-import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
-// GET all tasks
-export async function GET() {
- try {
- const db = await readDB();
- return NextResponse.json(db.tasks);
- } catch (error) {
- return NextResponse.json(
- { error: 'Failed to fetch tasks' },
- { status: 500 }
- );
- }
-}
-// POST new task
-export async function POST(request) {
- try {
- const body = await request.json();
- if (!body.title) {
- return NextResponse.json(
- { error: 'Title is required' },
- { status: 400 }
- );
- }
- const db = await readDB();
- const newTask = {
- id: Date.now().toString(),
- title: body.title,
- description: body.description || '',
- completed: false,
- createdAt: new Date().toISOString()
- };
- db.tasks.push(newTask);
- await writeDB(db);
- return NextResponse.json(newTask, { status: 201 });
- } catch (error) {
- return NextResponse.json(
- { error: 'Failed to create task' },
- { status: 500 }
- );
- }
-}`}</CodeBlock>
-          <CodeBlock language="jsx">{`// app/api/tasks/[id]/route.js
-import { NextResponse } from 'next/server';
-import { readDB, writeDB } from '@/lib/db';
-// GET single task
-export async function GET(request, { params }) {
- try {
- const db = await readDB();
- const task = db.tasks.find(t => t.id === params.id);
- if (!task) {
- return NextResponse.json(
- { error: 'Task not found' },
- { status: 404 }
- );
- }
- return NextResponse.json(task);
- } catch (error) {
- return NextResponse.json(
- { error: 'Failed to fetch task' },
- { status: 500 }
- );
- }
-}
-// PUT update task
-export async function PUT(request, { params }) {
- try {
- const body = await request.json();
- const db = await readDB();
- const index = db.tasks.findIndex(t => t.id === params.id);
- if (index === -1) {
- return NextResponse.json(
- { error: 'Task not found' },
- { status: 404 }
- );
- }
- db.tasks[index] = {
- ...db.tasks[index],
- ...body,
- updatedAt: new Date().toISOString()
- };
- await writeDB(db);
- return NextResponse.json(db.tasks[index]);
- } catch (error) {
- return NextResponse.json(
- { error: 'Failed to update task' },
- { status: 500 }
- );
- }
-}
-// DELETE task
-export async function DELETE(request, { params }) {
- try {
- const db = await readDB();
- const index = db.tasks.findIndex(t => t.id === params.id);
- if (index === -1) {
- return NextResponse.json(
- { error: 'Task not found' },
- { status: 404 }
- );
- }
- db.tasks.splice(index, 1);
- await writeDB(db);
- return NextResponse.json({ success: true });
- } catch (error) {
- return NextResponse.json(
- { error: 'Failed to delete task' },
- { status: 500 }
- );
- }
-}`}</CodeBlock>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">Click <strong>Complete &amp; Next</strong> below to continue.</p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">Complete the challenge above to unlock the next lesson.</p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Hello API</Typography>
-          <Typography>
-            Create a simple /api/hello endpoint.
-          </Typography>
-          <Typography variant="h3">Exercise 2: CRUD API</Typography>
-          <Typography>
-            Create a complete CRUD API for a notes app.
-          </Typography>
-          <Typography variant="h3">Exercise 3: Query Parameters</Typography>
-          <Typography>
-            Create an endpoint that filters data based on query params.
-          </Typography>
-          <Typography variant="h3">Exercise 4: Error Handling</Typography>
-          <Typography>
-            Add proper error handling to your API routes.
-          </Typography>
-          <Typography variant="h3">Exercise 5: Protected Endpoint</Typography>
-          <Typography>
-            Create an endpoint that requires authentication.
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Concept</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>route.js</TableCell>
-                <TableCell>API endpoint file</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>GET, POST, etc.</TableCell>
-                <TableCell>Export functions for methods</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>NextResponse.json()</TableCell>
-                <TableCell>Return JSON response</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>request.json()</TableCell>
-                <TableCell>Read request body</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>params</TableCell>
-                <TableCell>URL parameters</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>cookies()</TableCell>
-                <TableCell>Access cookies</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Coming Next: Module 06 - Deployment
-          </Typography>
-          <Typography>
-            You will learn to deploy your Next.js app!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            Full-stack development!
-          </Typography>
-          <Typography>
-            Backend and frontend in harmony.
-          </Typography>
-        </div>
-      </section>
-    </div>
+
+    </article>
   );
 }

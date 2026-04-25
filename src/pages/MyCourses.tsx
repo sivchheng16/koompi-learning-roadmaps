@@ -7,6 +7,7 @@ import type { Course, UserCredits } from "../types/course";
 import { cn } from "@/lib/utils";
 import { Trash2, Globe, Lock, Plus, Loader2 } from "lucide-react";
 import Footer from "../components/Footer";
+import ConfirmModal from "../components/ConfirmModal";
 
 type CourseWithCount = Course & { module_count: number };
 
@@ -16,6 +17,7 @@ export default function MyCourses() {
   const [credits, setCredits] = useState<UserCredits | null>(null);
   const [loading, setLoading] = useState(true);
   const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
+  const [confirmSlug, setConfirmSlug] = useState<string | null>(null);
 
   const [showRequest, setShowRequest] = useState(false);
   const [reason, setReason] = useState("");
@@ -32,12 +34,13 @@ export default function MyCourses() {
       .finally(() => setLoading(false));
   }, [user]);
 
-  const handleDelete = async (slug: string) => {
-    if (!confirm("Delete this course? This cannot be undone.")) return;
-    setDeletingSlug(slug);
+  const handleDelete = async () => {
+    if (!confirmSlug) return;
+    setDeletingSlug(confirmSlug);
     try {
-      await courseApi.deleteCourse(slug);
-      setCourses(prev => prev.filter(c => c.slug !== slug));
+      await courseApi.deleteCourse(confirmSlug);
+      setCourses(prev => prev.filter(c => c.slug !== confirmSlug));
+      setConfirmSlug(null);
     } finally {
       setDeletingSlug(null);
     }
@@ -71,7 +74,7 @@ export default function MyCourses() {
   const canCreate = credits ? credits.credits_remaining >= 10 : false;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <div className="max-w-5xl mx-auto px-6 pt-12 pb-24">
 
         {/* Header */}
@@ -186,7 +189,7 @@ export default function MyCourses() {
                     </span>
                   </div>
                   <button
-                    onClick={() => handleDelete(course.slug)}
+                    onClick={() => setConfirmSlug(course.slug)}
                     disabled={deletingSlug === course.slug}
                     className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all"
                   >
@@ -212,6 +215,16 @@ export default function MyCourses() {
           </div>
         )}
       </div>
+      <ConfirmModal
+        open={!!confirmSlug}
+        title="Delete this course?"
+        description="This will permanently remove the course and all its modules. This cannot be undone."
+        confirmLabel="Delete"
+        destructive
+        loading={!!deletingSlug}
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmSlug(null)}
+      />
       <Footer />
     </div>
   );

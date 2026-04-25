@@ -1,549 +1,406 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
-export default function Module07ProjectPortfolio() {
-  return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Project - Styled Portfolio</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 02: CSS Styling</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Overview</Typography>
-          <Typography>
-            It&apos;s time to combine everything you&apos;ve learned! You will transform your HTML Bio Page into a beautiful, professional, responsive portfolio website.
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Requirements</Typography>
-          <Typography variant="h3">Must Have (Required)</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Requirement</TableHead>
-                <TableHead>CSS Concepts Used</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>External CSS file(s)</TableCell>
-                <TableCell>External stylesheets</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Custom color scheme</TableCell>
-                <TableCell>Color properties</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Custom fonts (Google Fonts)</TableCell>
-                <TableCell>Typography</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Styled navigation with hover effects</TableCell>
-                <TableCell>Selectors, transitions</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Proper spacing (margin/padding)</TableCell>
-                <TableCell>Box model</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Cards or styled sections</TableCell>
-                <TableCell>Borders, backgrounds</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Responsive design (mobile + desktop)</TableCell>
-                <TableCell>Media queries</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Smooth transitions on interactions</TableCell>
-                <TableCell>Transitions</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Flexbox for layout</TableCell>
-                <TableCell>Flexbox</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Centered container</TableCell>
-                <TableCell>Max-width, margin auto</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Nice to Have (Bonus)</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Feature</TableHead>
-                <TableHead>Skills Shown</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Background image or gradient</TableCell>
-                <TableCell>Background properties</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Sticky navigation</TableCell>
-                <TableCell>Position fixed</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Animated buttons</TableCell>
-                <TableCell>Transform, transition</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Custom scrollbar</TableCell>
-                <TableCell>Advanced styling</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Dark/light sections</TableCell>
-                <TableCell>Color contrast</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Icon integration</TableCell>
-                <TableCell>External assets</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Structure</Typography>
-          <CodeBlock language="text">{`portfolio/
-├── index.html
-├── about.html (optional)
-├── contact.html (optional)
-├── css/
-│ └── style.css
-├── images/
-│ ├── profile.jpg
-│ └── ...
-└── README.md`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step-by-Step Guide</Typography>
-          <Typography variant="h3">Step 1: CSS Reset &amp; Base Styles</Typography>
-          <CodeBlock language="css">{`/* css/style.css */
-/* ==========================================
- CSS RESET & BASE
- ========================================== */
-*, *::before, *::after {
- margin: 0;
- padding: 0;
- box-sizing: border-box;
-}
-html {
- scroll-behavior: smooth;
-}
-body {
- font-family: 'Open Sans', Arial, sans-serif;
- font-size: 16px;
- line-height: 1.6;
- color: #333;
- background-color: #f5f5f5;
-}
-img {
- max-width: 100%;
- height: auto;
-}
-a {
- text-decoration: none;
- color: inherit;
-}
-ul {
- list-style: none;
-}`}</CodeBlock>
-          <Typography variant="h3">Step 2: CSS Variables (Optional but Recommended)</Typography>
-          <CodeBlock language="css">{`/* ==========================================
- CSS VARIABLES (Custom Properties)
- ========================================== */
-:root {
- /* Colors */
- --primary: #3498db;
- --primary-dark: #2980b9;
- --secondary: #2ecc71;
- --dark: #2c3e50;
- --light: #ecf0f1;
- --text: #333333;
- --text-light: #666666;
- --white: #ffffff;
- /* Spacing */
- --space-xs: 5px;
- --space-sm: 10px;
- --space-md: 20px;
- --space-lg: 40px;
- --space-xl: 80px;
- /* Transitions */
- --transition: 0.3s ease;
- /* Border radius */
- --radius: 8px;
- /* Shadows */
- --shadow: 0 2px 10px rgba(0,0,0,0.1);
- --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
-}`}</CodeBlock>
-          <Typography variant="h3">Step 3: Layout Classes</Typography>
-          <CodeBlock language="css">{`/* ==========================================
- LAYOUT
- ========================================== */
-.container {
- max-width: 1200px;
- margin: 0 auto;
- padding: 0 var(--space-md);
-}
-.section {
- padding: var(--space-xl) 0;
-}
-.section-dark {
- background-color: var(--dark);
- color: var(--white);
-}
-.section-light {
- background-color: var(--white);
-}
-.flex {
- display: flex;
-}
-.flex-center {
- display: flex;
- justify-content: center;
- align-items: center;
-}
-.flex-between {
- display: flex;
- justify-content: space-between;
- align-items: center;
-}`}</CodeBlock>
-          <Typography variant="h3">Step 4: Navigation Styling</Typography>
-          <CodeBlock language="css">{`/* ==========================================
- NAVIGATION
- ========================================== */
-.navbar {
- position: fixed;
- top: 0;
- left: 0;
- width: 100%;
- background-color: var(--dark);
- padding: var(--space-sm) 0;
- z-index: 1000;
- box-shadow: var(--shadow);
-}
-.navbar .container {
- display: flex;
- justify-content: space-between;
- align-items: center;
-}
-.logo {
- font-size: 1.5rem;
- font-weight: 700;
- color: var(--white);
-}
-.nav-links {
- display: flex;
- gap: var(--space-md);
-}
-.nav-links a {
- color: var(--light);
- padding: var(--space-sm) var(--space-md);
- border-radius: var(--radius);
- transition: var(--transition);
-}
-.nav-links a:hover {
- background-color: var(--primary);
- color: var(--white);
-}
-/* Space for fixed navbar */
-body {
- padding-top: 60px;
-}`}</CodeBlock>
-          <Typography variant="h3">Step 5: Hero Section</Typography>
-          <CodeBlock language="css">{`/* ==========================================
- HERO SECTION
- ========================================== */
-.hero {
- min-height: 80vh;
- display: flex;
- align-items: center;
- background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
- color: var(--white);
- text-align: center;
-}
-.hero h1 {
- font-size: 3rem;
- margin-bottom: var(--space-md);
-}
-.hero p {
- font-size: 1.25rem;
- opacity: 0.9;
- margin-bottom: var(--space-lg);
-}
-.hero-image {
- width: 150px;
- height: 150px;
- border-radius: 50%;
- border: 4px solid var(--white);
- margin-bottom: var(--space-md);
-}`}</CodeBlock>
-          <Typography variant="h3">Step 6: Cards &amp; Content</Typography>
-          <CodeBlock language="css">{`/* ==========================================
- CARDS
- ========================================== */
-.cards {
- display: flex;
- flex-wrap: wrap;
- gap: var(--space-md);
-}
-.card {
- flex: 1 1 300px;
- background-color: var(--white);
- border-radius: var(--radius);
- box-shadow: var(--shadow);
- padding: var(--space-lg);
- transition: var(--transition);
-}
-.card:hover {
- transform: translateY(-5px);
- box-shadow: var(--shadow-lg);
-}
-.card h3 {
- color: var(--dark);
- margin-bottom: var(--space-sm);
-}
-.card p {
- color: var(--text-light);
-}`}</CodeBlock>
-          <Typography variant="h3">Step 7: Buttons</Typography>
-          <CodeBlock language="css">{`/* ==========================================
- BUTTONS
- ========================================== */
-.btn {
- display: inline-block;
- padding: 12px 30px;
- border-radius: var(--radius);
- font-weight: 600;
- cursor: pointer;
- transition: var(--transition);
- border: none;
-}
-.btn-primary {
- background-color: var(--primary);
- color: var(--white);
-}
-.btn-primary:hover {
- background-color: var(--primary-dark);
- transform: translateY(-2px);
-}
-.btn-outline {
- background-color: transparent;
- border: 2px solid var(--white);
- color: var(--white);
-}
-.btn-outline:hover {
- background-color: var(--white);
- color: var(--dark);
-}`}</CodeBlock>
-          <Typography variant="h3">Step 8: Footer</Typography>
-          <CodeBlock language="css">{`/* ==========================================
- FOOTER
- ========================================== */
-.footer {
- background-color: var(--dark);
- color: var(--light);
- padding: var(--space-lg) 0;
- text-align: center;
-}
-.footer a {
- color: var(--primary);
- transition: var(--transition);
-}
-.footer a:hover {
- color: var(--white);
-}`}</CodeBlock>
-          <Typography variant="h3">Step 9: Responsive Design</Typography>
-          <CodeBlock language="css">{`/* ==========================================
- RESPONSIVE DESIGN
- ========================================== */
-/* Tablet */
-@media (max-width: 768px) {
- .hero h1 {
- font-size: 2rem;
- }
- .hero p {
- font-size: 1rem;
- }
- .nav-links {
- display: none; /* Add hamburger menu later */
- }
- .section {
- padding: var(--space-lg) 0;
- }
- .card {
- flex: 1 1 100%;
- }
-}
-/* Mobile */
-@media (max-width: 480px) {
- .hero h1 {
- font-size: 1.75rem;
- }
- .container {
- padding: 0 var(--space-sm);
- }
- .btn {
- display: block;
- width: 100%;
- text-align: center;
- }
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Complete HTML Template</Typography>
-          <CodeBlock language="html">{`<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Your Name - Portfolio</title>
- <!-- Google Fonts -->
- <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
- <!-- Your CSS -->
- <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
- <!-- Navigation -->
- <nav class="navbar">
- <div class="container flex-between">
- <a href="#" class="logo">Your Name</a>
- <ul class="nav-links">
- <li><a href="#about">About</a></li>
- <li><a href="#skills">Skills</a></li>
- <li><a href="#projects">Projects</a></li>
- <li><a href="#contact">Contact</a></li>
- </ul>
- </div>
- </nav>
- <!-- Hero Section -->
- <section class="hero">
- <div class="container">
- <img src="images/profile.jpg" alt="Your Name" class="hero-image">
- <h1>Hi, I'm [Your Name]</h1>
- <p>KOOMPI Apprentice | Future Software Engineer</p>
- <a href="#about" class="btn btn-outline">Learn More</a>
- </div>
- </section>
- <!-- About Section -->
- <section id="about" class="section section-light">
- <div class="container">
- <h2>About Me</h2>
- <p>Your story here...</p>
- </div>
- </section>
- <!-- Skills Section -->
- <section id="skills" class="section">
- <div class="container">
- <h2>My Skills</h2>
- <div class="cards">
- <div class="card">
- <h3>HTML</h3>
- <p>Building structured web pages</p>
- </div>
- <div class="card">
- <h3>CSS</h3>
- <p>Styling beautiful interfaces</p>
- </div>
- <div class="card">
- <h3>JavaScript</h3>
- <p>Coming soon...</p>
- </div>
- </div>
- </div>
- </section>
- <!-- Contact Section -->
- <section id="contact" class="section section-dark">
- <div class="container">
- <h2>Get In Touch</h2>
- <p>email@example.com</p>
- <a href="mailto:email@example.com" class="btn btn-primary">Email Me</a>
- </div>
- </section>
- <!-- Footer -->
- <footer class="footer">
- <div class="container">
- <p>&copy; 2024 Your Name. Built at KOOMPI </p>
- </div>
- </footer>
-</body>
-</html>`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Evaluation Checklist</Typography>
-          <Typography variant="h3">Technical (60 points)</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>External CSS file linked (5)</li>
-            <li>CSS reset applied (5)</li>
-            <li>Custom color scheme with variables (10)</li>
-            <li>Google Fonts integrated (5)</li>
-            <li>Navigation styled with hover effects (10)</li>
-            <li>Flexbox used for layout (10)</li>
-            <li>Responsive design works on mobile (10)</li>
-            <li>Transitions on interactive elements (5)</li>
-          </ul>
-          <Typography variant="h3">Visual Design (25 points)</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Consistent color palette (5)</li>
-            <li>Good typography hierarchy (5)</li>
-            <li>Appropriate spacing (5)</li>
-            <li>Visual balance and alignment (5)</li>
-            <li>Professional appearance (5)</li>
-          </ul>
-          <Typography variant="h3">Code Quality (15 points)</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Well-organized CSS with comments (5)</li>
-            <li>Meaningful class names (5)</li>
-            <li>No unused code (5)</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Level Complete</Typography>
-          <Typography>
-            Upon submitting your styled portfolio:
-          </Typography>
-          <Typography>
-            CSS Styling Badge earned
-Web Developer Apprentice Certificate awarded (combined with HTML)
-Ready for Track 03: JavaScript
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            You did it!
-          </Typography>
-          <Typography>
-            Your first portfolio website is complete!
-          </Typography>
-          <Typography>
-            This is the beginning of your professional presence online.
-          </Typography>
-        </div>
-      </section>
+const EXPLORE_STARTER = {
+  html: `<div class="card">
+  <div class="card-header">
+    <img
+      class="avatar"
+      src="https://i.pravatar.cc/80?img=47"
+      alt="Sokha's photo"
+    />
+    <div>
+      <h2 class="name">Sokha Dara</h2>
+      <p class="title">Frontend Developer · Phnom Penh</p>
     </div>
+  </div>
+
+  <p class="bio">
+    Passionate about building fast, beautiful interfaces.
+    Currently learning React at KOOMPI Academy.
+  </p>
+
+  <div class="tags">
+    <span class="tag">HTML</span>
+    <span class="tag">CSS</span>
+    <span class="tag">JavaScript</span>
+    <span class="tag">React</span>
+  </div>
+
+  <a class="cta" href="#">View Portfolio →</a>
+</div>`,
+  css: `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f0e8;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* ── Card shell ── */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 420px;
+  width: 100%;
+  border: 1px solid #e7e0d6;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+/* ── Header row: avatar + name ── */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #c2622d;
+}
+
+.name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.title {
+  font-size: 0.875rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* ── Bio ── */
+.bio {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* ── Skill tags ── */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.tag {
+  background: #fdf6ec;
+  border: 1px solid #e0d4c0;
+  color: #c2622d;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+/* ── CTA button with hover ── */
+.cta {
+  display: block;
+  text-align: center;
+  background-color: #c2622d;
+  color: white;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+}
+
+.cta:hover {
+  background-color: #a34f22;
+}
+
+/* ── Responsive: tighter on phones ── */
+@media (max-width: 480px) {
+  .card {
+    padding: 20px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    text-align: center;
+  }
+}`,
+};
+
+const CHALLENGE_STARTER = {
+  html: `<div class="card">
+  <h2 class="name">Your Name</h2>
+  <p class="role">Web Developer</p>
+
+  <div class="skills">
+    <span class="skill">HTML</span>
+    <span class="skill">CSS</span>
+  </div>
+
+  <a class="btn" href="#">Contact Me</a>
+</div>`,
+  css: `/* Build a portfolio card using all CSS skills.
+   Requirements:
+   1. font-family set on body or .card
+   2. display: flex somewhere
+   3. a :hover rule on any element
+   4. @media query
+   5. background-color or background set
+*/
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  padding: 40px;
+}
+
+.card {
+
+}`,
+};
+
+const challenge = {
+  prompt:
+    "Style a portfolio card using: font-family, display:flex, a :hover rule, a @media query, and background-color or background.",
+  check(_html: string, css: string, _js: string) {
+    const hasFont = /font-family\s*:/i.test(css);
+    const hasFlex = /display\s*:\s*flex/i.test(css);
+    const hasHover = /:hover\s*\{/i.test(css);
+    const hasMedia = /@media/i.test(css);
+    const hasBg =
+      /background-color\s*:/i.test(css) ||
+      /background\s*:/i.test(css);
+
+    if (!hasFont)
+      return {
+        passed: false,
+        message: "Set `font-family` on body or .card.",
+      };
+    if (!hasFlex)
+      return {
+        passed: false,
+        message: "Add `display: flex` somewhere — try the skills row.",
+      };
+    if (!hasHover)
+      return {
+        passed: false,
+        message:
+          "Add a `:hover` rule — try `.btn:hover { background-color: ... }`.",
+      };
+    if (!hasMedia)
+      return {
+        passed: false,
+        message: "Add a `@media` query for responsive behavior.",
+      };
+    if (!hasBg)
+      return {
+        passed: false,
+        message:
+          "Add `background-color` or `background` to at least one element.",
+      };
+    return { passed: true, message: "Portfolio card complete! Great work." };
+  },
+};
+
+export default function Module07ProjectPortfolio() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
+  return (
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* ── 1. Hook ────────────────────────────────────────── */}
+      <section>
+        <p className="text-xl md:text-2xl text-foreground leading-relaxed font-serif">
+          Six lessons of CSS. One card to prove you absorbed them. A
+          portfolio card is also one of the most reusable components you
+          will ever build — you will put your own name in it.
+        </p>
+      </section>
+
+      {/* ── 2. Concept ─────────────────────────────────────── */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-serif text-foreground">What the card must include</h2>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          This capstone brings together every technique from this track.
+          Your finished card must demonstrate:
+        </p>
+        <div className="rounded-xl bg-stone-50 border border-border divide-y divide-border text-sm">
+          <div className="px-6 py-3">
+            <span className="font-mono text-[#c2622d]">font-family</span>
+            <span className="text-muted-foreground ml-3">
+              a custom or web-safe font applied to the card or body
+            </span>
+          </div>
+          <div className="px-6 py-3">
+            <span className="font-mono text-[#c2622d]">display: flex</span>
+            <span className="text-muted-foreground ml-3">
+              a flex container somewhere — header row, skills list, or full
+              card layout
+            </span>
+          </div>
+          <div className="px-6 py-3">
+            <span className="font-mono text-[#c2622d]">:hover</span>
+            <span className="text-muted-foreground ml-3">
+              at least one hover effect — a button color change is perfect
+            </span>
+          </div>
+          <div className="px-6 py-3">
+            <span className="font-mono text-[#c2622d]">@media</span>
+            <span className="text-muted-foreground ml-3">
+              a responsive breakpoint that adjusts layout on small screens
+            </span>
+          </div>
+          <div className="px-6 py-3">
+            <span className="font-mono text-[#c2622d]">background-color</span>
+            <span className="text-muted-foreground ml-3">
+              colors on the card, header, button, or tags
+            </span>
+          </div>
+        </div>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          There is no single right answer. The reference below is one
+          approach — a complete portfolio card you can study before
+          building your own in the challenge.
+        </p>
+      </section>
+
+      {/* ── 3. Example ─────────────────────────────────────── */}
+      <section className="space-y-5">
+        <h2 className="text-2xl font-serif text-foreground">Reference card — fully annotated</h2>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          A complete working card using everything from this track. Read the
+          comments — they map each rule back to the lesson that introduced it.
+        </p>
+        <div className="rounded-xl border border-border overflow-hidden">
+          <div className="px-5 py-2.5 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            styles.css (annotated)
+          </div>
+          <pre className="px-6 py-5 text-sm font-mono leading-relaxed text-foreground overflow-x-auto bg-[#fafaf9]">
+{`/* ── Module 03: Google Font + typography ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;   /* Module 03 */
+  background-color: #f5f0e8;          /* Module 03 */
+}
+
+/* ── Module 04: Box model ── */
+.card {
+  padding: 32px;                      /* inner space */
+  border: 1px solid #e7e0d6;          /* visible edge */
+  border-radius: 16px;
+  margin: 0 auto;
+  max-width: 420px;
+}
+
+/* ── Module 06: Flexbox ── */
+.card-header {
+  display: flex;                      /* Module 06 */
+  align-items: center;
+  gap: 16px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ── Module 02: Pseudo-class :hover ── */
+.cta:hover {
+  background-color: #a34f22;          /* hover effect */
+}
+
+/* ── Module 06: Media query ── */
+@media (max-width: 480px) {
+  .card-header {
+    flex-direction: column;           /* stack on phones */
+  }
+}`}
+          </pre>
+        </div>
+      </section>
+
+      {/* ── 4. Try it ──────────────────────────────────────── */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-serif text-foreground">Try it</h2>
+          <p className="text-base text-muted-foreground mt-1">
+            The full reference card is live below — including the Google
+            Font, hover effect, and responsive breakpoint. Resize the preview
+            to trigger the mobile layout. Try changing the color palette,
+            adding a new tag, or swapping the font.
+          </p>
+        </div>
+        <CodePlayground
+          mode="web"
+          starter={EXPLORE_STARTER}
+          height="520px"
+        />
+      </section>
+
+      {/* ── 5. Challenge ───────────────────────────────────── */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-serif text-foreground">Challenge — build your own card</h2>
+          <p className="text-base text-muted-foreground mt-1">
+            Start from the skeleton below. Replace the placeholder name and
+            role with your own. The checker verifies five requirements:{" "}
+            <strong className="text-foreground">font-family</strong>,{" "}
+            <strong className="text-foreground">display: flex</strong>,{" "}
+            <strong className="text-foreground">:hover</strong>,{" "}
+            <strong className="text-foreground">@media</strong>, and{" "}
+            <strong className="text-foreground">background-color</strong>.
+            Everything else is your design decision.
+          </p>
+        </div>
+        <CodePlayground
+          mode="web"
+          starter={CHALLENGE_STARTER}
+          height="500px"
+          challenge={challenge}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
+      </section>
+
+      {/* ── 6. Gate ────────────────────────────────────────── */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
+      </section>
+
+    </article>
   );
 }

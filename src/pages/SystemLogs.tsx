@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { errorLogger, AppError } from '../lib/errorLogger';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import NavbarMobile from '@/components/NavbarMobile';
 
 export default function SystemLogs() {
   const [logs, setLogs] = useState<AppError[]>([]);
@@ -35,7 +34,6 @@ export default function SystemLogs() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pt-32 p-8 relative overflow-hidden">
-      <NavbarMobile />
 
       {/* Background Mesh Gradients */}
       <div className="absolute inset-0 -z-10">
