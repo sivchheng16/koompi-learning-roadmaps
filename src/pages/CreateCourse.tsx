@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { courseApi } from "../lib/courseApi";
 import { ContentRenderer } from "../components/ContentRenderer";
@@ -33,6 +33,13 @@ export default function CreateCourse() {
 
   const [isPublic, setIsPublic] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [credits, setCredits] = useState<number | null>(null);
+  const abortRef = React.useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    courseApi.getCredits().then(c => setCredits(c.credits_remaining)).catch(() => {});
+  }, [user]);
 
   if (!user) {
     return (
@@ -41,6 +48,17 @@ export default function CreateCourse() {
         <button onClick={login} className="px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-medium">
           Sign In
         </button>
+      </div>
+    );
+  }
+
+  if (user && credits !== null && credits < 10) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 p-6">
+        <p className="text-muted-foreground text-sm">You don't have enough credits to create a course.</p>
+        <Link to="/my-courses" className="text-sm font-sans text-primary hover:underline">
+          Request more credits →
+        </Link>
       </div>
     );
   }
@@ -72,6 +90,9 @@ export default function CreateCourse() {
   };
 
   const expandModules = async () => {
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     const initialMods: GeneratedModule[] = outline.map(o => ({
       ...o,
       blocks: [],
@@ -82,6 +103,7 @@ export default function CreateCourse() {
     setStep("generating");
 
     for (let i = 0; i < outline.length; i++) {
+      if (controller.signal.aborted) break;
       const mod = outline[i];
       try {
         const { blocks } = await courseApi.generateModule({
@@ -90,6 +112,7 @@ export default function CreateCourse() {
           module_title: mod.title,
           module_description: mod.description,
         });
+        if (controller.signal.aborted) break;
         setModules(prev =>
           prev.map((m, idx) => idx === i ? { ...m, blocks, generating: false, done: true } : m)
         );
@@ -100,7 +123,16 @@ export default function CreateCourse() {
       }
     }
 
-    setStep("review");
+    if (!controller.signal.aborted) {
+      setStep("review");
+    }
+  };
+
+  const handleCancel = () => {
+    abortRef.current?.abort();
+    setStep("details");
+    setModules([]);
+    setOutlineReady(false);
   };
 
   const handleSave = async () => {
@@ -141,6 +173,11 @@ export default function CreateCourse() {
           <p className="text-xs font-sans font-medium text-primary uppercase tracking-widest mb-2">
             AI Course Creator
           </p>
+          {credits !== null && (
+            <p className="text-xs text-muted-foreground font-sans mt-1">
+              {credits} credits remaining · {Math.floor(credits / 10)} {Math.floor(credits / 10) === 1 ? "course" : "courses"} left
+            </p>
+          )}
           <h1 className="text-4xl font-serif font-normal text-foreground tracking-tight">
             {step === "details" && "Design your course."}
             {step === "generating" && "Building your course…"}
@@ -309,6 +346,12 @@ export default function CreateCourse() {
                   <span className="font-medium">{mod.title}</span>
                 </div>
               ))}
+              <button
+                onClick={handleCancel}
+                className="mt-6 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Cancel generation
+              </button>
             </motion.div>
           )}
 

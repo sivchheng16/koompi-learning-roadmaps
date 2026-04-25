@@ -277,6 +277,10 @@ app.post("/api/courses/generate/outline", extractUserId, async (req, res) => {
   if (!title || !description || !level || !num_modules) {
     return res.status(400).json({ error: "missing_fields" });
   }
+  const VALID_LEVELS = ["beginner", "intermediate", "advanced"];
+  if (!VALID_LEVELS.includes(level)) {
+    return res.status(400).json({ error: "invalid_level" });
+  }
   const n = Math.min(Math.max(parseInt(num_modules) || 5, 3), 8);
 
   const { data: credits } = await supabase
@@ -405,6 +409,10 @@ app.post("/api/courses", extractUserId, async (req, res) => {
   if (!title || !level || !Array.isArray(modules) || modules.length === 0) {
     return res.status(400).json({ error: "missing_fields" });
   }
+  const VALID_LEVELS = ["beginner", "intermediate", "advanced"];
+  if (!VALID_LEVELS.includes(level)) {
+    return res.status(400).json({ error: "invalid_level" });
+  }
 
   const userId = req.userId;
 
@@ -417,6 +425,22 @@ app.post("/api/courses", extractUserId, async (req, res) => {
   if (credErr) return res.status(500).json({ error: "internal_error" });
   if (!credits || credits.credits_remaining < 10) {
     return res.status(403).json({ error: "insufficient_credits" });
+  }
+
+  // Atomically deduct using optimistic lock — fails if another request already changed credits
+  const { data: deducted, error: deductErr } = await supabase
+    .from("user_credits")
+    .update({
+      credits_remaining: credits.credits_remaining - 10,
+      credits_used: credits.credits_used + 10,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("user_id", userId)
+    .eq("credits_remaining", credits.credits_remaining)
+    .select();
+
+  if (deductErr || !deducted || deducted.length === 0) {
+    return res.status(409).json({ error: "concurrent_request" });
   }
 
   try {
@@ -435,7 +459,16 @@ app.post("/api/courses", extractUserId, async (req, res) => {
       })
       .select()
       .single();
-    if (courseErr) throw courseErr;
+
+    if (courseErr) {
+      // Restore credits on failure
+      await supabase.from("user_credits").update({
+        credits_remaining: credits.credits_remaining,
+        credits_used: credits.credits_used,
+        updated_at: new Date().toISOString(),
+      }).eq("user_id", userId);
+      throw courseErr;
+    }
 
     const moduleRows = modules.map((m, i) => ({
       course_id: course.id,
@@ -445,16 +478,18 @@ app.post("/api/courses", extractUserId, async (req, res) => {
       blocks: m.blocks ?? [],
     }));
     const { error: modErr } = await supabase.from("course_modules").insert(moduleRows);
-    if (modErr) throw modErr;
-
-    await supabase
-      .from("user_credits")
-      .update({
-        credits_remaining: credits.credits_remaining - 10,
-        credits_used: credits.credits_used + 10,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("user_id", userId);
+    if (modErr) {
+      // Restore credits and delete orphan course
+      await Promise.all([
+        supabase.from("courses").delete().eq("id", course.id),
+        supabase.from("user_credits").update({
+          credits_remaining: credits.credits_remaining,
+          credits_used: credits.credits_used,
+          updated_at: new Date().toISOString(),
+        }).eq("user_id", userId),
+      ]);
+      throw modErr;
+    }
 
     res.json({ ok: true, course: { ...course, modules: moduleRows } });
   } catch (err) {
