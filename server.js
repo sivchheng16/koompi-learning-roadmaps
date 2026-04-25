@@ -9,8 +9,11 @@ import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import { randomBytes } from "crypto";
 import { createClient } from "@supabase/supabase-js";
 import OpenAI from "openai";
+
+const makeSlug = () => randomBytes(6).toString("base64url").slice(0, 8);
 
 const ai = new OpenAI({
   baseURL: process.env.AI_BASE_URL,
@@ -393,6 +396,153 @@ app.post("/api/courses/generate/module", extractUserId, async (req, res) => {
   } catch (err) {
     console.error("module generation error:", err);
     res.status(500).json({ error: "generation_failed" });
+  }
+});
+
+// ── Course CRUD ───────────────────────────────────────────────────────────────
+app.post("/api/courses", extractUserId, async (req, res) => {
+  const { title, description, level, is_public, modules } = req.body;
+  if (!title || !level || !Array.isArray(modules) || modules.length === 0) {
+    return res.status(400).json({ error: "missing_fields" });
+  }
+
+  const userId = req.userId;
+
+  const { data: credits, error: credErr } = await supabase
+    .from("user_credits")
+    .select("credits_remaining, credits_used")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (credErr) return res.status(500).json({ error: "internal_error" });
+  if (!credits || credits.credits_remaining < 10) {
+    return res.status(403).json({ error: "insufficient_credits" });
+  }
+
+  try {
+    const slug = makeSlug();
+
+    const { data: course, error: courseErr } = await supabase
+      .from("courses")
+      .insert({
+        slug,
+        user_id: userId,
+        title: title.trim(),
+        description: description?.trim() ?? null,
+        level,
+        is_public: is_public ?? false,
+        schema_version: 1,
+      })
+      .select()
+      .single();
+    if (courseErr) throw courseErr;
+
+    const moduleRows = modules.map((m, i) => ({
+      course_id: course.id,
+      order: i + 1,
+      title: m.title,
+      duration: m.duration ?? null,
+      blocks: m.blocks ?? [],
+    }));
+    const { error: modErr } = await supabase.from("course_modules").insert(moduleRows);
+    if (modErr) throw modErr;
+
+    await supabase
+      .from("user_credits")
+      .update({
+        credits_remaining: credits.credits_remaining - 10,
+        credits_used: credits.credits_used + 10,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("user_id", userId);
+
+    res.json({ ok: true, course: { ...course, modules: moduleRows } });
+  } catch (err) {
+    console.error("POST /api/courses error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+app.get("/api/courses/mine", extractUserId, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("courses")
+      .select("id, slug, title, description, level, is_public, created_at")
+      .eq("user_id", req.userId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+
+    const coursesWithCount = await Promise.all(
+      (data ?? []).map(async (c) => {
+        const { count } = await supabase
+          .from("course_modules")
+          .select("id", { count: "exact", head: true })
+          .eq("course_id", c.id);
+        return { ...c, module_count: count ?? 0 };
+      })
+    );
+
+    res.json({ courses: coursesWithCount });
+  } catch (err) {
+    console.error("GET /api/courses/mine error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+app.get("/api/courses/:slug", async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const { data: course, error } = await supabase
+      .from("courses")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+    if (error || !course) return res.status(404).json({ error: "not_found" });
+
+    if (!course.is_public) {
+      const token = req.headers.authorization?.replace("Bearer ", "");
+      if (!token) return res.status(403).json({ error: "forbidden" });
+      try {
+        const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
+        const userId = payload.sub || payload._id || payload.id;
+        if (userId !== course.user_id) return res.status(403).json({ error: "forbidden" });
+      } catch {
+        return res.status(403).json({ error: "forbidden" });
+      }
+    }
+
+    const { data: modules, error: modErr } = await supabase
+      .from("course_modules")
+      .select("*")
+      .eq("course_id", course.id)
+      .order("order", { ascending: true });
+    if (modErr) throw modErr;
+
+    res.json({ course: { ...course, modules: modules ?? [] } });
+  } catch (err) {
+    console.error("GET /api/courses/:slug error:", err);
+    res.status(500).json({ error: "internal_error" });
+  }
+});
+
+app.delete("/api/courses/:slug", extractUserId, async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const { data: course, error } = await supabase
+      .from("courses")
+      .select("id, user_id")
+      .eq("slug", slug)
+      .single();
+    if (error || !course) return res.status(404).json({ error: "not_found" });
+    if (course.user_id !== req.userId) return res.status(403).json({ error: "forbidden" });
+
+    const { error: delErr } = await supabase.from("courses").delete().eq("id", course.id);
+    if (delErr) throw delErr;
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("DELETE /api/courses/:slug error:", err);
+    res.status(500).json({ error: "internal_error" });
   }
 });
 
