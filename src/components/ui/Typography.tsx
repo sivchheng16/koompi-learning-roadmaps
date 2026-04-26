@@ -11,7 +11,7 @@ export const Typography = ({ variant = "p", className, children }: TypographyPro
   const base = "mb-6 leading-[1.8] text-pretty";
 
   const styles: Record<NonNullable<TypographyProps["variant"]>, string> = {
-    h1:    "text-5xl md:text-6xl font-bold tracking-tight text-foreground mt-12 mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60",
+    h1:    "text-3xl font-bold tracking-tight text-foreground mb-4",
     h2:    "text-3xl md:text-4xl font-semibold tracking-tight text-foreground mt-16 mb-6 border-l-4 border-primary pl-6 py-1",
     h3:    "text-2xl md:text-3xl font-semibold text-foreground/90 mt-10 mb-4",
     h4:    "text-xl font-semibold text-foreground/80 mt-8 mb-3",

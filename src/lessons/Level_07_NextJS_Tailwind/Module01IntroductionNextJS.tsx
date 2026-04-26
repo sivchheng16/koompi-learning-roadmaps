@@ -1,485 +1,261 @@
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
+import { cn } from "@/lib/utils";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Module01IntroductionNextJS() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+  const [selected, setSelected] = useState<string | null>(null);
+  const CORRECT = "Makes the component render in the browser and enables React hooks";
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Introduction to Next.js</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Header */}
+      <section>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">Introduction to Next.js</h1>
+        <p className="mt-3 text-muted-foreground text-base">
+          Next.js is a React framework that adds server-side rendering, file-based routing, API routes, and automatic optimizations — turning React into a full production-ready stack.
+        </p>
+      </section>
+
+      {/* What is Next.js */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">What is Next.js?</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          React alone is a UI library — it renders components in the browser. Next.js wraps React and gives you routing, data fetching on the server, API endpoints, image optimization, and one-command deployment. It is used in production by Netflix, TikTok, Nike, Notion, and Twitch.
+        </p>
+
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-foreground">React alone</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Next.js adds</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[
+                ["Client-side rendering only", "Server-side rendering (SSR)"],
+                ["Manual routing setup", "File-based routing"],
+                ["No built-in API layer", "API routes built-in"],
+                ["Complex deployment", "One-click deploy to Vercel"],
+                ["Manual optimization", "Images, fonts, scripts auto-optimized"],
+              ].map(([left, right]) => (
+                <tr key={left} className="hover:bg-stone-50/50">
+                  <td className="px-4 py-3 text-muted-foreground">{left}</td>
+                  <td className="px-4 py-3 text-foreground font-medium">{right}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 07: Next.js &amp; Tailwind</Typography>
+
+      {/* Project structure */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">App Router Project Structure</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Run <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">npx create-next-app@latest my-app</code> and choose Tailwind + App Router + src/ directory. The folder structure maps directly to your URLs:
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">File tree → URL mapping</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`src/app/
+├── layout.tsx          →  wraps every page
+├── page.tsx            →  /
+├── about/
+│   └── page.tsx        →  /about
+├── products/
+│   ├── page.tsx        →  /products
+│   └── [id]/
+│       └── page.tsx    →  /products/42
+└── api/
+    └── hello/
+        └── route.ts    →  /api/hello`}</pre>
+        </div>
+
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Special file</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Purpose</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[
+                ["page.tsx", "UI for the route — required to make a URL"],
+                ["layout.tsx", "Shared wrapper — persists across child routes"],
+                ["loading.tsx", "Shown while page data is being fetched"],
+                ["error.tsx", "Shown when an unhandled error occurs"],
+                ["not-found.tsx", "Custom 404 for this segment"],
+                ["route.ts", "API endpoint (no JSX, returns Response)"],
+              ].map(([file, purpose]) => (
+                <tr key={file} className="hover:bg-stone-50/50">
+                  <td className="px-4 py-3 font-mono text-xs text-foreground">{file}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{purpose}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Understand what Next.js is and its benefits</li>
-            <li>Set up a Next.js project</li>
-            <li>Understand the App Router structure</li>
-            <li>Create your first pages</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: What is Next.js?</Typography>
-          <Typography variant="h3">Next.js Defined</Typography>
-          <CodeBlock language="text">{`┌─────────────────────────────────────────────────────────────────────────────┐
-│ NEXT.JS = REACT + SUPERPOWERS │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ │
-│ React alone: Next.js adds: │
-│ ════════════ ════════════ │
-│ │
-│ • Client-side only • Server-side rendering (SSR) │
-│ • Manual routing setup • File-based routing │
-│ • No built-in API • API routes built-in │
-│ • Complex deployment • Easy deployment (Vercel) │
-│ • Manual optimization • Automatic optimization │
-│ │
-│ Next.js is a FRAMEWORK built on top of React. │
-│ It provides structure and features out of the box. │
-│ │
-│ USED BY: Netflix, TikTok, Nike, Hulu, Notion, Twitch │
-│ │
-└─────────────────────────────────────────────────────────────────────────────┘`}</CodeBlock>
-          <Typography variant="h3">Key Features</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Feature</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>File-based Routing</TableCell>
-                <TableCell>Folder structure = URL structure</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Server Components</TableCell>
-                <TableCell>React components that run on server</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Server-side Rendering</TableCell>
-                <TableCell>HTML generated on server</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Static Generation</TableCell>
-                <TableCell>Pre-built pages at build time</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>API Routes</TableCell>
-                <TableCell>Backend endpoints in same project</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Automatic Optimization</TableCell>
-                <TableCell>Images, fonts, scripts</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Built-in CSS Support</TableCell>
-                <TableCell>CSS Modules, Tailwind ready</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Setting Up</Typography>
-          <Typography variant="h3">Create Next.js App</Typography>
-          <CodeBlock language="bash">{`npx create-next-app@latest my-nextjs-app`}</CodeBlock>
-          <Typography>
-            Prompts (recommended answers):
-          </Typography>
-          <CodeBlock language="text">{`Would you like to use TypeScript? › No
-Would you like to use ESLint? › Yes 
-Would you like to use Tailwind CSS? › Yes
-Would you like to use \`src/\` directory? › Yes
-Would you like to use App Router? › Yes
-Would you like to customize the default import alias? › No`}</CodeBlock>
-          <Typography variant="h3">Start Development</Typography>
-          <CodeBlock language="bash">{`cd my-nextjs-app
-npm run dev`}</CodeBlock>
-          <Typography>
-            Open http://localhost:3000
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Project Structure</Typography>
-          <Typography variant="h3">App Router Structure</Typography>
-          <CodeBlock language="text">{`my-nextjs-app/
-├── src/
-│ └── app/
-│ ├── layout.js ← Root layout (wraps all pages)
-│ ├── page.js ← Home page (/)
-│ ├── globals.css ← Global styles
-│ ├── about/
-│ │ └── page.js ← About page (/about)
-│ ├── products/
-│ │ ├── page.js ← Products list (/products)
-│ │ └── [id]/
-│ │ └── page.js ← Product detail (/products/123)
-│ └── api/
-│ └── hello/
-│ └── route.js ← API endpoint (/api/hello)
-├── public/ ← Static files
-├── package.json
-├── next.config.js
-└── tailwind.config.js`}</CodeBlock>
-          <Typography variant="h3">File Naming Convention</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>File</TableHead>
-                <TableHead>Purpose</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>page.js</TableCell>
-                <TableCell>UI for a route</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>layout.js</TableCell>
-                <TableCell>Shared UI for segment</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>loading.js</TableCell>
-                <TableCell>Loading UI</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>error.js</TableCell>
-                <TableCell>Error UI</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>not-found.js</TableCell>
-                <TableCell>404 UI</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>route.js</TableCell>
-                <TableCell>API endpoint</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Pages and Routing</Typography>
-          <Typography variant="h3">Creating Pages</Typography>
-          <CodeBlock language="jsx">{`// src/app/page.js (Home - /)
-export default function HomePage() {
- return (
- <main>
- <h1>Welcome to My App</h1>
- <p>This is the home page.</p>
- </main>
- );
-}`}</CodeBlock>
-          <CodeBlock language="jsx">{`// src/app/about/page.js (/about)
-export default function AboutPage() {
- return (
- <main>
- <h1>About Us</h1>
- <p>Learn more about our company.</p>
- </main>
- );
-}`}</CodeBlock>
-          <CodeBlock language="jsx">{`// src/app/contact/page.js (/contact)
-export default function ContactPage() {
- return (
- <main>
- <h1>Contact Us</h1>
- <form>
- <input type="email" placeholder="Email" />
- <textarea placeholder="Message"></textarea>
- <button type="submit">Send</button>
- </form>
- </main>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">URL Mapping</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>File Path</TableHead>
-                <TableHead>URL</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>app/page.js</TableCell>
-                <TableCell>/</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>app/about/page.js</TableCell>
-                <TableCell>/about</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>app/blog/page.js</TableCell>
-                <TableCell>/blog</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>app/blog/[slug]/page.js</TableCell>
-                <TableCell>/blog/my-post</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Layouts</Typography>
-          <Typography variant="h3">Root Layout</Typography>
-          <Typography>
-            Every app needs a root layout:
-          </Typography>
-          <CodeBlock language="jsx">{`// src/app/layout.js
-import './globals.css';
-export const metadata = {
- title: 'My Next.js App',
- description: 'Built with Next.js',
-};
-export default function RootLayout({ children }) {
- return (
- <html lang="en">
- <body>
- <header>
- <nav>
- <a href="/">Home</a>
- <a href="/about">About</a>
- <a href="/contact">Contact</a>
- </nav>
- </header>
- <main>{children}</main>
- <footer>
- <p>&copy; 2024 My App</p>
- </footer>
- </body>
- </html>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">Nested Layouts</Typography>
-          <CodeBlock language="jsx">{`// src/app/dashboard/layout.js
-export default function DashboardLayout({ children }) {
- return (
- <div className="dashboard">
- <aside className="sidebar">
- <nav>
- <a href="/dashboard">Overview</a>
- <a href="/dashboard/settings">Settings</a>
- </nav>
- </aside>
- <div className="content">
- {children}
- </div>
- </div>
- );
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Navigation</Typography>
-          <Typography variant="h3">Link Component</Typography>
-          <CodeBlock language="jsx">{`import Link from 'next/link';
-export default function Navigation() {
- return (
- <nav>
- <Link href="/">Home</Link>
- <Link href="/about">About</Link>
- <Link href="/products">Products</Link>
- <Link href="/contact">Contact</Link>
- </nav>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">Dynamic Links</Typography>
-          <CodeBlock language="jsx">{`function ProductList({ products }) {
- return (
- <ul>
- {products.map(product => (
- <li key={product.id}>
- <Link href={\`/products/\${product.id}\`}>
- {product.name}
- </Link>
- </li>
- ))}
- </ul>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">Programmatic Navigation</Typography>
-          <CodeBlock language="jsx">{`'use client';
-import { useRouter } from 'next/navigation';
-export default function SearchForm() {
- const router = useRouter();
- const handleSearch = (e) => {
- e.preventDefault();
- const query = e.target.search.value;
- router.push(\`/search?q=\${query}\`);
- };
- return (
- <form onSubmit={handleSearch}>
- <input name="search" placeholder="Search..." />
- <button type="submit">Search</button>
- </form>
- );
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Server vs Client Components</Typography>
-          <Typography variant="h3">Server Components (Default)</Typography>
-          <CodeBlock language="jsx">{`// This is a Server Component (default)
-// Runs on the server, can fetch data directly
+
+      {/* Server vs Client components */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Server Components vs Client Components</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          In the App Router, every component is a <strong>Server Component</strong> by default — it runs on the server, can use <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">async/await</code>, and never sends its own JS to the browser. To use state or event handlers, add <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">'use client'</code> at the top.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="rounded-xl border border-border overflow-hidden">
+            <div className="px-4 py-2 bg-stone-50 border-b border-border text-xs font-medium text-muted-foreground">Server Component (default)</div>
+            <pre className="px-4 py-4 text-xs font-mono leading-relaxed text-foreground overflow-x-auto bg-white">{`// No 'use client' needed
 async function ProductList() {
- const products = await fetch('https://api.example.com/products')
- .then(res => res.json());
- return (
- <ul>
- {products.map(p => <li key={p.id}>{p.name}</li>)}
- </ul>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">Client Components</Typography>
-          <CodeBlock language="jsx">{`'use client'; // This directive makes it a Client Component
+  // Can fetch directly — runs on server
+  const data = await fetch('/api/products');
+  const products = await data.json();
+
+  return (
+    <ul>
+      {products.map(p => (
+        <li key={p.id}>{p.name}</li>
+      ))}
+    </ul>
+  );
+}`}</pre>
+          </div>
+          <div className="rounded-xl border border-border overflow-hidden">
+            <div className="px-4 py-2 bg-stone-50 border-b border-border text-xs font-medium text-muted-foreground">Client Component</div>
+            <pre className="px-4 py-4 text-xs font-mono leading-relaxed text-foreground overflow-x-auto bg-white">{`'use client'; // ← this line is the switch
+
 import { useState } from 'react';
+
 export default function Counter() {
- const [count, setCount] = useState(0);
- return (
- <div>
- <p>Count: {count}</p>
- <button onClick={() => setCount(count + 1)}>+</button>
- </div>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">When to Use Each</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Server Component</TableHead>
-                <TableHead>Client Component</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Fetch data</TableCell>
-                <TableCell>useState, useEffect</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Access backend resources</TableCell>
-                <TableCell>Event listeners (onClick)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Keep secrets secure</TableCell>
-                <TableCell>Browser APIs</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Reduce client JS</TableCell>
-                <TableCell>Interactivity</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(c => c + 1)}>
+      Clicked {count} times
+    </button>
+  );
+}`}</pre>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Use Server Component when…</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Use Client Component when…</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[
+                ["Fetching data from a database or API", "Using useState or useEffect"],
+                ["Accessing environment secrets", "Handling onClick, onChange events"],
+                ["Reducing JavaScript sent to browser", "Using browser APIs (localStorage, geolocation)"],
+                ["Displaying static or server-rendered content", "Building interactive UI (modals, forms, sliders)"],
+              ].map(([server, client]) => (
+                <tr key={server} className="hover:bg-stone-50/50">
+                  <td className="px-4 py-3 text-muted-foreground">{server}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{client}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Setup</Typography>
-          <Typography>
-            Create a new Next.js app with Tailwind CSS.
-          </Typography>
-          <Typography variant="h3">Exercise 2: Three Pages</Typography>
-          <Typography>
-            Create Home, About, and Contact pages.
-          </Typography>
-          <Typography variant="h3">Exercise 3: Navigation</Typography>
-          <Typography>
-            Add a navigation bar to the layout.
-          </Typography>
-          <Typography variant="h3">Exercise 4: Nested Layout</Typography>
-          <Typography>
-            Create a dashboard section with its own layout.
-          </Typography>
-          <Typography variant="h3">Exercise 5: Dynamic Route</Typography>
-          <Typography>
-            Create a /blog/[slug] route that displays the slug.
-          </Typography>
+
+      {/* Navigation */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Navigation with Link</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Use Next.js <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">Link</code> instead of plain <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">&lt;a&gt;</code>. It prefetches pages in the background so navigation feels instant.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">src/app/layout.tsx</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`import Link from 'next/link';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <nav className="flex gap-6 p-4">
+          <Link href="/">Home</Link>
+          <Link href="/products">Products</Link>
+          <Link href="/about">About</Link>
+        </nav>
+        <main>{children}</main>
+      </body>
+    </html>
+  );
+}`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Concept</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Next.js</TableCell>
-                <TableCell>React framework with SSR</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>App Router</TableCell>
-                <TableCell>File-based routing system</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>page.js</TableCell>
-                <TableCell>Defines a route&apos;s UI</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>layout.js</TableCell>
-                <TableCell>Shared wrapper component</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Server Component</TableCell>
-                <TableCell>Default, runs on server</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Client Component</TableCell>
-                <TableCell>&apos;use client&apos;, interactive</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+
+      {/* Knowledge check */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Knowledge Check</h2>
+        <p className="text-sm text-muted-foreground">
+          In Next.js App Router, what does adding <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">'use client'</code> to a component do?
+        </p>
+        <div className="flex flex-col gap-3">
+          {[
+            "Runs the component only on the server",
+            "Makes the component render in the browser and enables React hooks",
+            "Disables TypeScript for that file",
+            "Prevents the component from fetching data",
+          ].map((opt) => (
+            <button
+              key={opt}
+              onClick={() => {
+                setSelected(opt);
+                if (opt === CORRECT) notifyChallengePassed(moduleId ?? "");
+              }}
+              className={cn(
+                "text-left px-5 py-3.5 rounded-xl border text-sm font-sans transition-all",
+                selected === opt
+                  ? opt === CORRECT
+                    ? "border-green-400 bg-green-50 text-green-800"
+                    : "border-red-300 bg-red-50 text-red-800"
+                  : "border-border hover:border-primary/40 hover:bg-primary/5 text-foreground"
+              )}
+            >
+              {opt}
+            </button>
+          ))}
         </div>
+        {selected && selected !== CORRECT && (
+          <p className="text-sm text-red-600">Not quite — think about which environment the component runs in after you add that directive.</p>
+        )}
+        {selected === CORRECT && (
+          <p className="text-sm text-green-700">Correct! <code className="bg-stone-100 px-1 rounded text-xs font-mono">'use client'</code> opts the component into browser rendering, which is required for hooks like <code className="bg-stone-100 px-1 rounded text-xs font-mono">useState</code> and event handlers.</p>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Coming Next: Module 03 - Tailwind CSS Fundamentals
-          </Typography>
-          <Typography>
-            You will learn rapid styling with utility classes!
-          </Typography>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">Click <strong>Complete &amp; Next</strong> below to continue.</p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">Complete the challenge above to unlock the next lesson.</p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            Next.js powers production apps!
-          </Typography>
-          <Typography>
-            React + Structure + Performance
-          </Typography>
-        </div>
-      </section>
-    </div>
+
+    </article>
   );
 }

@@ -1,370 +1,243 @@
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
+import { cn } from "@/lib/utils";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Module05Deployment() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+  const [selected, setSelected] = useState<string | null>(null);
+  const CORRECT = "next build";
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Deployment</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Header */}
+      <section>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">Deploying Next.js</h1>
+        <p className="mt-3 text-muted-foreground text-base">
+          Deploying a Next.js app means running <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">next build</code> to compile your project for production, then serving it with either a managed platform (Vercel, Railway) or your own Docker container.
+        </p>
+      </section>
+
+      {/* Build first */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Step 1 — Build Locally First</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Always run a production build locally before deploying. It catches TypeScript errors, missing environment variables, and bundle-size surprises that the dev server hides.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+          <div className="px-5 py-4 space-y-1 leading-relaxed">
+            <div><span className="text-green-400">$</span> npm run build</div>
+            <div className="text-stone-400">  ▲ Next.js 14.x</div>
+            <div className="text-stone-400">  Creating an optimized production build ...</div>
+            <div className="text-stone-400">  ✓ Compiled successfully</div>
+            <div className="mt-2"><span className="text-green-400">$</span> npm start</div>
+            <div className="text-stone-400">  ▲ Next.js 14.x</div>
+            <div className="text-stone-400">  - Local: http://localhost:3000</div>
+          </div>
+        </div>
+        <div className="px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-sm text-amber-800">
+          Fix every build error before deploying. A red build on Vercel still deploys the last successful version — confusing if you expect to see new code.
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 07: Next.js &amp; Tailwind</Typography>
+
+      {/* Vercel */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Deploy to Vercel</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Vercel is built by the same team as Next.js. It detects your framework automatically, runs the build, and deploys to a global edge network. The free Hobby tier is enough for personal projects.
+        </p>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-foreground">Via GitHub (recommended)</h3>
+          <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+            <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+            <div className="px-5 py-4 space-y-1 leading-relaxed">
+              <div><span className="text-green-400">$</span> git init</div>
+              <div><span className="text-green-400">$</span> git add .</div>
+              <div><span className="text-green-400">$</span> git commit -m "initial commit"</div>
+              <div><span className="text-green-400">$</span> git remote add origin https://github.com/you/my-app.git</div>
+              <div><span className="text-green-400">$</span> git push -u origin main</div>
+            </div>
+          </div>
+          <ol className="list-decimal pl-6 space-y-1.5 text-sm text-muted-foreground">
+            <li>Go to <span className="font-medium text-foreground">vercel.com</span> and sign up with GitHub</li>
+            <li>Click <span className="font-medium text-foreground">Add New → Project</span></li>
+            <li>Import your repository</li>
+            <li>Leave all settings as-is and click <span className="font-medium text-foreground">Deploy</span></li>
+          </ol>
+          <p className="text-sm text-muted-foreground">
+            After setup, every push to <code className="bg-stone-100 px-1 rounded text-xs font-mono">main</code> triggers a production deploy automatically. Every other branch gets a preview URL.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-foreground">Via CLI</h3>
+          <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+            <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+            <div className="px-5 py-4 space-y-1 leading-relaxed">
+              <div><span className="text-green-400">$</span> npm i -g vercel</div>
+              <div><span className="text-green-400">$</span> vercel login</div>
+              <div><span className="text-green-400">$</span> vercel          <span className="text-stone-500"># preview deploy</span></div>
+              <div><span className="text-green-400">$</span> vercel --prod   <span className="text-stone-500"># production deploy</span></div>
+            </div>
+          </div>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Deploy to Vercel (recommended)</li>
-            <li>Deploy to alternative platforms</li>
-            <li>Configure environment variables</li>
-            <li>Set up custom domains</li>
-          </ul>
+
+      {/* Env vars */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Environment Variables</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Never hardcode secrets. Store them in <code className="bg-stone-100 px-1 rounded text-xs font-mono">.env.local</code> locally (git-ignored) and set them in the Vercel dashboard for production.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">.env.local  ← never commit this file</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`DATABASE_URL=postgresql://localhost/myapp
+API_SECRET_KEY=super-secret-value
+NEXT_PUBLIC_API_URL=https://api.myapp.com`}</pre>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: Preparing for Deployment</Typography>
-          <Typography variant="h3">Pre-deployment Checklist</Typography>
-          <CodeBlock language="text">{`□ Build succeeds locally (npm run build)
-□ All tests pass
-□ Environment variables documented
-□ Images optimized
-□ No console errors in production mode
-□ SEO metadata configured
-□ Error pages customized (404, 500)
-□ Performance acceptable`}</CodeBlock>
-          <Typography variant="h3">Build Locally First</Typography>
-          <CodeBlock language="bash">{`# Build production version
-npm run build
-# Test production build locally
-npm start`}</CodeBlock>
-          <Typography>
-            Fix any build errors before deploying.
-          </Typography>
+
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Prefix</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Accessible in</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Example</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <tr className="hover:bg-stone-50/50">
+                <td className="px-4 py-3 font-mono text-xs text-foreground">NEXT_PUBLIC_</td>
+                <td className="px-4 py-3 text-muted-foreground">Browser + Server</td>
+                <td className="px-4 py-3 font-mono text-xs text-muted-foreground">NEXT_PUBLIC_API_URL</td>
+              </tr>
+              <tr className="hover:bg-stone-50/50">
+                <td className="px-4 py-3 font-mono text-xs text-foreground">(no prefix)</td>
+                <td className="px-4 py-3 text-muted-foreground">Server only — safe for secrets</td>
+                <td className="px-4 py-3 font-mono text-xs text-muted-foreground">DATABASE_URL</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Deploy to Vercel</Typography>
-          <Typography variant="h3">Why Vercel?</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Created by Next.js team</li>
-            <li>Zero configuration</li>
-            <li>Automatic CI/CD</li>
-            <li>Free tier available</li>
-            <li>Edge network</li>
-            <li>Analytics</li>
-          </ul>
-          <Typography variant="h3">Method 1: GitHub Integration</Typography>
-          <CodeBlock language="bash">{`# 1. Push your code to GitHub
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/username/my-app.git
-git push -u origin main`}</CodeBlock>
-          <Typography>
-            Then:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Go to vercel.com</li>
-            <li>Sign up with GitHub</li>
-            <li>Click &quot;Import Project&quot;</li>
-            <li>Select your repository</li>
-            <li>Click &quot;Deploy&quot;</li>
-          </ul>
-          <Typography variant="h3">Method 2: Vercel CLI</Typography>
-          <CodeBlock language="bash">{`# Install Vercel CLI
-npm i -g vercel
-# Login
-vercel login
-# Deploy
-vercel
-# Follow the prompts`}</CodeBlock>
-          <Typography variant="h3">Automatic Deployments</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Every push to main → Production deploy</li>
-            <li>Every push to other branches → Preview deploy</li>
-            <li>Each PR gets its own preview URL</li>
-          </ul>
+
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Using env vars in code</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`// Server Component or API route — server-only var
+const db = process.env.DATABASE_URL;
+
+// Client Component — must have NEXT_PUBLIC_ prefix
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;`}</pre>
         </div>
+
+        <p className="text-sm text-muted-foreground">
+          In Vercel: Project → Settings → Environment Variables. Add each variable and choose which environments (Production / Preview / Development) should receive it.
+        </p>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Environment Variables</Typography>
-          <Typography variant="h3">Local Development</Typography>
-          <CodeBlock language="bash">{`# .env.local (DO NOT commit this file)
-DATABASE_URL=mongodb://localhost:27017/myapp
-API_KEY=your-secret-key
-NEXT_PUBLIC_API_URL=http://localhost:3000/api`}</CodeBlock>
-          <Typography variant="h3">Naming Convention</Typography>
-          <CodeBlock language="text">{`NEXT_PUBLIC_* → Available in browser (be careful!)
-Other → Server-only (secure)`}</CodeBlock>
-          <Typography variant="h3">In Vercel Dashboard</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Go to your project</li>
-            <li>Settings → Environment Variables</li>
-            <li>Add each variable</li>
-            <li>Choose environments (Production, Preview, Development)</li>
-          </ul>
-          <Typography variant="h3">Using Environment Variables</Typography>
-          <CodeBlock language="jsx">{`// Server-side (API routes, Server Components)
-const dbUrl = process.env.DATABASE_URL;
-// Client-side (only NEXT_PUBLIC_ prefix)
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;`}</CodeBlock>
+
+      {/* Docker */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Docker Option</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          For self-hosted deployments on a VPS or Kubernetes cluster, Next.js supports a standalone output mode. Enable it in <code className="bg-stone-100 px-1 rounded text-xs font-mono">next.config.js</code> and use this Dockerfile:
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">next.config.js</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'standalone', // produces a self-contained build
+};
+module.exports = nextConfig;`}</pre>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Alternative Platforms</Typography>
-          <Typography variant="h3">Netlify</Typography>
-          <CodeBlock language="bash">{`# Install Netlify CLI
-npm i -g netlify-cli
-# Login
-netlify login
-# Deploy
-netlify deploy --prod`}</CodeBlock>
-          <Typography>
-            Create netlify.toml:
-          </Typography>
-          <CodeBlock language="toml">{`[build]
- command = "npm run build"
- publish = ".next"
-[[plugins]]
- package = "@netlify/plugin-nextjs"`}</CodeBlock>
-          <Typography variant="h3">Railway</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Go to railway.app</li>
-            <li>Connect GitHub</li>
-            <li>Select repository</li>
-            <li>Railway auto-detects Next.js</li>
-          </ul>
-          <Typography variant="h3">Docker</Typography>
-          <CodeBlock language="dockerfile">{`# Dockerfile
-FROM node:18-alpine AS base
-FROM base AS deps
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Dockerfile</div>
+          <pre className="px-5 py-4 leading-relaxed text-stone-200 overflow-x-auto">{`FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
-FROM base AS runner
+
+FROM node:20-alpine AS runner
 WORKDIR /app
-ENV NODE_ENV production
+ENV NODE_ENV=production
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 EXPOSE 3000
-CMD ["node", "server.js"]`}</CodeBlock>
-          <CodeBlock language="bash">{`docker build -t my-app .
-docker run -p 3000:3000 my-app`}</CodeBlock>
+CMD ["node", "server.js"]`}</pre>
+        </div>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+          <div className="px-5 py-4 space-y-1 leading-relaxed">
+            <div><span className="text-green-400">$</span> docker build -t my-nextjs-app .</div>
+            <div><span className="text-green-400">$</span> docker run -p 3000:3000 my-nextjs-app</div>
+          </div>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Custom Domain</Typography>
-          <Typography variant="h3">In Vercel</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Go to project Settings → Domains</li>
-            <li>Add your domain (e.g., myapp.com)</li>
-            <li>Add DNS records at your registrar:</li>
-          </ul>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>A record: 76.76.21.21</li>
-            <li>CNAME for www: cname.vercel-dns.com</li>
-          </ul>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Wait for SSL certificate (automatic)</li>
-          </ul>
-          <Typography variant="h3">With Subdomain</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>app.yourdomain.com → Your Next.js app</li>
-            <li>CNAME record pointing to cname.vercel-dns.com</li>
-          </ul>
+
+      {/* Knowledge check */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Knowledge Check</h2>
+        <p className="text-sm text-muted-foreground">
+          Which command builds a Next.js app for production?
+        </p>
+        <div className="flex flex-col gap-3">
+          {[
+            "npm run dev",
+            "next build",
+            "next export",
+            "npm run start",
+          ].map((opt) => (
+            <button
+              key={opt}
+              onClick={() => {
+                setSelected(opt);
+                if (opt === CORRECT) notifyChallengePassed(moduleId ?? "");
+              }}
+              className={cn(
+                "text-left px-5 py-3.5 rounded-xl border text-sm font-sans transition-all",
+                selected === opt
+                  ? opt === CORRECT
+                    ? "border-green-400 bg-green-50 text-green-800"
+                    : "border-red-300 bg-red-50 text-red-800"
+                  : "border-border hover:border-primary/40 hover:bg-primary/5 text-foreground"
+              )}
+            >
+              {opt}
+            </button>
+          ))}
         </div>
+        {selected && selected !== CORRECT && (
+          <p className="text-sm text-red-600">Not quite — <code className="bg-stone-100 px-1 rounded text-xs font-mono">dev</code> starts the dev server, <code className="bg-stone-100 px-1 rounded text-xs font-mono">start</code> serves an already-built app, and <code className="bg-stone-100 px-1 rounded text-xs font-mono">export</code> is a legacy flag.</p>
+        )}
+        {selected === CORRECT && (
+          <p className="text-sm text-green-700">Correct! <code className="bg-stone-100 px-1 rounded text-xs font-mono">next build</code> compiles and optimizes your app for production. <code className="bg-stone-100 px-1 rounded text-xs font-mono">next start</code> then serves the output.</p>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Optimization</Typography>
-          <Typography variant="h3">Image Optimization</Typography>
-          <CodeBlock language="jsx">{`import Image from 'next/image';
-export default function Hero() {
- return (
- <Image
- src="/hero.jpg"
- alt="Hero image"
- width={1200}
- height={600}
- priority // Load immediately
- placeholder="blur" // Show blur while loading
- blurDataURL="..." // Base64 blur image
- />
- );
-}`}</CodeBlock>
-          <Typography variant="h3">Font Optimization</Typography>
-          <CodeBlock language="jsx">{`// app/layout.js
-import { Inter } from 'next/font/google';
-const inter = Inter({ subsets: ['latin'] });
-export default function RootLayout({ children }) {
- return (
- <html lang="en" className={inter.className}>
- <body>{children}</body>
- </html>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">Bundle Analysis</Typography>
-          <CodeBlock language="bash">{`# Install analyzer
-npm install @next/bundle-analyzer
-# next.config.js
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
- enabled: process.env.ANALYZE === 'true',
-});
-module.exports = withBundleAnalyzer({
- // your config
-});
-# Run analysis
-ANALYZE=true npm run build`}</CodeBlock>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">Click <strong>Complete &amp; Next</strong> below to continue.</p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">Complete the challenge above to unlock the next lesson.</p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Monitoring &amp; Analytics</Typography>
-          <Typography variant="h3">Vercel Analytics</Typography>
-          <CodeBlock language="jsx">{`// app/layout.js
-import { Analytics } from '@vercel/analytics/react';
-export default function RootLayout({ children }) {
- return (
- <html lang="en">
- <body>
- {children}
- <Analytics />
- </body>
- </html>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">Vercel Speed Insights</Typography>
-          <CodeBlock language="jsx">{`import { SpeedInsights } from '@vercel/speed-insights/next';
-export default function RootLayout({ children }) {
- return (
- <html lang="en">
- <body>
- {children}
- <SpeedInsights />
- </body>
- </html>
- );
-}`}</CodeBlock>
-          <Typography variant="h3">Error Monitoring</Typography>
-          <Typography>
-            Consider services like:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Sentry</li>
-            <li>LogRocket</li>
-            <li>Bugsnag</li>
-          </ul>
-          <CodeBlock language="bash">{`npm install @sentry/nextjs
-npx @sentry/wizard@latest -i nextjs`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Local Build</Typography>
-          <Typography>
-            Run npm run build and fix any errors.
-          </Typography>
-          <Typography variant="h3">Exercise 2: Deploy to Vercel</Typography>
-          <Typography>
-            Deploy your Next.js app to Vercel via GitHub.
-          </Typography>
-          <Typography variant="h3">Exercise 3: Environment Variables</Typography>
-          <Typography>
-            Set up environment variables in Vercel.
-          </Typography>
-          <Typography variant="h3">Exercise 4: Custom Domain</Typography>
-          <Typography>
-            Configure a custom domain (or subdomain).
-          </Typography>
-          <Typography variant="h3">Exercise 5: Analytics</Typography>
-          <Typography>
-            Add Vercel Analytics to your app.
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Topic</TableHead>
-                <TableHead>Key Points</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Vercel</TableCell>
-                <TableCell>Best for Next.js, zero config</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Env Vars</TableCell>
-                <TableCell>NEXT_PUBLIC_ for client</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Domains</TableCell>
-                <TableCell>Add in Vercel, configure DNS</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Optimization</TableCell>
-                <TableCell>Images, fonts, bundles</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Monitoring</TableCell>
-                <TableCell>Analytics, Speed Insights</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography>
-            Deployment Commands:
-          </Typography>
-          <CodeBlock language="bash">{`npm run build # Build locally
-vercel # Deploy to Vercel
-vercel --prod # Deploy to production`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Coming Next: Module 07 - Project: E-commerce Store
-          </Typography>
-          <Typography>
-            You will build a complete full-stack application!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            Your app is live!
-          </Typography>
-          <Typography>
-            From localhost to the world.
-          </Typography>
-        </div>
-      </section>
-    </div>
+
+    </article>
   );
 }

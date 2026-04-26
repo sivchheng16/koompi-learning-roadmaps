@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowLeft, Clock, Menu, ChevronRight, ChevronLeft, ShieldAlert } from "lucide-react";
+import { Clock, ChevronRight, ChevronLeft, ShieldAlert, BookOpen, X, Menu } from "lucide-react";
 import { TOPICS } from "../constants";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -9,21 +9,20 @@ import Footer from "../components/Footer";
 import { CourseTopicNavbar } from "../components/CourseTopicNavbar";
 import { LessonSidebar } from "../components/LessonSidebar";
 import { lessonRegistry } from "../lessons/lessonRegistry";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import NavbarMobile from "@/components/NavbarMobile";
+import { useProgress } from "../context/ProgressContext";
+import { useAuth } from "../context/AuthContext";
+import { useLayout } from "../context/LayoutContext";
+import { CHALLENGE_LESSON_IDS } from "../lessons/challengeLessons";
 
 export default function TopicDetails() {
   const { topicId, moduleId } = useParams<{ topicId: string; moduleId: string }>();
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { isMobileSidebarOpen, setIsMobileSidebarOpen } = useLayout();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [completing, setCompleting] = React.useState(false);
   const topic = TOPICS.find((t) => t.id === topicId);
+  const { markComplete, setLastViewed, isComplete, isLessonUnlocked, progress } = useProgress();
+  const { user, login } = useAuth();
 
   // Validate lesson/moduleId
   const moduleIdInvalid = moduleId && topic && !topic.lessons.some(l => l.id === moduleId);
@@ -40,60 +39,59 @@ export default function TopicDetails() {
     }
   }, [topicId, moduleId, topic, navigate]);
 
-  // Reset scroll on topic or lesson change
+  // Reset scroll after exit animation starts
   useEffect(() => {
-    window.scrollTo(0, 0);
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo(0, 0);
-    }
+    const t = setTimeout(() => {
+      scrollContainerRef.current?.scrollTo({ top: 0, behavior: "instant" });
+    }, 120);
+    return () => clearTimeout(t);
   }, [topicId, moduleId]);
+
+  // Track last viewed lesson
+  useEffect(() => {
+    if (activeLessonId && topicId) {
+      setLastViewed(activeLessonId, topicId);
+    }
+  }, [activeLessonId, topicId]);
 
   if (!topic || moduleIdInvalid) {
     return (
-      <div className="min-h-screen bg-[#050505] text-[#00ffcc] font-mono flex items-center justify-center p-6 relative overflow-hidden">
-        <NavbarMobile />
-        <div className="absolute inset-0 pointer-events-none opacity-10 z-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-2xl text-center space-y-12 relative z-10"
+          className="w-full max-w-lg text-center space-y-8"
         >
-          <div className="space-y-6">
-            <div className="flex justify-center mb-8">
-              <div className="w-20 h-20 rounded-full glass-panel border-red-500/20 flex items-center justify-center text-red-500 shadow-[0_0_40px_rgba(239,68,68,0.2)]">
-                <ShieldAlert size={40} />
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-center justify-center gap-4 text-red-500 uppercase tracking-[0.5em] text-[10px] font-bold">
-                <span className="w-8 h-[1px] bg-red-500" />
-                {!topic ? "TOPIC_RESOLUTION_FAILED" : "MODULE_ADDRESS_INVALID"}
-                <span className="w-8 h-[1px] bg-red-500" />
-              </div>
-              <h1 className="text-5xl md:text-7xl font-sans font-medium tracking-tighter text-white uppercase italic">
-                {!topic ? "Topic" : "Module"} <span className="text-red-500 italic">Undefined.</span>
-              </h1>
-              <p className="text-white/40 text-lg max-w-lg mx-auto font-sans italic leading-relaxed">
-                {!topic 
-                  ? "The specified system directory could not be reached. The topic ID provided is not recognized by the central registry."
-                  : "The specified module coordinate does not exist within this topic's architecture. Return to a valid lesson."}
-              </p>
+          <div className="flex justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-destructive/8 border border-destructive/20 flex items-center justify-center text-destructive">
+              <ShieldAlert size={28} />
             </div>
           </div>
-
-          <div className="flex justify-center gap-6">
-            <Button asChild className="h-14 px-10 rounded-full bg-primary text-background font-bold tracking-widest uppercase hover:scale-105 transition-all shadow-xl shadow-primary/20">
-              <Link to="/">Reboot to Home</Link>
+          <div className="space-y-3">
+            <p className="text-xs font-sans font-medium text-destructive uppercase tracking-widest">
+              {!topic ? "Topic not found" : "Lesson not found"}
+            </p>
+            <h1 className="text-4xl md:text-5xl font-serif font-normal text-foreground">
+              {!topic ? "This topic doesn't exist." : "This lesson doesn't exist."}
+            </h1>
+            <p className="text-muted-foreground font-sans leading-relaxed max-w-sm mx-auto">
+              {!topic
+                ? "The topic you're looking for isn't in our curriculum. Head back home to explore what's available."
+                : "This lesson ID isn't part of the current topic. Return to a valid lesson."}
+            </p>
+          </div>
+          <div className="flex justify-center gap-3">
+            <Button asChild className="rounded-full px-6 bg-primary text-primary-foreground hover:bg-primary/90">
+              <Link to="/">Back to Home</Link>
             </Button>
             {moduleIdInvalid && (
-               <Button 
+              <Button
                 variant="outline"
-                className="h-14 px-10 rounded-full border-white/10 hover:bg-white/5 font-bold tracking-widest uppercase"
+                className="rounded-full px-6 border-border hover:bg-muted"
                 onClick={() => navigate(`/document/${topicId}`)}
-               >
-                 First Lesson
-               </Button>
+              >
+                First Lesson
+              </Button>
             )}
           </div>
         </motion.div>
@@ -111,264 +109,237 @@ export default function TopicDetails() {
   const nextLesson = currentIndex < topic.lessons.length - 1 ? topic.lessons[currentIndex + 1] : null;
 
   const handleLessonSelect = (_id: string) => {
-    // Navigation to /document/:topicId/:moduleId is handled inside LessonSidebar
-    setIsSidebarOpen(false);
+    setIsMobileSidebarOpen(false);
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-background text-foreground relative ">
-      {/* Background Mesh Gradients */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-[5%] left-[10%] w-[50vw] h-[50vw] bg-primary/5 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[10%] right-[0%] w-[40vw] h-[40vw] bg-secondary/3 blur-[150px] rounded-full" />
-      </div>
+    <div className="h-screen flex overflow-hidden bg-background text-foreground">
 
-      {/* Main Section Wrapper */}
+      {/* Mobile overlay */}
+      <AnimatePresence>
+        {isMobileSidebarOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+              onClick={() => setIsMobileSidebarOpen(false)}
+            />
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              className="fixed inset-y-0 left-0 w-64 bg-white border-r border-border z-50 lg:hidden overflow-y-auto flex flex-col"
+              style={{ scrollbarWidth: "none" }}
+            >
+              <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-border">
+                <span className="text-xs font-sans font-medium text-muted-foreground">{topic.title}</span>
+                <button onClick={() => setIsMobileSidebarOpen(false)} className="p-1.5 rounded-lg text-muted-foreground hover:bg-muted transition-colors">
+                  <X size={15} />
+                </button>
+              </div>
+              <div className="flex-1 px-2 py-3">
+                <LessonSidebar
+                  lessons={topic.lessons}
+                  activeLessonId={activeLessonId}
+                  completedLessonIds={Object.keys(progress.completed)}
+                  onLessonSelect={handleLessonSelect}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Left: topic nav */}
+      <CourseTopicNavbar />
+
+      {/* Right side: title bar + content + TOC */}
       <div className="flex-1 flex flex-col overflow-hidden">
 
-        {/* Top Section: Topic Switcher Navbar */}
-        <CourseTopicNavbar />
+        {/* Title bar — spans full width of center+right */}
+        <div className="flex items-center justify-between px-8 h-12 bg-white border-b border-border shrink-0">
+          <button
+            onClick={() => setIsMobileSidebarOpen(true)}
+            className="lg:hidden p-1.5 -ml-1.5 rounded-lg text-muted-foreground hover:bg-muted transition-colors mr-2"
+          >
+            <Menu size={16} />
+          </button>
 
-        {/* Sidebar + Content */}
-        <div className="flex-1 flex overflow-hidden" >
-
-          {/* Desktop Sidebar */}
-          <div className="hidden lg:block w-[360px]  border-r-4 border-white/5 overflow-y-auto custom-scrollbar  pl-8 pr-2 bg-background/10  scroll-smooth" data-lenis-prevent>
-            <LessonSidebar
-              lessons={topic.lessons}
-              activeLessonId={activeLessonId}
-              onLessonSelect={handleLessonSelect}
-            />
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <span className="text-sm font-sans font-medium text-foreground truncate">
+              {activeLesson?.title}
+            </span>
           </div>
 
+          <div className="flex items-center gap-4 shrink-0 ml-4">
+            {activeLesson?.duration && (
+              <span className="hidden sm:flex items-center gap-1.5 text-xs font-sans text-muted-foreground/50">
+                <Clock size={12} />
+                {activeLesson.duration}
+              </span>
+            )}
+            <span className="font-mono text-xs text-muted-foreground/40">
+              {String(currentIndex + 1).padStart(2, "0")} / {String(topic.lessons.length).padStart(2, "0")}
+            </span>
+          </div>
+        </div>
 
-          {/* Main Scrollable Content Area */}
-          <div
-            ref={scrollContainerRef}
-            className="flex-1 w-full overflow-y-auto custom-scrollbar relative scroll-smooth bg-muted-foreground/5"
-            data-lenis-prevent
-          >
-            <div className="w-full">
-              {/* Navigation & Header */}
-              {/* <div className="mb-16">
-                <Link
-                  to="/"
-                  className="group inline-flex items-center gap-4 font-mono text-[10px] font-bold tracking-[0.4em] text-primary uppercase mb-12 hover:gap-6 transition-all"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>Return Home</span>
-                </Link>
+        {/* Content row */}
+        <div className="flex-1 flex overflow-hidden">
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1 }}
-                  key={topic.id}
-                  className="flex flex-col md:flex-row gap-12 items-start md:items-center justify-between"
-                >
-                  <div className="flex flex-col md:flex-row items-start md:items-center gap-10">
-                    <div className="relative w-28 h-28 glass-panel p-2 rounded-3xl overflow-hidden group shrink-0">
-                      <div className={`absolute inset-0 bg-gradient-to-tr ${topic.gradient} opacity-20`} />
-                      <img
-                        src={topic.logo}
-                        alt={topic.title}
-                        className="relative z-10 w-full h-full object-cover rounded-2xl  transition-all duration-1000"
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-4 mb-6">
-                        <span className={cn(
-                          "px-4 py-1.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-widest flex items-center gap-2 border",
-                          topic.level === "Beginner" ? "border-green-500/20 text-green-500 bg-green-500/5" :
-                            topic.level === "Intermediate" ? "border-amber-500/20 text-amber-500 bg-amber-500/5" :
-                              "border-primary/20 text-primary bg-primary/5"
-                        )}>
-                          <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
-                          {topic.level} System
-                        </span>
-                        <span className="text-[9px] font-mono font-bold text-muted-foreground/40 uppercase tracking-[0.3em]">
-                          Module: {topic.id}
-                        </span>
-                      </div>
-                      <h1 className={`text-5xl md:text-7xl font-sans font-medium tracking-tighter leading-[0.8] mb-2 uppercase ${topic.textgradient} `}>
-                        {topic.title}
-                      </h1>
-                    </div>
+        {/* Center: scrollable lesson content */}
+        <div
+          ref={scrollContainerRef}
+          className="flex-1 overflow-y-auto bg-[#fafafa]"
+          style={{ scrollbarWidth: "none" }}
+          data-lenis-prevent
+        >
+        {/* Lesson content */}
+        <div className="w-full max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-6 md:px-10 lg:px-14 pt-10 pb-8">
+          <AnimatePresence mode="sync">
+            <motion.div
+              key={activeLessonId}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18, ease: "easeInOut" }}
+            >
+              {ActiveLessonComponent ? (
+                <React.Suspense fallback={
+                  <div className="h-64 flex items-center justify-center">
+                    <div className="w-6 h-6 border-2 border-border border-t-foreground rounded-full animate-spin" />
                   </div>
-
-                  <div className="flex flex-col items-end gap-3 text-right glass-panel p-6 rounded-2xl border-white/5 shrink-0">
-                    <div className="text-base font-sans italic text-muted-foreground">
-                      {topic.lessons.length} Modules in Queue
-                    </div>
-                    <div className="flex items-center gap-4 text-[10px] font-mono font-bold uppercase tracking-widest text-primary">
-                      <Clock className="w-4 h-4" />
-                      {topic.lessons.length * 45} MINS RUNTIME
-                    </div>
-                  </div>
-                </motion.div>
-              </div> */}
-
-
-
-              {/* Active Lesson Content */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeLessonId}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.4 }}
-                  className="mb-20"
-                >
-                  {/* <div className="flex items-center gap-6 mb-12">
-                    <h2 className="font-mono text-[10px] font-bold tracking-[0.4em] text-primary uppercase">
-                      Active Module
-                    </h2>
-                    <div className="h-px flex-1 bg-white/5" />
-                    <span className="font-mono text-[9px] text-muted-foreground/40 uppercase tracking-widest">
-                      {topic.lessons.findIndex((l) => l.id === activeLessonId) + 1} / {topic.lessons.length}
-                    </span>
-                  </div> */}
-
-                  {/* Render real lesson component from registry, or fallback card */}
-                  {ActiveLessonComponent ? (
-                    <div className=" overflow-hidden px-8">
-                      <React.Suspense fallback={
-                        <div className="h-64 flex flex-col items-center justify-center gap-4 glass-panel rounded-[40px]">
-                          <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-                          <p className="font-mono text-[10px] font-bold tracking-widest text-primary uppercase animate-pulse">Initializing Module...</p>
-                        </div>
-                      }>
-                        <ActiveLessonComponent />
-                      </React.Suspense>
-                    </div>
-                  ) : (
-                    <div className="glass-panel p-10 md:p-14 rounded-[40px] relative overflow-hidden group">
-                      <div className={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-tr ${topic.gradient} opacity-5 blur-[100px] pointer-events-none group-hover:opacity-10 transition-opacity duration-1000`} />
-                      <div className="flex flex-col gap-8">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                          <div className="flex items-center gap-4">
-                            <span className="text-4xl font-mono font-bold text-primary/10">
-                              {topic.lessons.findIndex((l) => l.id === activeLessonId) + 1 < 10 ? '0' : ''}
-                              {topic.lessons.findIndex((l) => l.id === activeLessonId) + 1}
-                            </span>
-                            <ChevronRight className="text-primary/20" size={24} />
-                          </div>
-                          <h3 className="text-4xl md:text-5xl font-sans font-medium tracking-tight italic">
-                            {activeLesson?.title}
-                          </h3>
-                        </div>
-                        <p className="text-xl md:text-2xl text-muted-foreground font-sans italic leading-relaxed max-w-2xl">
-                          {activeLesson?.description}
-                        </p>
-                        <div className="flex items-center gap-3 px-6 py-3 glass-panel rounded-full text-[10px] font-mono font-bold uppercase tracking-widest text-primary border-primary/20 w-fit">
-                          <Clock size={16} className="text-primary/40" />
-                          {activeLesson?.duration}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {/* Description Section */}
-                  <motion.div
-                    className="my-20 w-full border-l-2 border-primary/20 pl-12"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, delay: 0.2 }}
-                    key={`${topic.id}-desc`}
-                  >
-                    <p className="text-xl md:text-2xl font-sans leading-relaxed text-muted-foreground italic opacity-80">
-                      {topic.description}
-                    </p>
-                  </motion.div>
-
-
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Upcoming Modules Grid */}
-              {/* <div className="mb-20">
-                <div className="flex items-center gap-6 mb-12">
-                  <h2 className="font-mono text-[10px] font-bold tracking-[0.4em] text-muted-foreground/40 uppercase">
-                    Upcoming Syllabus
-                  </h2>
-                  <div className="h-px flex-1 bg-white/5" />
+                }>
+                  <ActiveLessonComponent />
+                </React.Suspense>
+              ) : (
+                <div className="space-y-3">
+                  <h1 className="text-4xl font-serif font-normal text-foreground tracking-tight leading-tight">
+                    {activeLesson?.title}
+                  </h1>
+                  <p className="text-base text-muted-foreground leading-[1.75]">
+                    {activeLesson?.description}
+                  </p>
                 </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {topic.lessons.filter((l) => l.id !== activeLessonId).map((lesson) => (
-                    <motion.div
-                      key={lesson.id}
-                      className="glass-panel p-8 rounded-[32px] hover:border-white/20 transition-all cursor-pointer group"
-                      onClick={() => navigate(`/document/${topicId}/${lesson.id}`)}
-                      whileHover={{ y: -5 }}
-                    >
-                      <div className="flex justify-between items-start mb-6">
-                        <span className="text-[10px] font-mono font-bold text-muted-foreground/20 group-hover:text-primary/40 transition-colors">
-                          MODULE_{(topic.lessons.findIndex((l) => l.id === lesson.id) + 1).toString().padStart(2, '0')}
-                        </span>
-                        <div className="flex items-center gap-2 text-[9px] font-mono font-bold uppercase tracking-widest text-muted-foreground/40 group-hover:text-primary/40">
-                          <Clock size={12} />
-                          {lesson.duration}
-                        </div>
-                      </div>
-                      <h4 className="text-xl font-sans font-medium mb-3 group-hover:text-primary transition-colors">
-                        {lesson.title}
-                      </h4>
-                      <p className="text-sm text-muted-foreground italic line-clamp-2">
-                        {lesson.description}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
-              </div> */}
-
+          {/* Sign-in nudge */}
+          {!user && (
+            <div className="mt-10 flex items-center justify-between gap-4 px-4 py-3.5 rounded-xl bg-black/4 border border-black/8">
+              <div className="flex items-center gap-2.5">
+                <BookOpen size={14} className="text-foreground/50 shrink-0" />
+                <p className="text-sm font-sans text-foreground/70">Sign in to save your progress.</p>
+              </div>
+              <button onClick={login} className="text-sm font-sans font-medium text-foreground hover:text-foreground/70 transition-colors shrink-0">
+                Sign in →
+              </button>
             </div>
-            {/* Pagination Buttons */}
-            <div className="relative z-10 flex items-between gap-6 mt-12 mb-20 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 w-full items-center justify-between px-8">
+          )}
+
+          {/* Navigation */}
+          <div className="mt-14 space-y-3">
+            {/* Primary action — full width */}
+            {nextLesson ? (
+              <motion.button
+                onClick={() => {
+                  if (completing) return;
+                  setCompleting(true);
+                  if (activeLessonId && topicId) markComplete(activeLessonId, topicId);
+                  setTimeout(() => {
+                    navigate(`/document/${topicId}/${nextLesson.id}`);
+                    setCompleting(false);
+                  }, 80);
+                }}
+                disabled={completing || (!!activeLessonId && CHALLENGE_LESSON_IDS.has(activeLessonId) && !isLessonUnlocked(activeLessonId))}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.1 }}
+                className={cn(
+                  "w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-sans font-semibold transition-colors",
+                  activeLessonId && CHALLENGE_LESSON_IDS.has(activeLessonId) && !isLessonUnlocked(activeLessonId)
+                    ? "bg-black/5 text-foreground/30 cursor-not-allowed"
+                    : completing
+                    ? "bg-foreground/80 text-background"
+                    : "bg-foreground text-background hover:bg-foreground/90 active:bg-foreground/80"
+                )}
+              >
+                {completing ? (
+                  <>
+                    <span className="w-3.5 h-3.5 border-2 border-background/40 border-t-background rounded-full animate-spin" />
+                    Saving…
+                  </>
+                ) : (
+                  <>
+                    {isComplete(activeLessonId ?? "") ? "Next lesson" : "Complete & continue"}
+                    <ChevronRight size={15} />
+                  </>
+                )}
+              </motion.button>
+            ) : (
+              <motion.button
+                onClick={() => { if (activeLessonId && topicId) markComplete(activeLessonId, topicId); }}
+                disabled={!!activeLessonId && CHALLENGE_LESSON_IDS.has(activeLessonId) && !isLessonUnlocked(activeLessonId)}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.1 }}
+                className={cn(
+                  "w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-sans font-semibold transition-colors",
+                  activeLessonId && CHALLENGE_LESSON_IDS.has(activeLessonId) && !isLessonUnlocked(activeLessonId)
+                    ? "bg-black/5 text-foreground/30 cursor-not-allowed"
+                    : "bg-foreground text-background hover:bg-foreground/90 active:bg-foreground/80"
+                )}
+              >
+                Mark complete ✓
+              </motion.button>
+            )}
+
+            {/* Previous — secondary */}
+            <div className="flex justify-center">
               {prevLesson ? (
                 <Link
                   to={`/document/${topicId}/${prevLesson.id}`}
-                  className="group flex flex-col items-start  py-4 px-6 glass-panel rounded-xl border-white/5 hover:border-primary/20 transition-all hover:bg-white/5 text-right "
+                  className="flex items-center gap-1.5 text-sm font-sans text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <span className="font-mono text-md font-semibold text-foreground group-hover:text-primary transition-colors uppercase tracking-[0.3em] flex items-center gap-1">
-                    <ChevronLeft className="w-5 h-5" />
-                    Previous
-                  </span>
-
+                  <ChevronLeft size={14} /> Previous lesson
                 </Link>
               ) : (
-                // <div className="flex-1 hidden sm:block" />
                 <Link
-                  to={`/`}
-                  className="group flex flex-col items-start  py-4 px-6 glass-panel rounded-xl border-white/5 hover:border-primary/20 transition-all hover:bg-white/5 text-right "
+                  to="/dashboard"
+                  className="flex items-center gap-1.5 text-sm font-sans text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <span className="font-mono text-md font-semibold text-foreground group-hover:text-primary transition-colors uppercase tracking-[0.3em] flex items-center gap-1">
-                    <ChevronLeft className="w-5 h-5" />
-                    Home
-                  </span>
-
+                  <ChevronLeft size={14} /> Back to dashboard
                 </Link>
-              )}
-
-              {nextLesson ? (
-                <Link
-                  to={`/document/${topicId}/${nextLesson.id}`}
-                  className=" group  flex flex-col items-end  py-4 px-6 glass-panel rounded-xl border-white/5 hover:border-primary/20 transition-all hover:bg-white/5 text-right "
-                >
-                  <span className="font-mono text-md font-semibold text-foreground group-hover:text-primary transition-colors uppercase tracking-[0.3em] flex items-center gap-1">
-                    Next
-                    <ChevronRight className="w-5 h-5" />
-                  </span>
-
-                </Link>
-              ) : (
-                <div className="flex-1 hidden sm:block" />
               )}
             </div>
+          </div>
+
+          <div className="mt-12 pb-8">
             <Footer />
           </div>
         </div>
-      </div>
+        </div>
+
+        {/* Right: TOC — sticky, no scrollbar */}
+        <div className="hidden xl:flex flex-col w-52 shrink-0 overflow-y-auto" style={{ scrollbarWidth: "none" }} data-lenis-prevent>
+          <div className="pt-5 pb-6 px-3">
+            <p className="px-2 mb-2 text-[10px] font-sans font-semibold text-muted-foreground/40 uppercase tracking-widest">
+              {topic.lessons.length} lessons
+            </p>
+            <LessonSidebar
+              lessons={topic.lessons}
+              activeLessonId={activeLessonId}
+              completedLessonIds={Object.keys(progress.completed)}
+              onLessonSelect={handleLessonSelect}
+            />
+          </div>
+        </div>
+
+        </div>{/* end content row */}
+      </div>{/* end right side */}
+
     </div>
   );
 }

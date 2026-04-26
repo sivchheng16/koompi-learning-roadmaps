@@ -1,729 +1,217 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
+// Open-Meteo — free, no API key, Phnom Penh coords
+const API_URL =
+  "https://api.open-meteo.com/v1/forecast?latitude=11.56&longitude=104.92&current_weather=true";
+
+const STARTER_HTML = `<div id="app" style="font-family:system-ui,sans-serif;max-width:480px;margin:40px auto;padding:0 20px">
+  <h1 style="font-size:1.6rem;margin-bottom:16px">Weather</h1>
+
+  <div style="display:flex;gap:8px;margin-bottom:20px">
+    <input id="lat"  type="number" step="any" placeholder="Latitude"  value="11.56"  style="flex:1;padding:8px 12px;border:1px solid #ddd;border-radius:8px">
+    <input id="lon"  type="number" step="any" placeholder="Longitude" value="104.92" style="flex:1;padding:8px 12px;border:1px solid #ddd;border-radius:8px">
+    <button id="btn" style="padding:8px 16px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer">Go</button>
+  </div>
+
+  <div id="result" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;min-height:80px">
+    Press Go to fetch weather for Phnom Penh.
+  </div>
+</div>`;
+
+const STARTER_JS = `document.getElementById("btn").addEventListener("click", fetchWeather);
+
+async function fetchWeather() {
+  const lat = document.getElementById("lat").value;
+  const lon = document.getElementById("lon").value;
+  const result = document.getElementById("result");
+
+  result.textContent = "Loading...";
+
+  try {
+    const url =
+      \`https://api.open-meteo.com/v1/forecast\` +
+      \`?latitude=\${lat}&longitude=\${lon}&current_weather=true\`;
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(\`HTTP \${response.status}\`);
+    const data = await response.json();
+
+    const w = data.current_weather;
+    result.innerHTML = \`
+      <p style="font-size:2.5rem;font-weight:700;margin:0">\${w.temperature}°C</p>
+      <p style="color:#64748b;margin:4px 0 0">Wind speed: \${w.windspeed} km/h</p>
+      <p style="color:#64748b;margin:4px 0 0">Coordinates: \${lat}, \${lon}</p>
+    \`;
+  } catch (err) {
+    result.innerHTML = \`<p style="color:#dc2626">Error: \${err.message}</p>\`;
+  }
+}`;
+
+const challenge = {
+  prompt:
+    "Your page must have a `<div>` and your JS must call `fetch(` to load weather data from the Open-Meteo API.",
+  check(html: string, _css: string, js: string) {
+    if (!/<div/i.test(html))
+      return { passed: false, message: "Add a <div> to your HTML to display the weather result." };
+    if (!/\bfetch\s*\(/.test(js))
+      return { passed: false, message: "Call `fetch(url)` in your JavaScript to load weather data." };
+    return { passed: true, message: "Weather app working — you just built a real API-powered page!" };
+  },
+};
+
 export default function Module05ProjectWeather() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Project - Weather Dashboard</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Header */}
+      <section className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary/60">
+          Track 04 · JavaScript Advanced · Capstone
+        </p>
+        <h1 className="text-4xl font-serif text-foreground">Project: Weather App</h1>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          Put everything together — async/await, fetch, error handling, and DOM manipulation —
+          to build a working weather display that calls a real API with no API key required.
+        </p>
+      </section>
+
+      {/* What you will build */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">What You Will Build</h2>
+        <p className="text-base text-muted-foreground">
+          A small web page with latitude/longitude inputs. When the user clicks Go, you fetch
+          current weather from the{" "}
+          <a
+            href="https://open-meteo.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline text-foreground"
+          >
+            Open-Meteo API
+          </a>{" "}
+          — completely free, no sign-up needed — and display the temperature and wind speed.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+          {[
+            ["fetch()", "Call the Open-Meteo REST endpoint"],
+            ["async/await", "Handle the two async steps cleanly"],
+            ["try/catch", "Show a friendly error if the network fails"],
+            ["DOM", "Update the result div without a page reload"],
+          ].map(([skill, desc]) => (
+            <div key={skill} className="rounded-xl border border-border px-4 py-3">
+              <p className="font-mono font-semibold text-foreground">{skill}</p>
+              <p className="text-muted-foreground mt-0.5">{desc}</p>
+            </div>
+          ))}
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 04: JavaScript Advanced</Typography>
+
+      {/* The API */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">The Open-Meteo API</h2>
+        <p className="text-base text-muted-foreground">
+          Open-Meteo is a free, open-source weather API. The endpoint below returns current
+          weather for any latitude/longitude — no API key, no account.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Phnom Penh — try it in your browser
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`${API_URL}`}</pre>
+        </div>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Response shape
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`{
+  "latitude": 11.5625,
+  "longitude": 104.9375,
+  "current_weather": {
+    "temperature": 31.2,       // °C
+    "windspeed": 14.7,         // km/h
+    "winddirection": 180,
+    "weathercode": 3,
+    "time": "2025-04-24T12:00"
+  }
+}`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Overview</Typography>
-          <Typography>
-            Build a Weather Dashboard application that fetches real weather data and displays it beautifully!
-          </Typography>
-        </div>
+
+      {/* Build steps */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Build Steps</h2>
+
+        <ol className="space-y-3 text-sm text-muted-foreground list-decimal list-inside">
+          <li>Add a <code className="font-mono">div#result</code> to display the fetched data.</li>
+          <li>Listen for a button click that reads lat/lon from inputs.</li>
+          <li>Build the URL with the coordinates and call <code className="font-mono">fetch(url)</code>.</li>
+          <li>Check <code className="font-mono">response.ok</code>, then parse with <code className="font-mono">.json()</code>.</li>
+          <li>Write the temperature and wind speed into the result div.</li>
+          <li>Wrap everything in <code className="font-mono">try/catch</code> and show an error message if it fails.</li>
+        </ol>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Requirements</Typography>
-          <Typography variant="h3">Must Have (Required)</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Feature</TableHead>
-                <TableHead>Skills Demonstrated</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Search by city name</TableCell>
-                <TableCell>DOM manipulation, events</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Display current weather</TableCell>
-                <TableCell>API fetching, async/await</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Show temperature, humidity, conditions</TableCell>
-                <TableCell>Data processing</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Weather icons</TableCell>
-                <TableCell>Conditional rendering</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Error handling</TableCell>
-                <TableCell>Try/catch, user feedback</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Loading states</TableCell>
-                <TableCell>UX, async handling</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Responsive design</TableCell>
-                <TableCell>CSS skills</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Nice to Have (Bonus)</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Feature</TableHead>
-                <TableHead>Skills Shown</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>5-day forecast</TableCell>
-                <TableCell>API, data processing</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Geolocation</TableCell>
-                <TableCell>Browser APIs</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Recent searches</TableCell>
-                <TableCell>localStorage</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Temperature unit toggle</TableCell>
-                <TableCell>State management</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Background based on weather</TableCell>
-                <TableCell>Dynamic styling</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
+
+      {/* Playground */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Try it / Build it</h2>
+        <p className="text-base text-muted-foreground">
+          A working starter is provided below. Click <strong>Go</strong> in the preview to see
+          Phnom Penh's live weather. Then extend the code — add a loading state, show the
+          weather code, or style the card.
+        </p>
+        <CodePlayground
+          mode="web"
+          starter={{ html: STARTER_HTML, js: STARTER_JS }}
+          height="460px"
+          challenge={challenge}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Getting Started</Typography>
-          <Typography variant="h3">1. Get API Key</Typography>
-          <Typography>
-            Sign up at OpenWeatherMap for a free API key.
-          </Typography>
-          <Typography variant="h3">2. Project Structure</Typography>
-          <CodeBlock language="text">{`weather-dashboard/
-├── index.html
-├── css/
-│ └── style.css
-└── js/
- └── app.js`}</CodeBlock>
-        </div>
+
+      {/* Extensions */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Take It Further</h2>
+        <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+          <li>Add a loading spinner while the request is in-flight.</li>
+          <li>Map the <code className="font-mono">weathercode</code> integer to a description (e.g. 0 = Clear sky).</li>
+          <li>Add city presets (Siem Reap, Battambang, Sihanoukville).</li>
+          <li>Request hourly forecast (<code className="font-mono">&amp;hourly=temperature_2m</code>) and draw a simple chart.</li>
+          <li>Persist the last-used coordinates in <code className="font-mono">localStorage</code>.</li>
+        </ul>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 1: HTML Structure</Typography>
-          <CodeBlock language="html">{`<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Weather Dashboard</title>
- <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
- <div class="container">
- <header>
- <h1> Weather Dashboard</h1>
- </header>
- <main>
- <!-- Search Section -->
- <section class="search-section">
- <form id="search-form">
- <input 
- type="text" 
- id="city-input" 
- placeholder="Enter city name..."
- autocomplete="off"
- >
- <button type="submit">Search</button>
- </form>
- </section>
- <!-- Loading State -->
- <div id="loading" class="loading hidden">
- <div class="spinner"></div>
- <p>Loading weather data...</p>
- </div>
- <!-- Error State -->
- <div id="error" class="error hidden">
- <p id="error-message"></p>
- <button id="retry-btn">Try Again</button>
- </div>
- <!-- Weather Display -->
- <section id="weather-display" class="weather-display hidden">
- <div class="current-weather">
- <div class="weather-header">
- <h2 id="city-name">City Name</h2>
- <p id="date">Date</p>
- </div>
- <div class="weather-main">
- <div class="temperature">
- <img id="weather-icon" src="" alt="Weather icon">
- <span id="temp">--</span>°C
- </div>
- <p id="description">Weather description</p>
- </div>
- <div class="weather-details">
- <div class="detail">
- <span class="label">Feels Like</span>
- <span id="feels-like">--°C</span>
- </div>
- <div class="detail">
- <span class="label">Humidity</span>
- <span id="humidity">--%</span>
- </div>
- <div class="detail">
- <span class="label">Wind</span>
- <span id="wind">-- km/h</span>
- </div>
- <div class="detail">
- <span class="label">Pressure</span>
- <span id="pressure">-- hPa</span>
- </div>
- </div>
- </div>
- <!-- 5-Day Forecast (Bonus) -->
- <div id="forecast" class="forecast hidden">
- <h3>5-Day Forecast</h3>
- <div id="forecast-container" class="forecast-container">
- <!-- Forecast cards inserted here -->
- </div>
- </div>
- </section>
- </main>
- <footer>
- <p>Built with by KOOMPI Apprentice</p>
- </footer>
- </div>
- <script src="js/app.js"></script>
-</body>
-</html>`}</CodeBlock>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 2: CSS Styling</Typography>
-          <CodeBlock language="css">{`/* css/style.css */
-* {
- margin: 0;
- padding: 0;
- box-sizing: border-box;
-}
-:root {
- --primary: #3498db;
- --primary-dark: #2980b9;
- --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
- --card-bg: rgba(255, 255, 255, 0.95);
- --text: #333;
- --text-light: #666;
-}
-body {
- font-family: 'Segoe UI', Tahoma, sans-serif;
- background: var(--bg-gradient);
- min-height: 100vh;
- color: var(--text);
-}
-.container {
- max-width: 800px;
- margin: 0 auto;
- padding: 20px;
-}
-header {
- text-align: center;
- padding: 20px 0;
-}
-header h1 {
- color: white;
- font-size: 2.5rem;
- text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-}
-/* Search Section */
-.search-section {
- margin-bottom: 30px;
-}
-#search-form {
- display: flex;
- gap: 10px;
- max-width: 500px;
- margin: 0 auto;
-}
-#city-input {
- flex: 1;
- padding: 15px 20px;
- font-size: 1rem;
- border: none;
- border-radius: 50px;
- box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-#search-form button {
- padding: 15px 30px;
- font-size: 1rem;
- background: var(--primary);
- color: white;
- border: none;
- border-radius: 50px;
- cursor: pointer;
- transition: background 0.3s;
-}
-#search-form button:hover {
- background: var(--primary-dark);
-}
-/* Loading State */
-.loading {
- text-align: center;
- padding: 50px;
- color: white;
-}
-.spinner {
- width: 50px;
- height: 50px;
- border: 5px solid rgba(255,255,255,0.3);
- border-top-color: white;
- border-radius: 50%;
- animation: spin 1s linear infinite;
- margin: 0 auto 20px;
-}
-@keyframes spin {
- to { transform: rotate(360deg); }
-}
-/* Error State */
-.error {
- text-align: center;
- padding: 30px;
- background: var(--card-bg);
- border-radius: 20px;
- color: #e74c3c;
-}
-#retry-btn {
- margin-top: 15px;
- padding: 10px 25px;
- background: #e74c3c;
- color: white;
- border: none;
- border-radius: 25px;
- cursor: pointer;
-}
-/* Weather Display */
-.weather-display {
- background: var(--card-bg);
- border-radius: 20px;
- padding: 30px;
- box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-}
-.current-weather {
- text-align: center;
-}
-.weather-header h2 {
- font-size: 2rem;
- margin-bottom: 5px;
-}
-.weather-header p {
- color: var(--text-light);
-}
-.weather-main {
- padding: 30px 0;
-}
-.temperature {
- display: flex;
- align-items: center;
- justify-content: center;
- gap: 10px;
- font-size: 4rem;
- font-weight: bold;
-}
-#weather-icon {
- width: 100px;
- height: 100px;
-}
-#description {
- font-size: 1.5rem;
- color: var(--text-light);
- text-transform: capitalize;
- margin-top: 10px;
-}
-.weather-details {
- display: grid;
- grid-template-columns: repeat(2, 1fr);
- gap: 20px;
- margin-top: 30px;
- padding-top: 30px;
- border-top: 1px solid #eee;
-}
-@media (min-width: 500px) {
- .weather-details {
- grid-template-columns: repeat(4, 1fr);
- }
-}
-.detail {
- text-align: center;
-}
-.detail .label {
- display: block;
- font-size: 0.9rem;
- color: var(--text-light);
- margin-bottom: 5px;
-}
-.detail span:not(.label) {
- font-size: 1.2rem;
- font-weight: bold;
-}
-/* Forecast */
-.forecast {
- margin-top: 30px;
- padding-top: 30px;
- border-top: 1px solid #eee;
-}
-.forecast h3 {
- margin-bottom: 20px;
-}
-.forecast-container {
- display: grid;
- grid-template-columns: repeat(5, 1fr);
- gap: 10px;
-}
-.forecast-card {
- background: #f8f9fa;
- border-radius: 10px;
- padding: 15px 10px;
- text-align: center;
-}
-.forecast-card .day {
- font-weight: bold;
- margin-bottom: 10px;
-}
-.forecast-card img {
- width: 50px;
- height: 50px;
-}
-.forecast-card .temp {
- font-weight: bold;
-}
-/* Utilities */
-.hidden {
- display: none !important;
-}
-/* Footer */
-footer {
- text-align: center;
- padding: 30px;
- color: rgba(255,255,255,0.8);
-}
-/* Responsive */
-@media (max-width: 600px) {
- header h1 {
- font-size: 1.8rem;
- }
- .temperature {
- font-size: 3rem;
- }
- .forecast-container {
- grid-template-columns: repeat(3, 1fr);
- }
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 3: JavaScript Logic</Typography>
-          <CodeBlock language="javascript">{`// js/app.js
-// Configuration
-const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your key
-const API_BASE = 'https://api.openweathermap.org/data/2.5';
-// DOM Elements
-const searchForm = document.getElementById('search-form');
-const cityInput = document.getElementById('city-input');
-const loadingEl = document.getElementById('loading');
-const errorEl = document.getElementById('error');
-const errorMessage = document.getElementById('error-message');
-const retryBtn = document.getElementById('retry-btn');
-const weatherDisplay = document.getElementById('weather-display');
-// State
-let lastSearchedCity = '';
-// Event Listeners
-searchForm.addEventListener('submit', handleSearch);
-retryBtn.addEventListener('click', () => searchCity(lastSearchedCity));
-// Functions
-async function handleSearch(e) {
- e.preventDefault();
- const city = cityInput.value.trim();
- if (!city) {
- showError('Please enter a city name');
- return;
- }
- await searchCity(city);
-}
-async function searchCity(city) {
- lastSearchedCity = city;
- showLoading();
- try {
- const weatherData = await fetchWeather(city);
- displayWeather(weatherData);
- // Optional: Fetch forecast
- // const forecastData = await fetchForecast(city);
- // displayForecast(forecastData);
- showWeather();
- } catch (error) {
- showError(getErrorMessage(error));
- }
-}
-async function fetchWeather(city) {
- const url = \`\${API_BASE}/weather?q=\${encodeURIComponent(city)}&appid=\${API_KEY}&units=metric\`;
- const response = await fetch(url);
- if (!response.ok) {
- const error = await response.json();
- throw new Error(error.message || 'Failed to fetch weather');
- }
- return response.json();
-}
-async function fetchForecast(city) {
- const url = \`\${API_BASE}/forecast?q=\${encodeURIComponent(city)}&appid=\${API_KEY}&units=metric\`;
- const response = await fetch(url);
- if (!response.ok) {
- throw new Error('Failed to fetch forecast');
- }
- return response.json();
-}
-function displayWeather(data) {
- // City and Date
- document.getElementById('city-name').textContent = 
- \`\${data.name}, \${data.sys.country}\`;
- document.getElementById('date').textContent = 
- formatDate(new Date());
- // Weather Icon
- const iconCode = data.weather[0].icon;
- document.getElementById('weather-icon').src = 
- \`https://openweathermap.org/img/wn/\${iconCode}@2x.png\`;
- document.getElementById('weather-icon').alt = 
- data.weather[0].description;
- // Temperature and Description
- document.getElementById('temp').textContent = 
- Math.round(data.main.temp);
- document.getElementById('description').textContent = 
- data.weather[0].description;
- // Details
- document.getElementById('feels-like').textContent = 
- \`\${Math.round(data.main.feels_like)}°C\`;
- document.getElementById('humidity').textContent = 
- \`\${data.main.humidity}%\`;
- document.getElementById('wind').textContent = 
- \`\${Math.round(data.wind.speed * 3.6)} km/h\`;
- document.getElementById('pressure').textContent = 
- \`\${data.main.pressure} hPa\`;
-}
-function displayForecast(data) {
- const container = document.getElementById('forecast-container');
- container.innerHTML = '';
- // Get one forecast per day (every 8th item = 24 hours)
- const dailyForecasts = data.list.filter((_, index) => index % 8 === 0).slice(0, 5);
- dailyForecasts.forEach(forecast => {
- const card = createForecastCard(forecast);
- container.appendChild(card);
- });
- document.getElementById('forecast').classList.remove('hidden');
-}
-function createForecastCard(forecast) {
- const card = document.createElement('div');
- card.className = 'forecast-card';
- const date = new Date(forecast.dt * 1000);
- const dayName = date.toLocaleDateString('en', { weekday: 'short' });
- const iconCode = forecast.weather[0].icon;
- const temp = Math.round(forecast.main.temp);
- card.innerHTML = \`
- <div class="day">\${dayName}</div>
- <img src="https://openweathermap.org/img/wn/\${iconCode}.png" alt="\${forecast.weather[0].description}">
- <div class="temp">\${temp}°C</div>
- \`;
- return card;
-}
-// UI State Functions
-function showLoading() {
- loadingEl.classList.remove('hidden');
- errorEl.classList.add('hidden');
- weatherDisplay.classList.add('hidden');
-}
-function showError(message) {
- loadingEl.classList.add('hidden');
- errorEl.classList.remove('hidden');
- weatherDisplay.classList.add('hidden');
- errorMessage.textContent = message;
-}
-function showWeather() {
- loadingEl.classList.add('hidden');
- errorEl.classList.add('hidden');
- weatherDisplay.classList.remove('hidden');
-}
-// Helper Functions
-function formatDate(date) {
- return date.toLocaleDateString('en', {
- weekday: 'long',
- year: 'numeric',
- month: 'long',
- day: 'numeric'
- });
-}
-function getErrorMessage(error) {
- if (error.message.includes('city not found')) {
- return 'City not found. Please check the spelling and try again.';
- }
- if (error.message.includes('401')) {
- return 'API key error. Please check your configuration.';
- }
- if (!navigator.onLine) {
- return 'No internet connection. Please check your network.';
- }
- return 'Something went wrong. Please try again.';
-}
-// Optional: Get user's location on load
-async function getLocationWeather() {
- if ('geolocation' in navigator) {
- try {
- const position = await new Promise((resolve, reject) => {
- navigator.geolocation.getCurrentPosition(resolve, reject);
- });
- const { latitude, longitude } = position.coords;
- const url = \`\${API_BASE}/weather?lat=\${latitude}&lon=\${longitude}&appid=\${API_KEY}&units=metric\`;
- const response = await fetch(url);
- const data = await response.json();
- displayWeather(data);
- showWeather();
- } catch (error) {
- console.log('Location access denied or failed');
- }
- }
-}
-// Uncomment to enable auto-location:
-// getLocationWeather();`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Bonus Features</Typography>
-          <Typography variant="h3">Recent Searches (localStorage)</Typography>
-          <CodeBlock language="javascript">{`function saveSearch(city) {
- let searches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
- searches = searches.filter(s => s.toLowerCase() !== city.toLowerCase());
- searches.unshift(city);
- searches = searches.slice(0, 5); // Keep only 5
- localStorage.setItem('recentSearches', JSON.stringify(searches));
-}
-function loadRecentSearches() {
- return JSON.parse(localStorage.getItem('recentSearches') || '[]');
-}`}</CodeBlock>
-          <Typography variant="h3">Temperature Unit Toggle</Typography>
-          <CodeBlock language="javascript">{`let isCelsius = true;
-function toggleUnit() {
- isCelsius = !isCelsius;
- // Re-display weather with new unit
-}
-function convertTemp(celsius) {
- if (isCelsius) return celsius;
- return (celsius * 9/5) + 32; // To Fahrenheit
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Evaluation Criteria</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Criteria</TableHead>
-                <TableHead>Points</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>API Integration (30)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Fetches weather correctly</TableCell>
-                <TableCell>15</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Handles errors properly</TableCell>
-                <TableCell>15</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>User Interface (30)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Clean, professional design</TableCell>
-                <TableCell>15</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Responsive layout</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Loading/error states</TableCell>
-                <TableCell>5</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Code Quality (25)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Clean JavaScript</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Async/await usage</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Error handling</TableCell>
-                <TableCell>5</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Bonus Features (15)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Forecast</TableCell>
-                <TableCell>5</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Geolocation</TableCell>
-                <TableCell>5</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Recent searches</TableCell>
-                <TableCell>5</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Level Complete</Typography>
-          <Typography>
-            Upon completing this project:
-          </Typography>
-          <Typography>
-            JavaScript Advanced Badge earned
-Ready for Track 05: Git &amp; GitHub (if not done)
-Ready for Track 06: React Fundamentals
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            You built a real application!
-          </Typography>
-          <Typography>
-            APIs + Async = Powerful apps
-          </Typography>
-        </div>
-      </section>
-    </div>
+
+    </article>
   );
 }

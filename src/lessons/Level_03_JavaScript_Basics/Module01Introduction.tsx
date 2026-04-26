@@ -1,581 +1,220 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Module01Introduction() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Introduction to JavaScript</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Hook */}
+      <section className="space-y-4">
+        <div className="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold tracking-wide uppercase">
+          Module 01 — JavaScript Basics
+        </div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          Introduction to JavaScript
+        </h1>
+        <p className="text-lg text-muted-foreground leading-relaxed">
+          HTML gives a page its bones, CSS gives it a face, and JavaScript gives
+          it a brain. Every interactive feature you've ever used on the web —
+          a live search box, a chat bubble, a button that does something —
+          is powered by JavaScript. In this lesson you'll write your very first
+          JavaScript and see results right in the browser.
+        </p>
+        <div className="grid grid-cols-3 gap-4 pt-2">
+          {[
+            { label: "HTML", desc: "Structure — What's here" },
+            { label: "CSS", desc: "Style — How it looks" },
+            { label: "JavaScript", desc: "Behaviour — What it does" },
+          ].map(({ label, desc }) => (
+            <div
+              key={label}
+              className="rounded-xl border border-border bg-stone-50 px-4 py-3 text-center"
+            >
+              <p className="font-mono font-bold text-foreground">{label}</p>
+              <p className="text-xs text-muted-foreground mt-1">{desc}</p>
+            </div>
+          ))}
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 03: JavaScript Basics</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Understand what JavaScript is and why it&apos;s important</li>
-            <li>Use the browser console</li>
-            <li>Add JavaScript to your web pages</li>
-            <li>Write your first JavaScript code</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: What is JavaScript?</Typography>
-          <Typography variant="h3">JavaScript Defined</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>THE WEB DEVELOPMENT TRIO (REVISITED)</li>
-            <li>HTML CSS JavaScript</li>
-            <li>STRUCTURE STYLE BEHAVIOR</li>
-            <li>&quot;What&apos;s here&quot; &quot;How it looks&quot; &quot;What it does&quot;</li>
-            <li>The skeleton The appearance The brains</li>
-            <li>HTML = Nouns CSS = Adjectives JavaScript = Verbs</li>
-            <li>(Things) (Descriptions) (Actions)</li>
-          </ul>
-          <Typography variant="h3">What JavaScript Can Do</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Action</TableHead>
-                <TableHead>Example</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Respond to events</TableCell>
-                <TableCell>When user clicks a button</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Change HTML content</TableCell>
-                <TableCell>Update text without reloading</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Change CSS styles</TableCell>
-                <TableCell>Toggle dark mode</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Validate forms</TableCell>
-                <TableCell>Check if email is valid</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Create animations</TableCell>
-                <TableCell>Smooth scrolling</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Communicate with servers</TableCell>
-                <TableCell>Load new data</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Store data locally</TableCell>
-                <TableCell>Remember user preferences</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">JavaScript is Everywhere</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Websites — Every interactive website uses JavaScript</li>
-            <li>Web apps — Gmail, Google Docs, Facebook</li>
-            <li>Mobile apps — React Native apps</li>
-            <li>Servers — Node.js</li>
-            <li>Desktop apps — Electron apps (VS Code!)</li>
-            <li>Games — Browser games</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: The Browser Console</Typography>
-          <Typography variant="h3">Opening the Console</Typography>
-          <Typography>
-            The console is where you can test JavaScript immediately.
-          </Typography>
-          <Typography>
-            How to open:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Chrome/Edge: Right-click → Inspect → Console tab</li>
-            <li>Or press F12 → Console tab</li>
-            <li>Or press Ctrl + Shift + J (Windows/Linux)</li>
-            <li>Or press Cmd + Option + J (Mac)</li>
-          </ul>
-          <Typography variant="h3">Your First JavaScript</Typography>
-          <Typography>
-            Type this in the console and press Enter:
-          </Typography>
-          <CodeBlock language="javascript">{`console.log("Hello, Cambodia!");`}</CodeBlock>
-          <Typography>
-            You should see: Hello, Cambodia!
-          </Typography>
-          <Typography variant="h3">Console Methods</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Command</TableHead>
-                <TableHead>What it does</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>console.log()</TableCell>
-                <TableCell>Print a message</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>console.warn()</TableCell>
-                <TableCell>Print a warning (yellow)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>console.error()</TableCell>
-                <TableCell>Print an error (red)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>console.clear()</TableCell>
-                <TableCell>Clear the console</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Try These</Typography>
-          <CodeBlock language="javascript">{`// Print messages
-console.log("I am learning JavaScript!");
-// Do math
-console.log(10 + 5);
-// Print multiple things
-console.log("My age:", 25);`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Adding JavaScript to HTML</Typography>
-          <Typography variant="h3">Three Methods</Typography>
-          <Typography>
-            Just like CSS, there are three ways to add JavaScript:
-          </Typography>
-          <Typography variant="h3">Method 1: Inline (Not Recommended)</Typography>
-          <CodeBlock language="html">{`<button onclick="alert('Hello!')">Click Me</button>`}</CodeBlock>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Pros</TableHead>
-                <TableHead>Cons</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Quick to write</TableCell>
-                <TableCell>Hard to maintain</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell></TableCell>
-                <TableCell>Mixes HTML and JS</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell></TableCell>
-                <TableCell>Not reusable</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Method 2: Internal Script</Typography>
-          <CodeBlock language="html">{`<!DOCTYPE html>
+
+      {/* Concept */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">What can JavaScript do?</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          JavaScript runs directly inside the browser — no install needed. Here are
+          the most common things you'll build:
+        </p>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          {[
+            "Respond to button clicks and keyboard input",
+            "Update page content without reloading (e.g. live score)",
+            "Validate forms before submitting (did the user fill everything?)",
+            "Call a server to load new data (e.g. weather, news feed)",
+            "Save preferences in the browser (e.g. dark mode toggle)",
+          ].map((item) => (
+            <li key={item} className="flex items-start gap-2">
+              <CheckCircle2 size={15} className="text-amber-500 mt-0.5 shrink-0" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Adding JS to a page</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          The most common way is to put a <code className="font-mono bg-stone-100 px-1 rounded">&lt;script&gt;</code> tag
+          at the bottom of <code className="font-mono bg-stone-100 px-1 rounded">&lt;body&gt;</code>. The browser runs
+          whatever JS is inside it when the page loads.
+        </p>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`<!DOCTYPE html>
 <html>
-<head>
- <title>My Page</title>
-</head>
-<body>
- <h1>Hello World</h1>
- <script>
- console.log("Hello from internal script!");
- alert("Welcome to my page!");
- </script>
-</body>
-</html>`}</CodeBlock>
-          <Typography>
-            Note: Place &lt;script&gt; at the end of &lt;body&gt; so HTML loads first.
-          </Typography>
-          <Typography variant="h3">Method 3: External File (Recommended!)</Typography>
-          <Typography>
-            script.js:
-          </Typography>
-          <CodeBlock language="javascript">{`console.log("Hello from external file!");
-alert("Welcome to my page!");`}</CodeBlock>
-          <Typography>
-            index.html:
-          </Typography>
-          <CodeBlock language="html">{`<!DOCTYPE html>
-<html>
-<head>
- <title>My Page</title>
-</head>
-<body>
- <h1>Hello World</h1>
- <script src="script.js"></script>
-</body>
-</html>`}</CodeBlock>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Pros</TableHead>
-                <TableHead>Cons</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Clean separation</TableCell>
-                <TableCell>Extra file to manage</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Reusable across pages</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Cacheable by browser</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Easier to maintain</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+  <body>
+    <h1>Hello, Cambodia!</h1>
+
+    <script>
+      // JS goes here — runs after the page loads
+      document.body.innerHTML += "<p>JS is working!</p>";
+    </script>
+  </body>
+</html>`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Two ways to output something</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-2 pr-4 font-semibold text-foreground">Method</th>
+                <th className="text-left py-2 pr-4 font-semibold text-foreground">What it does</th>
+                <th className="text-left py-2 font-semibold text-foreground">Use it for</th>
+              </tr>
+            </thead>
+            <tbody className="text-muted-foreground">
+              <tr className="border-b border-border/50">
+                <td className="py-2 pr-4 font-mono">document.write()</td>
+                <td className="py-2 pr-4">Writes HTML into the page</td>
+                <td className="py-2">Quick demos (avoid in real apps)</td>
+              </tr>
+              <tr className="border-b border-border/50">
+                <td className="py-2 pr-4 font-mono">element.innerHTML</td>
+                <td className="py-2 pr-4">Sets the content of any element</td>
+                <td className="py-2">Most real-world usage</td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-4 font-mono">alert()</td>
+                <td className="py-2 pr-4">Shows a popup dialog</td>
+                <td className="py-2">Debugging, quick messages</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: JavaScript Syntax Basics</Typography>
-          <Typography variant="h3">Statements</Typography>
-          <Typography>
-            Statements are instructions. Each ends with a semicolon (;):
-          </Typography>
-          <CodeBlock language="javascript">{`console.log("Statement 1");
-console.log("Statement 2");
-console.log("Statement 3");`}</CodeBlock>
-          <Typography variant="h3">Comments</Typography>
-          <Typography>
-            Comments explain your code (ignored by browser):
-          </Typography>
-          <CodeBlock language="javascript">{`// This is a single-line comment
-/*
-This is a 
-multi-line comment
-*/
-// Good comments explain WHY, not WHAT
-console.log("Hello"); // Prints greeting - obvious, don't need this comment
-// Check if user is admin before showing settings - good comment`}</CodeBlock>
-          <Typography variant="h3">Case Sensitivity</Typography>
-          <Typography>
-            JavaScript is case-sensitive:
-          </Typography>
-          <CodeBlock language="javascript">{`// These are ALL DIFFERENT:
-let name = "Sokha";
-let Name = "Dara";
-let NAME = "Bopha";
-// Common error:
-console.log("Works");
-Console.log("Error!"); // Console with capital C = error`}</CodeBlock>
-          <Typography variant="h3">Common Errors</Typography>
-          <CodeBlock language="javascript">{`// Unclosed string
-console.log("Hello); // Missing closing quote
-// Missing semicolon (usually okay, but can cause issues)
-console.log("Hello")
-// Typos in function names
-consol.log("Hello"); // consol instead of console
-// Using undefined variables
-console.log(myName); // myName hasn't been defined`}</CodeBlock>
-        </div>
+
+      {/* Example */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Live example — try editing it</h2>
+        <p className="text-sm text-muted-foreground">
+          This playground runs real HTML and JavaScript. The preview updates as you
+          type. Change the message or add another line.
+        </p>
+        <CodePlayground
+          mode="web"
+          starter={{
+            html: `<h2 id="greeting">Hello from HTML</h2>
+<p id="sub">JavaScript hasn't run yet...</p>`,
+            css: `body { font-family: system-ui, sans-serif; padding: 24px; }
+h2 { color: #333; }
+#sub { color: #777; font-size: 0.9rem; }`,
+            js: `// JS runs after HTML is ready
+document.getElementById("greeting").textContent = "Hello, Cambodia! 🇰🇭";
+document.getElementById("sub").textContent = "JavaScript is running!";`,
+          }}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Basic Interactions</Typography>
-          <Typography variant="h3">Alert</Typography>
-          <Typography>
-            Shows a popup message:
-          </Typography>
-          <CodeBlock language="javascript">{`alert("Hello, user!");`}</CodeBlock>
-          <Typography variant="h3">Confirm</Typography>
-          <Typography>
-            Shows popup with OK/Cancel, returns true/false:
-          </Typography>
-          <CodeBlock language="javascript">{`let result = confirm("Are you sure?");
-console.log(result); // true if OK, false if Cancel`}</CodeBlock>
-          <Typography variant="h3">Prompt</Typography>
-          <Typography>
-            Shows popup asking for input:
-          </Typography>
-          <CodeBlock language="javascript">{`let name = prompt("What is your name?");
-console.log("Hello, " + name + "!");`}</CodeBlock>
-          <Typography variant="h3">Example: Interactive Welcome</Typography>
-          <CodeBlock language="html">{`<!DOCTYPE html>
-<html>
-<head>
- <title>Welcome</title>
-</head>
-<body>
- <h1 id="greeting">Welcome!</h1>
- <script>
- let name = prompt("What is your name?");
- alert("Hello, " + name + "! Welcome to KOOMPI.");
- console.log(name + " visited the page.");
- </script>
-</body>
-</html>`}</CodeBlock>
-        </div>
+
+      {/* Try it */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Try it yourself</h2>
+        <p className="text-sm text-muted-foreground">
+          Experiment below. Add a <code className="font-mono bg-stone-100 px-1 rounded">&lt;script&gt;</code> tag
+          in the HTML panel that writes something to the page using{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">document.write()</code> or sets{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">document.body.innerHTML</code>.
+        </p>
+        <CodePlayground
+          mode="web"
+          starter={{
+            html: `<!-- Write your page content here -->
+<h1>My first JavaScript page</h1>
+<p>Edit me, then add a script tag below!</p>`,
+            css: `body { font-family: system-ui, sans-serif; padding: 24px; }`,
+            js: `// Your JS here — try: document.write("<p>It works!</p>")`,
+          }}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Your First Project Setup</Typography>
-          <Typography variant="h3">Create Project Structure</Typography>
-          <CodeBlock language="bash">{`mkdir javascript-practice
-cd javascript-practice
-touch index.html script.js`}</CodeBlock>
-          <Typography variant="h3">index.html</Typography>
-          <CodeBlock language="html">{`<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>JavaScript Practice</title>
- <style>
- body {
- font-family: Arial, sans-serif;
- padding: 20px;
- max-width: 800px;
- margin: 0 auto;
- }
- h1 {
- color: #333;
- }
- #output {
- background-color: #f0f0f0;
- padding: 20px;
- border-radius: 8px;
- min-height: 100px;
- }
- </style>
-</head>
-<body>
- <h1>JavaScript Practice</h1>
- <div id="output">
- <p>Output will appear here...</p>
- </div>
- <script src="script.js"></script>
-</body>
-</html>`}</CodeBlock>
-          <Typography variant="h3">script.js</Typography>
-          <CodeBlock language="javascript">{`// JavaScript Practice
-console.log("JavaScript file loaded!");
-// Your code here`}</CodeBlock>
-        </div>
+
+      {/* Challenge */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Challenge</h2>
+        <p className="text-sm text-muted-foreground">
+          In the JS panel, write code that uses <code className="font-mono bg-stone-100 px-1 rounded">document.</code> to
+          put your name onto the page. You can use{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">document.write("Hello Dara!")</code> or{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">document.body.innerHTML = "..."</code> — your choice.
+        </p>
+        <CodePlayground
+          mode="web"
+          starter={{
+            html: `<h2>My page</h2>
+<p>Add JavaScript to write your name here!</p>`,
+            css: `body { font-family: system-ui, sans-serif; padding: 24px; }`,
+            js: `// Write your name onto the page using document
+`,
+          }}
+          challenge={{
+            prompt:
+              "Use document.write() or set document.body.innerHTML to put your name on the page.",
+            check(_html, _css, js) {
+              if (!js.includes("document."))
+                return {
+                  passed: false,
+                  message:
+                    "Your JS must reference document. — try document.write(\"Your name\")",
+                };
+              return { passed: true, message: "Challenge complete! You just used JavaScript to control the DOM." };
+            },
+          }}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Debugging Basics</Typography>
-          <Typography variant="h3">Reading Errors</Typography>
-          <Typography>
-            When you make an error, check the console:
-          </Typography>
-          <CodeBlock language="text">{`Uncaught SyntaxError: Unexpected token ')' at script.js:5`}</CodeBlock>
-          <Typography>
-            This tells you:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Error type: SyntaxError</li>
-            <li>Problem: Unexpected token &apos;)&apos;</li>
-            <li>Location: script.js, line 5</li>
-          </ul>
-          <Typography variant="h3">Common Beginner Errors</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Error</TableHead>
-                <TableHead>Cause</TableHead>
-                <TableHead>Fix</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Unexpected token</TableCell>
-                <TableCell>Typo or missing character</TableCell>
-                <TableCell>Check punctuation</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>is not defined</TableCell>
-                <TableCell>Using undeclared variable</TableCell>
-                <TableCell>Define the variable first</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>is not a function</TableCell>
-                <TableCell>Calling non-function</TableCell>
-                <TableCell>Check function name</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>null or undefined</TableCell>
-                <TableCell>Missing element or value</TableCell>
-                <TableCell>Check if element exists</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Debugging Tips</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Read the error — It tells you what&apos;s wrong</li>
-            <li>Check the line number — Look at that specific line</li>
-            <li>Use console.log — Print values to check them</li>
-            <li>Comment out code — Isolate the problem</li>
-            <li>Search the error — Google the exact message</li>
-          </ul>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Console Practice</Typography>
-          <Typography>
-            Open the console and try:
-          </Typography>
-          <CodeBlock language="javascript">{`console.log("Hello!");
-console.log(2 + 2);
-console.log("My name is " + "Sokha");`}</CodeBlock>
-          <Typography variant="h3">Exercise 2: Alert Welcome</Typography>
-          <Typography>
-            Create a page that:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Asks for user&apos;s name with prompt()</li>
-            <li>Shows an alert welcoming them</li>
-            <li>Logs the name to console</li>
-          </ul>
-          <Typography variant="h3">Exercise 3: Calculator in Console</Typography>
-          <Typography>
-            Use the console to calculate:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>25 + 17</li>
-            <li>100 - 33</li>
-            <li>12 * 5</li>
-            <li>144 / 12</li>
-          </ul>
-          <Typography variant="h3">Exercise 4: External Script</Typography>
-          <Typography>
-            Create a project with:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>index.html</li>
-            <li>script.js</li>
-            <li>Make script.js log &quot;JavaScript is working!&quot;</li>
-          </ul>
-          <Typography variant="h3">Exercise 5: Comments</Typography>
-          <Typography>
-            Write a code file with:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>A single-line comment explaining what the file does</li>
-            <li>A multi-line comment with your name and date</li>
-            <li>Code that prints &quot;Hello World&quot;</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Typography>
-            Key Terminology
-          </Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Term</TableHead>
-                <TableHead>Meaning</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>JavaScript</TableCell>
-                <TableCell>Programming language for web interactivity</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Console</TableCell>
-                <TableCell>Browser tool to run and test JavaScript</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Statement</TableCell>
-                <TableCell>Single instruction</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Script</TableCell>
-                <TableCell>JavaScript code file or block</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Syntax</TableCell>
-                <TableCell>Rules for how code must be written</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography>
-            Three Ways to Add JavaScript
-          </Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Method</TableHead>
-                <TableHead>Best For</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Inline</TableCell>
-                <TableCell>Never use</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Internal &lt;script&gt;</TableCell>
-                <TableCell>Small tests</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>External file</TableCell>
-                <TableCell>Real projects</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Before moving to Module 03:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Practiced with browser console</li>
-            <li>Created external JavaScript file</li>
-            <li>Made interactive page with prompts</li>
-            <li>Understand error messages</li>
-            <li>Get mentor verification</li>
-          </ul>
-          <Typography>
-            Coming Next: Module 03 - Variables &amp; Data Types
-          </Typography>
-          <Typography>
-            You will learn to store and work with data!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            You&apos;re now a JavaScript developer!
-          </Typography>
-          <Typography>
-            The browser console is your new playground.
-          </Typography>
-        </div>
-      </section>
-    </div>
+    </article>
   );
 }

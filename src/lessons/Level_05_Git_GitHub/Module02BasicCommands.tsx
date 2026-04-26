@@ -1,461 +1,320 @@
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
+import { cn } from "@/lib/utils";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
+const OPTIONS = ["git stage .", "git add .", "git commit -a", "git push ."];
+const CORRECT = "git add .";
+
 export default function Module02BasicCommands() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+  const [selected, setSelected] = useState<string | null>(null);
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Basic Git Commands</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Header */}
+      <section className="space-y-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary/60">
+          Track 05 · Git &amp; GitHub
+        </p>
+        <h1 className="text-4xl font-serif text-foreground">Basic Git Commands</h1>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          Six commands cover 90% of daily Git work:{" "}
+          <code className="font-mono text-sm">add</code>,{" "}
+          <code className="font-mono text-sm">commit</code>,{" "}
+          <code className="font-mono text-sm">status</code>,{" "}
+          <code className="font-mono text-sm">log</code>,{" "}
+          <code className="font-mono text-sm">diff</code>, and undoing changes.
+          This module drills them all with annotated terminal examples.
+        </p>
+      </section>
+
+      {/* git add */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">git add — Staging Changes</h2>
+        <p className="text-base text-muted-foreground">
+          Staging is the step between editing files and saving a commit. It lets you
+          deliberately choose which changes belong in the next snapshot.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Terminal
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`# Stage a single file
+git add index.html
+
+# Stage a folder
+git add css/
+
+# Stage everything in the working directory
+git add .
+
+# Stage parts of a file interactively (advanced)
+git add -p index.html
+
+# Unstage a file (keep your edits, just un-queue it)
+git restore --staged index.html`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 05: Git &amp; GitHub</Typography>
+
+      {/* git commit */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">git commit — Saving a Snapshot</h2>
+        <p className="text-base text-muted-foreground">
+          A commit permanently saves everything in the staging area into the repository history
+          with a message, timestamp, and author.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Terminal
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`# Basic commit
+git commit -m "Add hero section to homepage"
+
+# Stage all tracked files and commit in one step
+git commit -am "Fix typo in about page"
+
+# Amend the last commit (before pushing)
+git commit --amend -m "Better message for the last commit"`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>View commit history</li>
-            <li>Undo changes in various ways</li>
-            <li>Work with branches</li>
-            <li>Use essential daily Git commands</li>
-          </ul>
+
+      {/* git status */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">git status — What's Going On?</h2>
+        <p className="text-base text-muted-foreground">
+          Run <code className="font-mono text-sm">git status</code> constantly. It shows you
+          which files are modified, staged, or untracked so you always know what Git sees.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Example output
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   about.html          ← staged ✓
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+        modified:   index.html          ← changed, not staged
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        contact.html                    ← Git doesn't know about this yet`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: Viewing History</Typography>
-          <Typography variant="h3">git log</Typography>
-          <Typography>
-            See all commits:
-          </Typography>
-          <CodeBlock language="bash">{`git log`}</CodeBlock>
-          <Typography>
-            Output:
-          </Typography>
-          <CodeBlock language="text">{`commit a1b2c3d4e5f6... (HEAD -> main)
-Author: Sokha <sokha@email.com>
-Date: Thu Dec 26 10:00:00 2024 +0700
- Add navigation styling
-commit f6e5d4c3b2a1...
-Author: Sokha <sokha@email.com>
-Date: Thu Dec 26 09:30:00 2024 +0700
- Add header section`}</CodeBlock>
-          <Typography variant="h3">Compact Log View</Typography>
-          <CodeBlock language="bash">{`# One line per commit
+
+      {/* git log */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">git log — Viewing History</h2>
+        <p className="text-base text-muted-foreground">
+          The log shows every commit in reverse chronological order. Each entry has a SHA-1
+          hash (the unique ID), author, date, and message.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Terminal
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`# Full log
+git log
+
+# Compact — one line per commit (great for overview)
 git log --oneline
-# Output:
-# a1b2c3d Add navigation styling
-# f6e5d4c Add header section
-# 1234567 Initial commit`}</CodeBlock>
-          <Typography variant="h3">Other Useful Log Options</Typography>
-          <CodeBlock language="bash">{`# Last 5 commits
+
+# Show only the last 5 commits
 git log -5
-# Show what changed in each commit
-git log -p
-# Graph view (for branches)
-git log --oneline --graph --all`}</CodeBlock>
+
+# Log with a graph of branches
+git log --oneline --graph --all
+
+# Search commits by message
+git log --grep="fix"
+
+# Commits that changed a specific file
+git log -- index.html`}</pre>
+        </div>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            git log --oneline output
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`a3f91bc Fix mobile nav overlap
+7d2e4a1 Add contact form with validation
+c1089ff Update hero section colours
+3b55abc Add about page
+e7812d0 Initial commit`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Checking Differences</Typography>
-          <Typography variant="h3">git diff</Typography>
-          <Typography>
-            See what changed in your files:
-          </Typography>
-          <CodeBlock language="bash">{`# Changes not yet staged
+
+      {/* git diff */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">git diff — Seeing Changes</h2>
+        <p className="text-base text-muted-foreground">
+          <code className="font-mono text-sm">git diff</code> shows exactly what lines changed
+          but haven't been staged yet. Lines starting with <code className="font-mono text-sm">+</code> were
+          added; lines starting with <code className="font-mono text-sm">-</code> were removed.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Terminal
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`# Unstaged changes (working dir vs last commit)
 git diff
-# Changes that are staged
+
+# Staged changes (what will go into the next commit)
 git diff --staged
-# Specific file
-git diff index.html`}</CodeBlock>
-          <Typography variant="h3">Understanding Diff Output</Typography>
-          <CodeBlock language="diff">{`diff --git a/index.html b/index.html
---- a/index.html
-+++ b/index.html
-@@ -1,5 +1,6 @@
- <html>
- <head>
-- <title>Old Title</title>
-+ <title>New Title</title>
-+ <link rel="stylesheet" href="style.css">
- </head>
- </html>`}</CodeBlock>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Lines starting with - were removed</li>
-            <li>Lines starting with + were added</li>
-          </ul>
+
+# Compare two commits
+git diff a3f91bc 7d2e4a1
+
+# Diff a specific file
+git diff index.html`}</pre>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Undoing Changes</Typography>
-          <Typography variant="h3">Discard Unstaged Changes</Typography>
-          <CodeBlock language="bash">{`# Discard changes to specific file
-git checkout -- filename.html
-# Or using restore (newer)
-git restore filename.html`}</CodeBlock>
-          <Typography>
-            Warning: This permanently loses your changes!
-          </Typography>
-          <Typography variant="h3">Unstage Files</Typography>
-          <CodeBlock language="bash">{`# Unstage specific file
-git reset HEAD filename.html
-# Or using restore (newer)
-git restore --staged filename.html`}</CodeBlock>
-          <Typography variant="h3">Amend Last Commit</Typography>
-          <Typography>
-            Forgot something? Fix the last commit:
-          </Typography>
-          <CodeBlock language="bash">{`# Make your fix
-git add forgotten-file.html
-# Amend the commit
-git commit --amend -m "Better commit message"`}</CodeBlock>
-          <Typography variant="h3">Revert a Commit</Typography>
-          <Typography>
-            Create a new commit that undoes a previous one:
-          </Typography>
-          <CodeBlock language="bash">{`git revert abc123`}</CodeBlock>
-          <Typography>
-            This is safe — doesn&apos;t rewrite history.
-          </Typography>
-          <Typography variant="h3">Reset to Previous Commit</Typography>
-          <Typography>
-            Caution: This can lose work!
-          </Typography>
-          <CodeBlock language="bash">{`# Soft reset (keep changes staged)
-git reset --soft abc123
-# Mixed reset (keep changes unstaged) - default
-git reset abc123
-# Hard reset (discard all changes)
-git reset --hard abc123`}</CodeBlock>
+
+      {/* Undoing */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Undoing Changes</h2>
+        <p className="text-base text-muted-foreground">
+          Git gives you several ways to go back, depending on how far you went.
+        </p>
+
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <div className="px-5 py-3 bg-stone-50 border-b border-border text-xs font-mono text-muted-foreground">
+            Common undo operations
+          </div>
+          <pre className="px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">{`# Discard edits to a file (restore to last commit)
+git restore index.html
+
+# Unstage a file (keep edits, just remove from staging)
+git restore --staged index.html
+
+# Create a new commit that reverses a past commit (safe — history preserved)
+git revert a3f91bc
+
+# Move HEAD back N commits, keep working dir intact
+git reset HEAD~1          # soft: un-commits but keeps staged files
+git reset --mixed HEAD~1  # default: un-commits and unstages
+
+# DESTRUCTIVE — discards commits AND working dir changes
+# Only use locally before pushing
+git reset --hard HEAD~1`}</pre>
+        </div>
+
+        <div className="rounded-2xl border border-border px-5 py-4">
+          <p className="text-sm font-semibold text-foreground mb-1">Safe rule of thumb</p>
+          <p className="text-sm text-muted-foreground">
+            If the commits have already been pushed to a shared branch, use{" "}
+            <code className="font-mono">git revert</code>. It adds a new commit that undoes the
+            change, so history stays intact for your team.
+          </p>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Branches</Typography>
-          <Typography variant="h3">What Are Branches?</Typography>
-          <Typography>
-            Branches let you work on features without affecting main code:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>[feature-login]</li>
-            <li>→ Add login page</li>
-            <li>main: ● ● ● ●</li>
-            <li>→ Continue main work</li>
-            <li>[main]</li>
-          </ul>
-          <Typography variant="h3">Creating Branches</Typography>
-          <CodeBlock language="bash">{`# Create a new branch
-git branch feature-login
-# Switch to it
-git checkout feature-login
-# Or do both at once
-git checkout -b feature-login
-# Newer syntax
-git switch -c feature-login`}</CodeBlock>
-          <Typography variant="h3">Listing Branches</Typography>
-          <CodeBlock language="bash">{`# List local branches
-git branch
-# Current branch has asterisk
-# feature-login
-# * main`}</CodeBlock>
-          <Typography variant="h3">Switching Branches</Typography>
-          <CodeBlock language="bash">{`git checkout main
-# or
-git switch main`}</CodeBlock>
-          <Typography variant="h3">Merging Branches</Typography>
-          <Typography>
-            Bring changes from one branch into another:
-          </Typography>
-          <CodeBlock language="bash">{`# Switch to branch you want to merge INTO
-git checkout main
-# Merge the feature branch
-git merge feature-login`}</CodeBlock>
-          <Typography variant="h3">Deleting Branches</Typography>
-          <CodeBlock language="bash">{`# Delete merged branch
-git branch -d feature-login
-# Force delete (even if not merged)
-git branch -D abandoned-feature`}</CodeBlock>
+
+      {/* Cheat sheet */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Quick Reference</h2>
+        <div className="rounded-2xl border border-border overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-2 font-semibold text-foreground">Command</th>
+                <th className="text-left px-4 py-2 font-semibold text-foreground">What it does</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border text-muted-foreground">
+              {[
+                ["git add .", "Stage all changes"],
+                ["git add <file>", "Stage one file"],
+                ["git commit -m \"msg\"", "Save a snapshot"],
+                ["git status", "See current state"],
+                ["git log --oneline", "Compact commit history"],
+                ["git diff", "See unstaged changes"],
+                ["git diff --staged", "See staged changes"],
+                ["git restore <file>", "Discard unstaged edits"],
+                ["git revert <sha>", "Undo a commit safely"],
+              ].map(([cmd, desc]) => (
+                <tr key={cmd}>
+                  <td className="px-4 py-2 font-mono text-foreground">{cmd}</td>
+                  <td className="px-4 py-2">{desc}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Common Workflows</Typography>
-          <Typography variant="h3">Daily Workflow</Typography>
-          <CodeBlock language="bash">{`# Morning: Start work
-git status # Check current state
-git pull # Get latest changes (if using remote)
-# Make changes to files...
-# Save progress
-git add .
-git commit -m "Add contact form"
-# Continue working...
-git add .
-git commit -m "Style contact form"
-# End of day: Push to remote
-git push`}</CodeBlock>
-          <Typography variant="h3">Feature Branch Workflow</Typography>
-          <CodeBlock language="bash">{`# Start new feature
-git checkout -b feature-dark-mode
-# Work on feature...
-git add .
-git commit -m "Add dark mode toggle"
-git add .
-git commit -m "Implement dark mode styles"
-# Feature complete - merge back
-git checkout main
-git merge feature-dark-mode
-git branch -d feature-dark-mode`}</CodeBlock>
+
+      {/* Knowledge check */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-serif text-foreground">Knowledge Check</h2>
+        <p className="text-base text-muted-foreground">
+          Which command stages <em>all</em> changed files in the current directory?
+        </p>
+        <div className="flex flex-col gap-2">
+          {OPTIONS.map(opt => (
+            <button
+              key={opt}
+              onClick={() => {
+                setSelected(opt);
+                if (opt === CORRECT) notifyChallengePassed(moduleId ?? "");
+              }}
+              className={cn(
+                "text-left px-5 py-3.5 rounded-xl border text-sm font-sans transition-all",
+                selected === opt
+                  ? opt === CORRECT
+                    ? "border-green-400 bg-green-50 text-green-800"
+                    : "border-red-300 bg-red-50 text-red-800"
+                  : "border-border hover:border-primary/40 hover:bg-primary/5 text-foreground"
+              )}
+            >
+              {opt}
+            </button>
+          ))}
         </div>
+        {selected && selected !== CORRECT && (
+          <p className="text-sm text-muted-foreground">Not quite — try another option.</p>
+        )}
+        {selected === CORRECT && (
+          <p className="text-sm text-green-700 font-medium">
+            Correct! <code className="font-mono">git add .</code> stages every modified and
+            untracked file in the current directory and its subdirectories.
+          </p>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Useful Commands Reference</Typography>
-          <Typography variant="h3">Status &amp; Information</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Command</TableHead>
-                <TableHead>Purpose</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>git status</TableCell>
-                <TableCell>Current state</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git log</TableCell>
-                <TableCell>Commit history</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git log --oneline</TableCell>
-                <TableCell>Compact history</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git diff</TableCell>
-                <TableCell>Show changes</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git branch</TableCell>
-                <TableCell>List branches</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Making Changes</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Command</TableHead>
-                <TableHead>Purpose</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>git add .</TableCell>
-                <TableCell>Stage all</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git add file</TableCell>
-                <TableCell>Stage specific file</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git commit -m &quot;msg&quot;</TableCell>
-                <TableCell>Commit with message</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git commit --amend</TableCell>
-                <TableCell>Fix last commit</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Undoing</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Command</TableHead>
-                <TableHead>Purpose</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>git restore file</TableCell>
-                <TableCell>Discard changes</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git restore --staged file</TableCell>
-                <TableCell>Unstage</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git revert commit</TableCell>
-                <TableCell>Undo a commit safely</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git reset --hard commit</TableCell>
-                <TableCell>Reset to commit (destructive)</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Branches</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Command</TableHead>
-                <TableHead>Purpose</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>git branch name</TableCell>
-                <TableCell>Create branch</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git checkout name</TableCell>
-                <TableCell>Switch to branch</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git checkout -b name</TableCell>
-                <TableCell>Create and switch</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git merge name</TableCell>
-                <TableCell>Merge branch</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>git branch -d name</TableCell>
-                <TableCell>Delete branch</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Common Problems &amp; Solutions</Typography>
-          <Typography variant="h3">Problem: Committed to Wrong Branch</Typography>
-          <CodeBlock language="bash">{`# Move commit to correct branch
-git checkout correct-branch
-git cherry-pick abc123
-# Remove from wrong branch
-git checkout wrong-branch
-git reset --hard HEAD~1`}</CodeBlock>
-          <Typography variant="h3">Problem: Need to Temporarily Save Work</Typography>
-          <CodeBlock language="bash">{`# Stash current changes
-git stash
-# Do other work...
-# Get changes back
-git stash pop`}</CodeBlock>
-          <Typography variant="h3">Problem: Merge Conflict</Typography>
-          <Typography>
-            When Git can&apos;t auto-merge:
-          </Typography>
-          <CodeBlock language="text">{`<<<<<<< HEAD
-Your version
-=======
-Their version
->>>>>>> branch-name`}</CodeBlock>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Edit file to resolve</li>
-            <li>Remove conflict markers</li>
-            <li>git add filename</li>
-            <li>git commit</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Log Exploration</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Create 5 commits in a project</li>
-            <li>View with git log</li>
-            <li>View with git log --oneline</li>
-            <li>Find a specific commit</li>
-          </ul>
-          <Typography variant="h3">Exercise 2: Undo Practice</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Make changes to a file</li>
-            <li>Use git restore to undo before staging</li>
-            <li>Make changes again</li>
-            <li>Stage, then unstage with git restore --staged</li>
-          </ul>
-          <Typography variant="h3">Exercise 3: Branch Workflow</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Create a new branch called feature-test</li>
-            <li>Make changes and commit</li>
-            <li>Switch back to main</li>
-            <li>Merge the feature branch</li>
-            <li>Delete the feature branch</li>
-          </ul>
-          <Typography variant="h3">Exercise 4: Amend Commit</Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Make a commit with a typo in the message</li>
-            <li>Use git commit --amend to fix it</li>
-            <li>Verify with git log</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Typography>
-            Essential Commands
-          </Typography>
-          <CodeBlock language="bash">{`# Status
-git status
-git log --oneline
-# Changes
-git add .
-git commit -m "message"
-# Undo
-git restore filename
-git restore --staged filename
-# Branches
-git branch name
-git checkout name
-git merge name`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Before moving to Module 04:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>View and understand history</li>
-            <li>Undo changes safely</li>
-            <li>Create and merge branches</li>
-            <li>Get mentor verification</li>
-          </ul>
-          <Typography>
-            Coming Next: Module 04 - GitHub &amp; Remote Repositories
-          </Typography>
-          <Typography>
-            You will put your code online!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            Git mastery growing!
-          </Typography>
-          <Typography>
-            These commands will become second nature.
-          </Typography>
-        </div>
-      </section>
-    </div>
+
+    </article>
   );
 }

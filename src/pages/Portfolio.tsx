@@ -9,7 +9,6 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 import { useRequireAuth } from '../hooks/useRequireAuth';
-import NavbarMobile from '@/components/NavbarMobile';
 
 const CATEGORIES = ['All', 'Web Development', 'Mobile', 'UI/UX Design'];
 
@@ -55,7 +54,6 @@ export default function Portfolio({
 
   return (
     <div className="min-h-screen bg-background text-foreground pt-32 relative overflow-hidden mb-48">
-           <NavbarMobile />
       {/* Background Mesh Gradients */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-[10%] left-[5%] w-[45vw] h-[45vw] bg-primary/5 blur-[120px] rounded-full" />
@@ -82,7 +80,7 @@ export default function Portfolio({
                 <span className="opacity-50 italic font-light lowercase font-sans text-3xl md:text-7xl lg:text-8xl">os & apps.</span>
               </h1>
               <p className="text-xl text-muted-foreground font-sans leading-relaxed max-w-lg italic opacity-80 border-l-2 border-primary/20 pl-8">
-                "A curated archive of KOOMPI OS official applications and core system features developed for our users."
+                "A curated archive of KOOMPI Academy official applications and core system features developed for our users."
               </p>
             </motion.div>
 

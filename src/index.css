@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400;1,9..40,500&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,38 +6,34 @@
 
 @layer base {
   :root {
-    --background: 222 47% 4%;
-    /* Deep Navy */
-    --foreground: 210 40% 98%;
-    /* Off-white */
-    
-    --card: 222 47% 6%;
-    --card-foreground: 210 40% 98%;
-    
-    --popover: 222 47% 4%;
-    --popover-foreground: 210 40% 98%;
-    
-    --primary: 180 100% 50%;
-    /* Vibrant Cyan */
-    --primary-foreground: 222 47% 4%;
-    
-    --secondary: 84 100% 50%;
-    /* Lime Green */
-    --secondary-foreground: 222 47% 4%;
-    
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    
-    --accent: 180 100% 50%;
-    --accent-foreground: 222 47% 4%;
-    
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 180 100% 50%;
-    --radius: 0.5rem;
+    --background: 40 22% 97%;
+    --foreground: 20 25% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 25% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 25% 8%;
+
+    --primary: 18 72% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 38 15% 93%;
+    --secondary-foreground: 20 15% 25%;
+
+    --muted: 38 12% 94%;
+    --muted-foreground: 25 12% 46%;
+
+    --accent: 38 12% 93%;
+    --accent-foreground: 20 25% 8%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 35 14% 87%;
+    --input: 35 14% 87%;
+    --ring: 18 72% 50%;
+    --radius: 0.75rem;
   }
 }
 
@@ -68,44 +64,29 @@
     transform-style: preserve-3d;
   }
 
+  /* Clean card panel — replaces dark glass-panel */
   .glass-panel {
-    @apply bg-white/5 backdrop-blur-2xl border border-white/10;
-  }
-
-  .mesh-glow-cyan {
-    background: radial-gradient(circle at 50% 50%, hsla(180, 100%, 50%, 0.15), transparent 70%);
-  }
-
-  .mesh-glow-lime {
-    background: radial-gradient(circle at 50% 50%, hsla(84, 100%, 50%, 0.15), transparent 70%);
+    @apply bg-white border border-border shadow-sm;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-white to-secondary;
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-foreground to-primary;
   }
 
-  /* Connective Background Utilities */
-  .bloom-container {
-    @apply absolute inset-0 -z-10 overflow-hidden pointer-events-none;
-  }
-
-  .bloom-orb {
-    @apply absolute rounded-full blur-[120px] opacity-20 transition-all duration-1000;
-  }
-
+  /* Warm section divider */
   .section-connector {
-    @apply relative border-t border-white/5;
+    @apply relative border-t border-border;
   }
 
   .section-connector::before {
     content: '';
-    @apply absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent;
+    @apply absolute top-0 left-1/2 -translate-x-1/2 w-1/4 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent;
   }
 
-  /* Custom Scrollbar */
+  /* Scrollbar — warm minimal */
   .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
@@ -113,7 +94,7 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-white/10 rounded-full hover:bg-primary/40 transition-colors;
+    @apply bg-border rounded-full hover:bg-primary/40 transition-colors;
   }
 
   .no-scrollbar::-webkit-scrollbar {
@@ -124,10 +105,22 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Warm paper texture overlay (very subtle) */
+  .warm-texture {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.4' fill='%23c4a882' fill-opacity='0.08'/%3E%3C/svg%3E");
+  }
+
+  /* Non-standard opacity steps */
+  .bg-primary\/8 {
+    background-color: hsl(var(--primary) / 0.08);
+  }
+  .bg-destructive\/8 {
+    background-color: hsl(var(--destructive) / 0.08);
+  }
 }
 
-/* Custom selection color */
 ::selection {
-  background-color: hsla(180, 100%, 50%, 0.2);
-  color: #fff;
+  background-color: hsla(18, 72%, 50%, 0.15);
+  color: hsl(20, 25%, 8%);
 }

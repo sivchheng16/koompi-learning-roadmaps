@@ -4,19 +4,19 @@ import { CodeBlock } from '../../components/ui/CodeBlock';
 import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Introduction() {
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
+    <article className="max-w-3xl mx-auto font-sans space-y-10">
+      <div>
+        <div>
           <Typography variant="h1">Introduction: React</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track 06: React Fundamentals</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Level Overview</Typography>
           <Typography>
             React is a JavaScript library for building user interfaces. It&apos;s used by Facebook, Instagram, Netflix, Airbnb, and many more.
@@ -36,9 +36,9 @@ export default function Introduction() {
             <li>Project: Task Manager App</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Prerequisites</Typography>
           <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
             <li>Completed JavaScript Basics &amp; Advanced</li>
@@ -47,9 +47,9 @@ export default function Introduction() {
             <li>Node.js installed</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Why React?</Typography>
           <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
             <li>WHY LEARN REACT?</li>
@@ -64,9 +64,9 @@ export default function Introduction() {
             <li>Many jobs in Cambodia Discord, Notion</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">What You&apos;ll Build</Typography>
           <Typography>
             A Task Manager Application:
@@ -83,9 +83,9 @@ export default function Introduction() {
             <li>Tasks: 2 active, 1 completed</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Module Index</Typography>
           <Table>
             <TableHeader>
@@ -134,9 +134,9 @@ export default function Introduction() {
             </TableBody>
           </Table>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">React Code Preview</Typography>
           <Typography variant="h3">A Simple Component</Typography>
           <CodeBlock language="jsx">{`function Welcome({ name }) {
@@ -163,9 +163,9 @@ function Counter() {
  );
 }`}</CodeBlock>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Setup</Typography>
           <Typography variant="h3">Create React App (with Vite)</Typography>
           <CodeBlock language="bash">{`npm create vite@latest my-app -- --template react
@@ -173,9 +173,9 @@ cd my-app
 npm install
 npm run dev`}</CodeBlock>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track Completion</Typography>
           <Typography>
             To complete Track 06:
@@ -189,9 +189,9 @@ npm run dev`}</CodeBlock>
             <li>React Fundamentals Badge earned</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography>
             Build modern UIs!
           </Typography>
@@ -199,7 +199,7 @@ npm run dev`}</CodeBlock>
             Start with Module 02: Introduction to React
           </Typography>
         </div>
-      </section>
-    </div>
+      </div>
+    </article>
   );
 }

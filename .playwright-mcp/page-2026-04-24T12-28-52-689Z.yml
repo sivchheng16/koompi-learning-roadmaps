@@ -1,0 +1,20 @@
+- generic [ref=e3]:
+  - region "Notifications alt+T"
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "KOOMPI Academy KOOMPI Academy" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "KOOMPI Academy" [ref=e7]
+        - generic [ref=e8]: KOOMPI Academy
+      - navigation [ref=e9]:
+        - link "Home" [ref=e10] [cursor=pointer]:
+          - /url: /
+        - link "Courses" [ref=e11] [cursor=pointer]:
+          - /url: /services
+        - link "About" [ref=e12] [cursor=pointer]:
+          - /url: /about
+        - link "The Vault" [ref=e13] [cursor=pointer]:
+          - /url: /vault
+      - button "Sign in with KOOMPI ID" [ref=e15] [cursor=pointer]
+  - main [ref=e16]:
+    - paragraph [ref=e19]: Loading…

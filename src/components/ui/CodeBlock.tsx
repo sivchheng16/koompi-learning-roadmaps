@@ -22,27 +22,28 @@ export const CodeBlock = ({ language = "javascript", className, children }: Code
   };
 
   return (
-    <div className={cn("my-8 rounded-2xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-md group shadow-2xl", className)}>
+    <div className={cn("my-8 rounded-xl overflow-hidden group shadow-lg", className)} style={{ background: "#1e1e1e", border: "1px solid #3e3e42" }}>
       {/* Header bar */}
-      <div className="flex items-center justify-between px-6 py-3 bg-white/5 border-b border-white/5">
+      <div className="flex items-center justify-between px-5 py-2.5" style={{ background: "#252526", borderBottom: "1px solid #3e3e42" }}>
         <div className="flex items-center gap-2">
-          <div className="flex gap-1.5 grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
+          <div className="flex gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#FF5F56" }} />
+            <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#FFBD2E" }} />
+            <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#27C93F" }} />
           </div>
-          <span className="ml-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 font-bold">
+          <span className="ml-3 font-mono text-[10px] uppercase tracking-[0.2em] font-medium" style={{ color: "#858585" }}>
             {language}
           </span>
         </div>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg font-mono text-[10px] uppercase tracking-widest text-muted-foreground/40 hover:text-primary hover:bg-primary/5 transition-all active:scale-95"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md font-mono text-[10px] uppercase tracking-widest transition-all active:scale-95 hover:bg-white/10"
+          style={{ color: "#858585" }}
         >
           {copied ? (
             <>
-              <Check size={12} className="text-green-500" />
-              <span className="text-green-500">Copied</span>
+              <Check size={12} style={{ color: "#4ec9b0" }} />
+              <span style={{ color: "#4ec9b0" }}>Copied</span>
             </>
           ) : (
             <>
@@ -68,7 +69,7 @@ export const CodeBlock = ({ language = "javascript", className, children }: Code
           lineNumberStyle={{
             minWidth: "2.5em",
             paddingRight: "1em",
-            color: "rgba(255,255,255,0.1)",
+            color: "#495162",
             textAlign: "right",
             userSelect: "none",
           }}

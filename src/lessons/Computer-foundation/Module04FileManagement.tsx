@@ -1,235 +1,339 @@
-
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
+import { cn } from "@/lib/utils";
 
 export default function Module04FileManagement() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+  const [selected, setSelected] = useState<string | null>(null);
+  const CORRECT = "cp report.txt backup/";
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">File Management & Organization</Typography>
-          <Typography variant="lead">
-            Track 00: Organizing Your Digital Workspace Like a Professional
-          </Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Header */}
+      <section>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">File Management</h1>
+        <p className="mt-3 text-muted-foreground text-base">
+          Good file management is a professional habit. In this lesson you will learn to copy, move, rename, and search files from the terminal — plus how to read and set file permissions.
+        </p>
+      </section>
+
+      {/* cp */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Copying Files — <code className="text-base font-mono bg-stone-100 px-1.5 py-0.5 rounded">cp</code></h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          <code className="bg-stone-100 px-1 rounded text-xs font-mono">cp source destination</code> — the original file stays, and a copy is created at the destination.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+          <div className="px-5 py-4 space-y-1 leading-relaxed">
+            <div><span className="text-green-400">$</span> cp report.txt backup/        <span className="text-stone-500"># copy file into folder</span></div>
+            <div><span className="text-green-400">$</span> cp report.txt report-v2.txt  <span className="text-stone-500"># copy and rename</span></div>
+            <div><span className="text-green-400">$</span> cp -r src/ src-backup/       <span className="text-stone-500"># copy a folder (-r = recursive)</span></div>
+          </div>
+        </div>
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50 border-b border-border">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-foreground font-mono text-xs">Flag</th>
+                <th className="text-left px-4 py-3 font-medium text-foreground">Effect</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[
+                ["-r", "Copy directories recursively (required for folders)"],
+                ["-i", "Ask before overwriting an existing file"],
+                ["-v", "Verbose — print each file as it is copied"],
+              ].map(([flag, effect]) => (
+                <tr key={flag} className="hover:bg-stone-50/50">
+                  <td className="px-4 py-3 font-mono text-xs text-foreground">{flag}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{effect}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Organize files and folders like a professional developer</li>
-            <li>Use consistent naming conventions</li>
-            <li>Manage projects efficiently</li>
-            <li>Keep your digital workspace clean and productive</li>
-          </ul>
-        </div>
-      </section>
-
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: Why Organization Matters</Typography>
-          <Typography variant="h3">The Cost of Disorganization</Typography>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-            <div className="p-6 bg-red-500/5 border border-red-500/20 rounded-2xl">
-              <Typography variant="h4" className="text-red-400 mb-4">Disorganized Developer</Typography>
-              <CodeBlock language="text">{`Desktop/
-├── final_v2_FINAL.html
-├── test.html
-├── asdfasdf.js
-├── project(1).zip
-├── New folder/
-└── untitled.txt`}</CodeBlock>
-              <ul className="list-disc pl-8 mt-4 space-y-1 text-sm text-text-secondary">
-                <li>Can't find anything</li>
-                <li>Wastes time searching</li>
-                <li>Looks unprofessional</li>
-              </ul>
-            </div>
-            
-            <div className="p-6 bg-green-500/5 border border-green-500/20 rounded-2xl">
-              <Typography variant="h4" className="text-green-400 mb-4">Organized Developer</Typography>
-              <CodeBlock language="text">{`projects/
-├── koompi-website/
-│   ├── index.html
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       └── main.js
-└── portfolio/`}</CodeBlock>
-              <ul className="list-disc pl-8 mt-4 space-y-1 text-sm text-text-secondary">
-                <li>Easy to navigate</li>
-                <li>Saves hours of work</li>
-                <li>Team-friendly</li>
-              </ul>
-            </div>
+      {/* mv */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Moving and Renaming — <code className="text-base font-mono bg-stone-100 px-1.5 py-0.5 rounded">mv</code></h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          <code className="bg-stone-100 px-1 rounded text-xs font-mono">mv</code> moves a file to a new location, or renames it if the destination is in the same directory. Unlike <code className="bg-stone-100 px-1 rounded text-xs font-mono">cp</code>, the original disappears.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+          <div className="px-5 py-4 space-y-1 leading-relaxed">
+            <div><span className="text-green-400">$</span> mv draft.txt final.txt          <span className="text-stone-500"># rename in same folder</span></div>
+            <div><span className="text-green-400">$</span> mv final.txt Documents/          <span className="text-stone-500"># move to Documents</span></div>
+            <div><span className="text-green-400">$</span> mv old-name/ new-name/           <span className="text-stone-500"># rename a folder</span></div>
+            <div><span className="text-green-400">$</span> mv *.log logs/                   <span className="text-stone-500"># move all .log files into logs/</span></div>
           </div>
         </div>
       </section>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Standard Project Structure</Typography>
-          <Typography>
-            Every web project should follow a similar pattern to ensure clarity and scalability:
-          </Typography>
-          
-          <div className="my-8 p-6 glass-panel rounded-2xl border border-white/5">
-            <CodeBlock language="text">{`project-name/
-├── index.html           # Main homepage
-├── about.html           # Other HTML pages
-├── css/                 # All stylesheets
-│   └── style.css
-├── js/                  # All JavaScript files
-│   └── main.js
-├── images/              # All visual assets
-│   ├── logo.png
-│   └── icons/
-└── README.md            # Project description`}</CodeBlock>
+      {/* rm -r */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Deleting Folders — <code className="text-base font-mono bg-stone-100 px-1.5 py-0.5 rounded">rm -r</code></h2>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+          <div className="px-5 py-4 space-y-1 leading-relaxed">
+            <div><span className="text-green-400">$</span> rm file.txt              <span className="text-stone-500"># delete one file</span></div>
+            <div><span className="text-green-400">$</span> rm -r old-project/       <span className="text-stone-500"># delete entire folder</span></div>
+            <div><span className="text-green-400">$</span> rm -ri old-project/      <span className="text-stone-500"># -i prompts before each delete</span></div>
           </div>
-
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Folder</TableHead>
-                <TableHead>Purpose</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Root (<code>/</code>)</TableCell>
-                <TableCell>Main HTML files and documentation</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>css/</code></TableCell>
-                <TableCell>Keeps styles separate from logic</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>js/</code></TableCell>
-                <TableCell>Keeps interactive scripts organized</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>images/</code></TableCell>
-                <TableCell>Centralizes all visual media</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+        </div>
+        <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+          <strong>No undo.</strong> Files deleted with <code className="bg-red-100 px-1 rounded text-xs font-mono">rm</code> bypass the Recycle Bin and are gone permanently. Use <code className="bg-red-100 px-1 rounded text-xs font-mono">-i</code> when in doubt.
         </div>
       </section>
 
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: File Naming Conventions</Typography>
-          <Typography variant="h3">The Golden Rules</Typography>
-          
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Do</TableHead>
-                <TableHead>Don't</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell><span className="text-green-400">Lowercase only</span> (<code>index.html</code>)</TableCell>
-                <TableCell><span className="text-red-400">Uppercase</span> (<code>Index.HTML</code>)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><span className="text-green-400">Hyphens for spaces</span> (<code>my-work.css</code>)</TableCell>
-                <TableCell><span className="text-red-400">Spaces</span> (<code>my work.css</code>)</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><span className="text-green-400">Be descriptive</span> (<code>contact-form.js</code>)</TableCell>
-                <TableCell><span className="text-red-400">Be vague</span> (<code>script1.js</code>)</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-
-          <Typography variant="h3" className="mt-8">Examples</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Bad</TableHead>
-                <TableHead>Good</TableHead>
-                <TableHead>Why</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell><code>My Page.html</code></TableCell>
-                <TableCell><code>my-page.html</code></TableCell>
-                <TableCell>No spaces, lowercase</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>sdfljk.js</code></TableCell>
-                <TableCell><code>form-handler.js</code></TableCell>
-                <TableCell>Clear purpose</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell><code>image (1).png</code></TableCell>
-                <TableCell><code>profile-photo.png</code></TableCell>
-                <TableCell>Descriptive</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Organizing Your Home Directory</Typography>
-          <Typography>
-            Set up your permanent workspace structure:
-          </Typography>
-          <CodeBlock language="text">{`/home/student/
-├── projects/            # ALL coding projects
-│   ├── learning/        # Practice and exercises
-│   └── portfolio/       # Your main portfolio
-├── Documents/           # General files
-│   └── notes/           # Study notes
-└── Downloads/           # TEMPORARY only!`}</CodeBlock>
-          
-          <Typography variant="h3" className="mt-8 text-primary">Workspace Setup Tip</Typography>
-          <Typography>
-            Keep your Desktop empty! It's for shortcuts only. A clean Desktop leads to a clear mind.
-          </Typography>
-        </div>
-      </section>
-
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <div className="mt-20 pt-10 border-t border-white/5">
-            <Typography variant="h2">Module Summary</Typography>
-            
-            <div className="p-8 glass-panel rounded-3xl border border-white/5 mb-12">
-              <Typography variant="h3" className="mb-4 text-primary">Digital Foundations Complete!</Typography>
-              <Typography>
-                Congratulations! You have finished Track 00. You now have the fundamental skills:
-              </Typography>
-              <ul className="list-disc pl-8 mt-4 space-y-2 text-text-secondary">
-                <li>Comfort with the Linux terminal (CLI)</li>
-                <li>Professional file organization habits</li>
-                <li>Consistent naming conventions</li>
-                <li>Typing proficiency (aim for 30+ WPM)</li>
-              </ul>
-            </div>
-
-            <div className="mt-12 p-8 bg-primary/10 rounded-3xl text-center border border-primary/20">
-              <Typography variant="h4" className="text-primary uppercase tracking-widest">Next Step</Typography>
-              <Typography variant="lead" className="mt-2">Track 02: Web Development (HTML)</Typography>
-              <Typography className="mt-2 text-text-secondary">
-                You are now ready to start building real websites. The journey of a Software Engineer begins here!
-              </Typography>
-            </div>
+      {/* find */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Finding Files — <code className="text-base font-mono bg-stone-100 px-1.5 py-0.5 rounded">find</code></h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          <code className="bg-stone-100 px-1 rounded text-xs font-mono">find</code> searches the file system starting from a directory you specify. It supports powerful filters.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+          <div className="px-5 py-4 space-y-1 leading-relaxed">
+            <div><span className="text-green-400">$</span> find . -name "*.html"         <span className="text-stone-500"># all .html files from here down</span></div>
+            <div><span className="text-green-400">$</span> find ~/projects -name "*.js"  <span className="text-stone-500"># all .js files in projects/</span></div>
+            <div><span className="text-green-400">$</span> find . -type d                <span className="text-stone-500"># list only directories</span></div>
+            <div><span className="text-green-400">$</span> find . -name "index.html"</div>
+            <div className="text-stone-400">./koompi-site/index.html</div>
+            <div className="text-stone-400">./portfolio/index.html</div>
           </div>
         </div>
       </section>
-    </div>
+
+      {/* grep */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Searching Inside Files — <code className="text-base font-mono bg-stone-100 px-1.5 py-0.5 rounded">grep</code></h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          <code className="bg-stone-100 px-1 rounded text-xs font-mono">grep</code> searches for text patterns inside files. It prints every matching line with the filename.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+          <div className="px-5 py-4 space-y-1 leading-relaxed">
+            <div><span className="text-green-400">$</span> grep "TODO" main.js              <span className="text-stone-500"># find TODOs in one file</span></div>
+            <div><span className="text-green-400">$</span> grep -r "console.log" src/       <span className="text-stone-500"># search recursively</span></div>
+            <div><span className="text-green-400">$</span> grep -n "function" app.js        <span className="text-stone-500"># show line numbers</span></div>
+            <div><span className="text-green-400">$</span> grep -i "error" server.log       <span className="text-stone-500"># case-insensitive</span></div>
+            <div className="mt-2 text-stone-400">server.log:42: ERROR: Connection refused</div>
+            <div className="text-stone-400">server.log:87: error: timeout after 30s</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Permissions */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">File Permissions</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Every file has three permission groups: <strong>owner</strong>, <strong>group</strong>, and <strong>others</strong>. Each group can have read (r), write (w), and execute (x) permissions.
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Reading ls -la output</div>
+          <div className="px-5 py-4 space-y-2 leading-relaxed">
+            <div><span className="text-green-400">$</span> ls -la</div>
+            <div className="text-stone-400">-rwxr-xr-- 1 student student 4096 Apr 24 09:00 deploy.sh</div>
+            <div className="mt-3 text-stone-300 text-xs space-y-1">
+              <div><span className="text-yellow-400">-</span>  — file type (- = file, d = directory, l = symlink)</div>
+              <div><span className="text-yellow-400">rwx</span> — owner: read + write + execute</div>
+              <div><span className="text-yellow-400">r-x</span> — group: read + execute (no write)</div>
+              <div><span className="text-yellow-400">r--</span> — others: read only</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-foreground"><code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">chmod</code> — Change Permissions</h3>
+          <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+            <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+            <div className="px-5 py-4 space-y-1 leading-relaxed">
+              <div><span className="text-green-400">$</span> chmod +x deploy.sh     <span className="text-stone-500"># make executable</span></div>
+              <div><span className="text-green-400">$</span> chmod 644 index.html   <span className="text-stone-500"># owner rw, group r, others r</span></div>
+              <div><span className="text-green-400">$</span> chmod 755 script.sh    <span className="text-stone-500"># owner rwx, group rx, others rx</span></div>
+            </div>
+          </div>
+          <div className="overflow-x-auto rounded-xl border border-border">
+            <table className="w-full text-sm">
+              <thead className="bg-stone-50 border-b border-border">
+                <tr>
+                  <th className="text-left px-4 py-3 font-medium text-foreground">Mode</th>
+                  <th className="text-left px-4 py-3 font-medium text-foreground">Permissions</th>
+                  <th className="text-left px-4 py-3 font-medium text-foreground">Common use</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {[
+                  ["644", "rw-r--r--", "Regular files (HTML, CSS, images)"],
+                  ["755", "rwxr-xr-x", "Executable scripts, directories"],
+                  ["600", "rw-------", "Private config files (SSH keys)"],
+                  ["700", "rwx------", "Private scripts"],
+                ].map(([mode, perms, use]) => (
+                  <tr key={mode} className="hover:bg-stone-50/50">
+                    <td className="px-4 py-3 font-mono text-xs text-foreground">{mode}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{perms}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{use}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* Text editors */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Editing Files in the Terminal</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          When you are on a remote server without a graphical editor, you need a terminal-based text editor. The two most common are <strong>nano</strong> (beginner-friendly) and <strong>vim</strong> (powerful, steep learning curve).
+        </p>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-foreground">nano — Simple and Beginner-Friendly</h3>
+          <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+            <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+            <div className="px-5 py-4 space-y-1 leading-relaxed">
+              <div><span className="text-green-400">$</span> nano index.html   <span className="text-stone-500"># open a file in nano</span></div>
+              <div className="text-stone-400 text-xs mt-3">Key shortcuts shown at the bottom of nano:</div>
+              <div className="text-stone-400 text-xs">^O = save (Ctrl+O)   ^X = exit (Ctrl+X)   ^W = search (Ctrl+W)</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-foreground">vim — Essential Survival Commands</h3>
+          <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+            <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal</div>
+            <div className="px-5 py-4 space-y-1 leading-relaxed">
+              <div><span className="text-green-400">$</span> vim index.html</div>
+            </div>
+          </div>
+          <div className="overflow-x-auto rounded-xl border border-border">
+            <table className="w-full text-sm">
+              <thead className="bg-stone-50 border-b border-border">
+                <tr>
+                  <th className="text-left px-4 py-3 font-medium text-foreground font-mono text-xs">Key</th>
+                  <th className="text-left px-4 py-3 font-medium text-foreground">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {[
+                  ["i", "Enter INSERT mode (start typing)"],
+                  ["Esc", "Return to NORMAL mode"],
+                  [":w", "Save (write)"],
+                  [":q", "Quit"],
+                  [":wq", "Save and quit"],
+                  [":q!", "Quit without saving"],
+                ].map(([key, action]) => (
+                  <tr key={key} className="hover:bg-stone-50/50">
+                    <td className="px-4 py-3 font-mono text-xs text-foreground">{key}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{action}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* Practical workflow */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">A Practical Workflow</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Here is a common sequence when starting a new project:
+        </p>
+        <div className="rounded-xl bg-stone-900 text-stone-100 font-mono text-sm overflow-hidden">
+          <div className="px-4 py-2 bg-stone-800 text-stone-400 text-xs">Terminal — setting up a project from scratch</div>
+          <div className="px-5 py-4 space-y-1 leading-relaxed">
+            <div><span className="text-green-400">$</span> cd ~/projects</div>
+            <div><span className="text-green-400">$</span> mkdir koompi-site</div>
+            <div><span className="text-green-400">$</span> cd koompi-site</div>
+            <div><span className="text-green-400">$</span> mkdir css js images</div>
+            <div><span className="text-green-400">$</span> touch index.html css/style.css js/main.js</div>
+            <div><span className="text-green-400">$</span> ls -la</div>
+            <div className="text-stone-400">total 16</div>
+            <div className="text-stone-400">drwxr-xr-x 5 student student 4096 Apr 24 09:15 .</div>
+            <div className="text-stone-400">drwxr-xr-x 8 student student 4096 Apr 24 09:15 ..</div>
+            <div className="text-stone-400">drwxr-xr-x 2 student student 4096 Apr 24 09:15 <span className="text-blue-400">css</span></div>
+            <div className="text-stone-400">drwxr-xr-x 2 student student 4096 Apr 24 09:15 <span className="text-blue-400">images</span></div>
+            <div className="text-stone-400">-rw-r--r-- 1 student student    0 Apr 24 09:15 index.html</div>
+            <div className="text-stone-400">drwxr-xr-x 2 student student 4096 Apr 24 09:15 <span className="text-blue-400">js</span></div>
+            <div className="mt-2"><span className="text-green-400">$</span> nano index.html   <span className="text-stone-500"># start editing</span></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Knowledge check */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Knowledge Check</h2>
+        <p className="text-sm text-muted-foreground">
+          Which command copies a file named <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">report.txt</code> into the <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">backup/</code> folder?
+        </p>
+        <div className="flex flex-col gap-3">
+          {[
+            "mv report.txt backup/",
+            "cp report.txt backup/",
+            "cp backup/ report.txt",
+            "copy report.txt backup/",
+          ].map((opt) => (
+            <button
+              key={opt}
+              onClick={() => {
+                setSelected(opt);
+                if (opt === CORRECT) notifyChallengePassed(moduleId ?? "");
+              }}
+              className={cn(
+                "text-left px-5 py-3.5 rounded-xl border text-sm font-sans transition-all",
+                selected === opt
+                  ? opt === CORRECT
+                    ? "border-green-400 bg-green-50 text-green-800"
+                    : "border-red-300 bg-red-50 text-red-800"
+                  : "border-border hover:border-primary/40 hover:bg-primary/5 text-foreground"
+              )}
+            >
+              <code className="font-mono text-xs">{opt}</code>
+            </button>
+          ))}
+        </div>
+        {selected && selected !== CORRECT && (
+          <p className="text-sm text-red-600">
+            {selected === "mv report.txt backup/"
+              ? "mv would work but it moves the file, removing the original. cp keeps both copies."
+              : selected === "cp backup/ report.txt"
+              ? "The order is cp SOURCE DESTINATION — source comes first."
+              : "copy is not a standard Linux command. Use cp."}
+          </p>
+        )}
+        {selected === CORRECT && (
+          <p className="text-sm text-green-700">Correct! <code className="bg-stone-100 px-1 rounded text-xs font-mono">cp source destination</code> — the original file stays intact and a copy appears in <code className="bg-stone-100 px-1 rounded text-xs font-mono">backup/</code>.</p>
+        )}
+      </section>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">Click <strong>Complete &amp; Next</strong> below to continue.</p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">Complete the challenge above to unlock the next lesson.</p>
+          </div>
+        )}
+      </section>
+
+    </article>
   );
 }

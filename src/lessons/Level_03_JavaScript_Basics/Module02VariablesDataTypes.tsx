@@ -1,479 +1,221 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Module02VariablesDataTypes() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Variables &amp; Data Types</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Hook */}
+      <section className="space-y-4">
+        <div className="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold tracking-wide uppercase">
+          Module 02 — JavaScript Basics
         </div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          Variables &amp; Data Types
+        </h1>
+        <p className="text-lg text-muted-foreground leading-relaxed">
+          Every app stores information — a user's name, a price in riel, a score in
+          a game. Variables are how JavaScript remembers things. Get this right and
+          you'll have the foundation for everything else.
+        </p>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 03: JavaScript Basics</Typography>
+
+      {/* Concept */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Declaring variables</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          There are three keywords. In modern JavaScript you only need two of them:
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-2 pr-4 font-semibold text-foreground font-mono">Keyword</th>
+                <th className="text-left py-2 pr-4 font-semibold text-foreground">Can change?</th>
+                <th className="text-left py-2 font-semibold text-foreground">When to use</th>
+              </tr>
+            </thead>
+            <tbody className="text-muted-foreground">
+              <tr className="border-b border-border/50">
+                <td className="py-2 pr-4 font-mono">const</td>
+                <td className="py-2 pr-4">No — value is fixed</td>
+                <td className="py-2">Default choice for most things</td>
+              </tr>
+              <tr className="border-b border-border/50">
+                <td className="py-2 pr-4 font-mono">let</td>
+                <td className="py-2 pr-4">Yes — can be reassigned</td>
+                <td className="py-2">Counters, values that update</td>
+              </tr>
+              <tr>
+                <td className="py-2 pr-4 font-mono">var</td>
+                <td className="py-2 pr-4">Yes — old style</td>
+                <td className="py-2">Avoid — use const/let instead</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Declare variables using let, const, and var</li>
-            <li>Work with different data types</li>
-            <li>Perform string operations</li>
-            <li>Understand type conversion</li>
-          </ul>
+
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`const city = "Phnom Penh";   // won't change
+let score = 0;               // will change as user plays
+// city = "Siem Reap";      // ❌ error — const can't change
+score = score + 10;          // ✅ fine — let can change`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">The four basic data types</h2>
+        <div className="grid grid-cols-2 gap-4">
+          {[
+            { type: "String", example: `"Hello"  'Sokha'`, desc: "Text — always in quotes" },
+            { type: "Number", example: "42   3.14   -7", desc: "Any numeric value" },
+            { type: "Boolean", example: "true   false", desc: "Yes / No — exactly two values" },
+            { type: "undefined", example: "let x;", desc: "Declared but not assigned" },
+          ].map(({ type, example, desc }) => (
+            <div key={type} className="rounded-xl border border-border bg-stone-50 px-4 py-3">
+              <p className="font-mono font-bold text-foreground text-sm">{type}</p>
+              <p className="font-mono text-xs text-amber-700 mt-1">{example}</p>
+              <p className="text-xs text-muted-foreground mt-1">{desc}</p>
+            </div>
+          ))}
         </div>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Template literals</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          Use backticks (<code className="font-mono bg-stone-100 px-1 rounded">` `</code>) instead of quotes and embed
+          variables with <code className="font-mono bg-stone-100 px-1 rounded">{`\${}`}</code>. Much cleaner than string
+          concatenation with <code className="font-mono bg-stone-100 px-1 rounded">+</code>.
+        </p>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`const name = "Dara";
+const price = 4000; // KHR
+
+// Old way (messy)
+console.log("Hello " + name + ", price is " + price + " ៛");
+
+// Template literal (clean)
+console.log(\`Hello \${name}, price is \${price} ៛\`);
+// → Hello Dara, price is 4000 ៛`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Checking types with typeof</h2>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`console.log(typeof "hello");   // "string"
+console.log(typeof 42);        // "number"
+console.log(typeof true);      // "boolean"
+console.log(typeof undefined); // "undefined"`}
+        </pre>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: What Are Variables?</Typography>
-          <Typography variant="h3">Variables Store Data</Typography>
-          <Typography>
-            Think of variables as labeled boxes that hold information:
-          </Typography>
-          <CodeBlock language="javascript">{`let name = "Sokha"; // Box labeled "name" contains "Sokha"
-let age = 22; // Box labeled "age" contains 22
-let isStudent = true; // Box labeled "isStudent" contains true`}</CodeBlock>
-          <Typography variant="h3">Declaring Variables</Typography>
-          <CodeBlock language="javascript">{`// Declaration with value
-let score = 100;
-// Declaration without value (undefined)
-let playerName;
-// Assign value later
-playerName = "Dara";
-// Change value
-score = 150;`}</CodeBlock>
-        </div>
+
+      {/* Example */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Live example — a Cambodian market price tag</h2>
+        <p className="text-sm text-muted-foreground">
+          Read the code, then tweak the values and watch the preview update.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{
+            js: `const item = "Nom banh chok";
+const priceKHR = 2000;
+const available = true;
+
+// Template literal builds the message
+const tag = \`Item: \${item}
+Price: \${priceKHR} ៛
+In stock: \${available}\`;
+
+// In JS mode, use document.write to show output
+document.write("<pre>" + tag + "</pre>");`,
+          }}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: let, const, and var</Typography>
-          <Typography variant="h3">Three Ways to Declare</Typography>
-          <CodeBlock language="javascript">{`let message = "Hello"; // Can be changed
-const PI = 3.14159; // Cannot be changed
-var oldWay = "Legacy"; // Old way (avoid)`}</CodeBlock>
-          <Typography variant="h3">let — Use Most of the Time</Typography>
-          <CodeBlock language="javascript">{`let count = 0;
-count = 1; // OK - can change
-count = 2; // OK - can change again
-let count = 3; // Error - can't redeclare`}</CodeBlock>
-          <Typography variant="h3">const — For Values That Don&apos;t Change</Typography>
-          <CodeBlock language="javascript">{`const maxUsers = 100;
-maxUsers = 200; // Error! Cannot change const
-const siteName = "KOOMPI";
-siteName = "Other"; // Error!`}</CodeBlock>
-          <Typography>
-            When to use const:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Configuration values</li>
-            <li>Constants (like PI, MAX_VALUE)</li>
-            <li>DOM element references</li>
-            <li>When value shouldn&apos;t change</li>
-          </ul>
-          <Typography variant="h3">var — The Old Way (Avoid)</Typography>
-          <CodeBlock language="javascript">{`var oldVariable = "Legacy code";
-// Works but can cause problems
-// Only use when maintaining old code`}</CodeBlock>
-          <Typography variant="h3">Comparison</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Feature</TableHead>
-                <TableHead>let</TableHead>
-                <TableHead>const</TableHead>
-                <TableHead>var</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Can reassign</TableCell>
-                <TableCell>Yes</TableCell>
-                <TableCell>No</TableCell>
-                <TableCell>Yes</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Can redeclare</TableCell>
-                <TableCell>No</TableCell>
-                <TableCell>No</TableCell>
-                <TableCell>Yes</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Block scope</TableCell>
-                <TableCell>Yes</TableCell>
-                <TableCell>Yes</TableCell>
-                <TableCell>No</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Recommended</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
+
+      {/* Try it */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Try it yourself</h2>
+        <p className="text-sm text-muted-foreground">
+          Declare some variables about yourself — your name, your age, your hometown — and
+          use a template literal to display them on the page.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{
+            js: `// Declare variables about yourself
+const name = "Your name";
+let age = 20;
+
+// Use a template literal
+document.write(\`Hello, I am \${name} and I am \${age} years old.\`);`,
+          }}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Naming Variables</Typography>
-          <Typography variant="h3">Rules</Typography>
-          <CodeBlock language="javascript">{`// Valid names
-let userName;
-let user_name;
-let userName1;
-let \$price;
-let _private;
-// Invalid names
-let 1user; // Can't start with number
-let user-name; // Can't use hyphen
-let let; // Can't use reserved words
-let my name; // Can't have spaces`}</CodeBlock>
-          <Typography variant="h3">Common Conventions</Typography>
-          <CodeBlock language="javascript">{`// camelCase (most common in JavaScript)
-let firstName;
-let userEmailAddress;
-let isLoggedIn;
-// Use descriptive names
-let x; // What does x mean?
-let userAge; // Clear meaning
-// Boolean names often start with is, has, can
-let isActive;
-let hasPermission;
-let canEdit;`}</CodeBlock>
-          <Typography variant="h3">Reserved Words (Can&apos;t Use)</Typography>
-          <CodeBlock language="text">{`break, case, catch, class, const, continue, 
-do, else, export, extends, false, finally, 
-for, function, if, import, in, instanceof, 
-let, new, null, return, static, switch, 
-this, throw, true, try, typeof, undefined, 
-var, void, while, with, yield`}</CodeBlock>
-        </div>
+
+      {/* Challenge */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Challenge</h2>
+        <p className="text-sm text-muted-foreground">
+          Declare a <code className="font-mono bg-stone-100 px-1 rounded">const</code> for a name (string) and a{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">let</code> for an age (number), then write a template
+          literal that uses both variables in a sentence.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{
+            js: `// 1. Declare a const for a name
+// 2. Declare a let for an age
+// 3. Use a template literal with both
+
+`,
+          }}
+          challenge={{
+            prompt:
+              "Declare a const (name) and a let (age), then build a sentence with a template literal using backticks.",
+            check(_html, _css, js) {
+              if (!js.includes("const"))
+                return { passed: false, message: "Declare your name with const." };
+              if (!js.includes("let"))
+                return { passed: false, message: "Declare your age with let." };
+              if (!js.includes("`"))
+                return {
+                  passed: false,
+                  message: "Use a template literal with backticks ` ` and ${} to combine them.",
+                };
+              return {
+                passed: true,
+                message: "Challenge complete! Variables and template literals down.",
+              };
+            },
+          }}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Data Types</Typography>
-          <Typography variant="h3">Primitive Data Types</Typography>
-          <CodeBlock language="javascript">{`// 1. STRING - text
-let name = "Sokha";
-let greeting = 'Hello!';
-let message = \`Welcome, \${name}\`;
-// 2. NUMBER - integers and decimals
-let age = 22;
-let price = 9.99;
-let negative = -10;
-// 3. BOOLEAN - true or false
-let isStudent = true;
-let hasLicense = false;
-// 4. UNDEFINED - no value assigned
-let unknown;
-console.log(unknown); // undefined
-// 5. NULL - intentionally empty
-let selectedUser = null;
-// 6. SYMBOL - unique identifier (advanced)
-let id = Symbol('id');`}</CodeBlock>
-          <Typography variant="h3">Checking Type</Typography>
-          <CodeBlock language="javascript">{`let name = "Sokha";
-let age = 22;
-let isStudent = true;
-console.log(typeof name); // "string"
-console.log(typeof age); // "number"
-console.log(typeof isStudent); // "boolean"
-console.log(typeof undefined); // "undefined"
-console.log(typeof null); // "object" (JavaScript quirk!)`}</CodeBlock>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Working with Strings</Typography>
-          <Typography variant="h3">Creating Strings</Typography>
-          <CodeBlock language="javascript">{`// Single quotes
-let str1 = 'Hello';
-// Double quotes
-let str2 = "World";
-// Template literals (backticks) - allows expressions
-let str3 = \`Hello, World!\`;`}</CodeBlock>
-          <Typography variant="h3">String Concatenation</Typography>
-          <CodeBlock language="javascript">{`let firstName = "Sokha";
-let lastName = "Meas";
-// Using +
-let fullName = firstName + " " + lastName;
-console.log(fullName); // "Sokha Meas"
-// Using template literals (better!)
-let greeting = \`Hello, \${firstName} \${lastName}!\`;
-console.log(greeting); // "Hello, Sokha Meas!"`}</CodeBlock>
-          <Typography variant="h3">Template Literals</Typography>
-          <CodeBlock language="javascript">{`let name = "Dara";
-let age = 25;
-// Can embed expressions
-let intro = \`My name is \${name} and I am \${age} years old.\`;
-// Can do calculations
-let message = \`Next year I will be \${age + 1}.\`;
-// Multi-line strings
-let poem = \`
- Roses are red,
- Violets are blue,
- JavaScript is fun,
- And so are you!
-\`;`}</CodeBlock>
-          <Typography variant="h3">String Properties and Methods</Typography>
-          <CodeBlock language="javascript">{`let text = "Hello, Cambodia!";
-// Length
-console.log(text.length); // 16
-// Access character
-console.log(text[0]); // "H"
-console.log(text[7]); // "C"
-// Common methods
-console.log(text.toUpperCase()); // "HELLO, CAMBODIA!"
-console.log(text.toLowerCase()); // "hello, cambodia!"
-console.log(text.includes("Cambodia")); // true
-console.log(text.indexOf("Cambodia")); // 7
-console.log(text.slice(0, 5)); // "Hello"
-console.log(text.replace("Cambodia", "World")); // "Hello, World!"`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Working with Numbers</Typography>
-          <Typography variant="h3">Basic Operations</Typography>
-          <CodeBlock language="javascript">{`let a = 10;
-let b = 3;
-console.log(a + b); // 13 (addition)
-console.log(a - b); // 7 (subtraction)
-console.log(a * b); // 30 (multiplication)
-console.log(a / b); // 3.333... (division)
-console.log(a % b); // 1 (remainder/modulo)
-console.log(a ** b); // 1000 (exponent)`}</CodeBlock>
-          <Typography variant="h3">Increment and Decrement</Typography>
-          <CodeBlock language="javascript">{`let count = 0;
-count++; // count is now 1
-count++; // count is now 2
-count--; // count is now 1
-// Also:
-count += 5; // count = count + 5
-count -= 2; // count = count - 2
-count *= 3; // count = count * 3`}</CodeBlock>
-          <Typography variant="h3">Math Object</Typography>
-          <CodeBlock language="javascript">{`// Rounding
-console.log(Math.round(4.5)); // 5
-console.log(Math.floor(4.9)); // 4 (round down)
-console.log(Math.ceil(4.1)); // 5 (round up)
-// Other useful methods
-console.log(Math.abs(-5)); // 5 (absolute value)
-console.log(Math.max(1, 5, 3)); // 5
-console.log(Math.min(1, 5, 3)); // 1
-console.log(Math.random()); // Random 0-1
-// Random whole number between 1 and 10
-let random = Math.floor(Math.random() * 10) + 1;`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Type Conversion</Typography>
-          <Typography variant="h3">Automatic Conversion (Coercion)</Typography>
-          <CodeBlock language="javascript">{`// String + Number = String
-console.log("5" + 3); // "53" (string)
-// Number operations try to convert
-console.log("5" - 3); // 2 (number)
-console.log("5" * 3); // 15 (number)
-// Be careful!
-console.log("5" + 3); // "53"
-console.log(5 + "3"); // "53"`}</CodeBlock>
-          <Typography variant="h3">Explicit Conversion</Typography>
-          <CodeBlock language="javascript">{`// To String
-let num = 123;
-let str = String(num); // "123"
-let str2 = num.toString(); // "123"
-// To Number
-let text = "456";
-let number = Number(text); // 456
-let num2 = parseInt("456"); // 456
-let num3 = parseFloat("3.14"); // 3.14
-// To Boolean
-let bool = Boolean(1); // true
-let bool2 = Boolean(0); // false
-let bool3 = Boolean(""); // false
-let bool4 = Boolean("hello"); // true`}</CodeBlock>
-          <Typography variant="h3">Truthy and Falsy</Typography>
-          <CodeBlock language="javascript">{`// Falsy values (become false)
-Boolean(0); // false
-Boolean(""); // false
-Boolean(null); // false
-Boolean(undefined); // false
-Boolean(NaN); // false
-Boolean(false); // false
-// Everything else is truthy
-Boolean(1); // true
-Boolean("hello"); // true
-Boolean([]); // true
-Boolean({}); // true`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Variable Practice</Typography>
-          <Typography>
-            Create variables for:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Your name</li>
-            <li>Your age</li>
-            <li>Whether you are a student (true/false)</li>
-            <li>Your favorite color</li>
-          </ul>
-          <Typography>
-            Print all of them to the console.
-          </Typography>
-          <Typography variant="h3">Exercise 2: String Concatenation</Typography>
-          <Typography>
-            Create a variable with your first name and another with your last name. Combine them to create a full name using:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>The + operator</li>
-            <li>Template literals</li>
-          </ul>
-          <Typography variant="h3">Exercise 3: Math Calculator</Typography>
-          <Typography>
-            Create variables for:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>price = 100</li>
-            <li>quantity = 5</li>
-            <li>taxRate = 0.10</li>
-          </ul>
-          <Typography>
-            Calculate and print:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Subtotal (price × quantity)</li>
-            <li>Tax amount (subtotal × taxRate)</li>
-            <li>Total (subtotal + tax)</li>
-          </ul>
-          <Typography variant="h3">Exercise 4: Type Checking</Typography>
-          <Typography>
-            For each variable below, use typeof to check the type:
-          </Typography>
-          <CodeBlock language="javascript">{`let a = "Hello";
-let b = 42;
-let c = true;
-let d;
-let e = null;`}</CodeBlock>
-          <Typography variant="h3">Exercise 5: User Info</Typography>
-          <Typography>
-            Create a page that:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Prompts for user&apos;s name</li>
-            <li>Prompts for user&apos;s age</li>
-            <li>Displays: &quot;Hello [name], you will be [age+1] next year!&quot;</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Typography>
-            Variable Declarations
-          </Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Keyword</TableHead>
-                <TableHead>Reassign</TableHead>
-                <TableHead>Best For</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>let</TableCell>
-                <TableCell>Yes</TableCell>
-                <TableCell>Variables that change</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>const</TableCell>
-                <TableCell>No</TableCell>
-                <TableCell>Constants, config</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>var</TableCell>
-                <TableCell>Yes</TableCell>
-                <TableCell>Old code only</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography>
-            Data Types
-          </Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Example</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>String</TableCell>
-                <TableCell>&quot;Hello&quot;</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Number</TableCell>
-                <TableCell>42, 3.14</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Boolean</TableCell>
-                <TableCell>true, false</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Undefined</TableCell>
-                <TableCell>undefined</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Null</TableCell>
-                <TableCell>null</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Before moving to Module 04:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Practiced variable declarations</li>
-            <li>Worked with strings and numbers</li>
-            <li>Understand data types</li>
-            <li>Completed all exercises</li>
-            <li>Get mentor verification</li>
-          </ul>
-          <Typography>
-            Coming Next: Module 04 - Operators &amp; Conditions
-          </Typography>
-          <Typography>
-            You will learn to make decisions in code!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            Data is the foundation!
-          </Typography>
-          <Typography>
-            Everything in programming starts with data.
-          </Typography>
-        </div>
-      </section>
-    </div>
+    </article>
   );
 }

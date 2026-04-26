@@ -1,446 +1,228 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Module04Functions() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Functions</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Hook */}
+      <section className="space-y-4">
+        <div className="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold tracking-wide uppercase">
+          Module 04 — JavaScript Basics
         </div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          Functions
+        </h1>
+        <p className="text-lg text-muted-foreground leading-relaxed">
+          Imagine you need to calculate a tuk-tuk fare ten different places in your
+          app. You don't paste the same math ten times — you write it once inside a
+          function and call it whenever you need it. Functions are reusable blocks
+          of code with a name.
+        </p>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 03: JavaScript Basics</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Objectives</Typography>
-          <Typography>
-            By the end of this module, you will be able to:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Create and call functions</li>
-            <li>Use parameters and return values</li>
-            <li>Understand function scope</li>
-            <li>Use arrow functions</li>
-          </ul>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 1: What Are Functions?</Typography>
-          <Typography variant="h3">Functions Are Reusable Code</Typography>
-          <CodeBlock language="text">{`┌─────────────────────────────────────────────────────────────────────────────┐
-│ WHY FUNCTIONS? │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ │
-│ WITHOUT FUNCTIONS: WITH FUNCTIONS: │
-│ │
-│ console.log("Hello, Sokha"); function greet(name) { │
-│ console.log("Hello, Dara"); console.log("Hello, " + name); │
-│ console.log("Hello, Bopha"); } │
-│ console.log("Hello, Vanna"); │
-│ // ... repeat for every person greet("Sokha"); │
-│ greet("Dara"); │
-│ greet("Bopha"); │
-│ greet("Vanna"); │
-│ // Reuse for anyone! │
-│ │
-│ Functions let you write once and use many times. │
-│ │
-└─────────────────────────────────────────────────────────────────────────────┘`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 2: Creating Functions</Typography>
-          <Typography variant="h3">Function Declaration</Typography>
-          <CodeBlock language="javascript">{`function sayHello() {
- console.log("Hello!");
+
+      {/* Concept */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">Function declaration</h2>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`function greet(name) {
+  return "Hello, " + name + "!";
 }
-// Call the function
-sayHello(); // Output: Hello!
-sayHello(); // Output: Hello!`}</CodeBlock>
-          <Typography variant="h3">Function with Parameters</Typography>
-          <CodeBlock language="javascript">{`function greet(name) {
- console.log("Hello, " + name + "!");
-}
-greet("Sokha"); // Hello, Sokha!
-greet("Dara"); // Hello, Dara!`}</CodeBlock>
-          <Typography variant="h3">Multiple Parameters</Typography>
-          <CodeBlock language="javascript">{`function introduce(name, age, job) {
- console.log(\`My name is \${name}, I'm \${age}, and I work as a \${job}.\`);
-}
-introduce("Sokha", 22, "developer");
-// My name is Sokha, I'm 22, and I work as a developer.`}</CodeBlock>
-          <Typography variant="h3">Default Parameters</Typography>
-          <CodeBlock language="javascript">{`function greet(name = "Friend") {
- console.log(\`Hello, \${name}!\`);
-}
-greet("Sokha"); // Hello, Sokha!
-greet(); // Hello, Friend!`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 3: Return Values</Typography>
-          <Typography variant="h3">The Return Statement</Typography>
-          <Typography>
-            Functions can send a value back:
-          </Typography>
-          <CodeBlock language="javascript">{`function add(a, b) {
- return a + b;
-}
-let result = add(5, 3);
-console.log(result); // 8
-// Use directly
-console.log(add(10, 20)); // 30`}</CodeBlock>
-          <Typography variant="h3">Return Stops Execution</Typography>
-          <CodeBlock language="javascript">{`function checkAge(age) {
- if (age < 18) {
- return "Too young";
- }
- return "Welcome!";
- console.log("This never runs"); // Unreachable
-}
-console.log(checkAge(15)); // Too young
-console.log(checkAge(25)); // Welcome!`}</CodeBlock>
-          <Typography variant="h3">Returning Different Types</Typography>
-          <CodeBlock language="javascript">{`// Return a number
-function calculateArea(width, height) {
- return width * height;
-}
-// Return a string
-function getFullName(first, last) {
- return first + " " + last;
-}
-// Return a boolean
-function isAdult(age) {
- return age >= 18;
-}
-// Return an object
-function createUser(name, age) {
- return {
- name: name,
- age: age,
- isAdult: age >= 18
- };
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 4: Scope</Typography>
-          <Typography variant="h3">What is Scope?</Typography>
-          <Typography>
-            Scope determines where variables are accessible.
-          </Typography>
-          <CodeBlock language="javascript">{`let globalVar = "I'm global";
-function myFunction() {
- let localVar = "I'm local";
- console.log(globalVar); // Can access global
- console.log(localVar); // Can access local
-}
-myFunction();
-console.log(globalVar); // Can access global
-console.log(localVar); // Error! localVar not defined`}</CodeBlock>
-          <Typography variant="h3">Block Scope</Typography>
-          <Typography>
-            Variables declared with let and const are block-scoped:
-          </Typography>
-          <CodeBlock language="javascript">{`if (true) {
- let blockVar = "I'm in a block";
- console.log(blockVar); // Works here
-}
-console.log(blockVar); // Error! Not accessible outside
-// var leaks out of blocks (avoid!)
-if (true) {
- var leakyVar = "I leak!";
-}
-console.log(leakyVar); // "I leak!" - This actually works`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 5: Arrow Functions</Typography>
-          <Typography variant="h3">Arrow Function Syntax</Typography>
-          <Typography>
-            A shorter way to write functions:
-          </Typography>
-          <CodeBlock language="javascript">{`// Traditional function
+
+const message = greet("Sokha");
+document.write(message); // Hello, Sokha!`}
+        </pre>
+        <p className="text-muted-foreground text-sm">
+          The function is <em>declared</em> once and <em>called</em> as many times as you need.
+          The <code className="font-mono bg-stone-100 px-1 rounded">return</code> keyword sends
+          a value back to whoever called the function.
+        </p>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Arrow functions</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          Modern JavaScript uses arrow functions — shorter syntax, same idea:
+        </p>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`// Classic function
 function add(a, b) {
- return a + b;
+  return a + b;
 }
-// Arrow function
+
+// Arrow function — same thing, less typing
 const add = (a, b) => {
- return a + b;
+  return a + b;
 };
-// Even shorter (implicit return)
-const add = (a, b) => a + b;`}</CodeBlock>
-          <Typography variant="h3">Arrow Function Examples</Typography>
-          <CodeBlock language="javascript">{`// No parameters
-const sayHello = () => console.log("Hello!");
-// One parameter (parentheses optional)
-const double = x => x * 2;
-const double = (x) => x * 2; // Also valid
-// Multiple parameters
-const add = (a, b) => a + b;
-// With function body
-const greet = (name) => {
- let message = \`Hello, \${name}!\`;
- console.log(message);
- return message;
-};`}</CodeBlock>
-          <Typography variant="h3">When to Use Arrow Functions</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Use Arrow Functions</TableHead>
-                <TableHead>Use Regular Functions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Short operations</TableCell>
-                <TableCell>Methods in objects</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Array methods</TableCell>
-                <TableCell>Constructors</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Callbacks</TableCell>
-                <TableCell>When you need this context</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+
+// One-liner arrow — implicit return
+const addShort = (a, b) => a + b;
+
+document.write(addShort(3, 4)); // 7`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Parameters vs arguments</h2>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="rounded-xl border border-border bg-stone-50 px-4 py-3">
+            <p className="font-semibold text-foreground mb-1">Parameter</p>
+            <p className="text-muted-foreground">The variable name inside the function definition.</p>
+            <pre className="font-mono text-xs mt-2 text-amber-800">{"function greet(name) { ... }"}</pre>
+            <p className="text-xs text-muted-foreground mt-1"><code className="font-mono">name</code> is the parameter</p>
+          </div>
+          <div className="rounded-xl border border-border bg-stone-50 px-4 py-3">
+            <p className="font-semibold text-foreground mb-1">Argument</p>
+            <p className="text-muted-foreground">The actual value you pass when calling the function.</p>
+            <pre className="font-mono text-xs mt-2 text-amber-800">{'greet("Dara")'}</pre>
+            <p className="text-xs text-muted-foreground mt-1"><code className="font-mono">"Dara"</code> is the argument</p>
+          </div>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 6: Function Expressions</Typography>
-          <Typography variant="h3">Storing Functions in Variables</Typography>
-          <CodeBlock language="javascript">{`// Function declaration
-function greet1(name) {
- return \`Hello, \${name}!\`;
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Default parameters</h2>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`const greet = (name = "friend") => \`Hello, \${name}!\`;
+
+document.write(greet("Bopha")); // Hello, Bopha!
+document.write("<br>");
+document.write(greet());        // Hello, friend!`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Scope — where variables live</h2>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`const city = "Phnom Penh"; // global — visible everywhere
+
+function showCity() {
+  const district = "Chamkarmon"; // local — only inside here
+  document.write(city + ", " + district);
 }
-// Function expression
-const greet2 = function(name) {
- return \`Hello, \${name}!\`;
+
+showCity();
+// document.write(district); // Error — district is local to the function`}
+        </pre>
+      </section>
+
+      {/* Example */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Live example — fare calculator function</h2>
+        <p className="text-sm text-muted-foreground">
+          The function takes a distance, applies the rate, and returns the fare.
+          Call it multiple times with different arguments.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{
+            js: `const calcFare = (distanceKm, ratePerKm = 2000) => {
+  return distanceKm * ratePerKm;
 };
-// Arrow function expression
-const greet3 = (name) => \`Hello, \${name}!\`;
-// All work the same way
-console.log(greet1("Sokha"));
-console.log(greet2("Sokha"));
-console.log(greet3("Sokha"));`}</CodeBlock>
-          <Typography variant="h3">Passing Functions as Arguments</Typography>
-          <CodeBlock language="javascript">{`function doOperation(a, b, operation) {
- return operation(a, b);
-}
-const add = (x, y) => x + y;
-const subtract = (x, y) => x - y;
-const multiply = (x, y) => x * y;
-console.log(doOperation(10, 5, add)); // 15
-console.log(doOperation(10, 5, subtract)); // 5
-console.log(doOperation(10, 5, multiply)); // 50`}</CodeBlock>
-        </div>
+
+document.write("3 km: " + calcFare(3) + " ៛<br>");
+document.write("7 km: " + calcFare(7) + " ៛<br>");
+document.write("15 km (premium 3500/km): " + calcFare(15, 3500) + " ៛");`,
+          }}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Lesson 7: Practical Function Examples</Typography>
-          <Typography variant="h3">Calculator Functions</Typography>
-          <CodeBlock language="javascript">{`const add = (a, b) => a + b;
-const subtract = (a, b) => a - b;
-const multiply = (a, b) => a * b;
-const divide = (a, b) => b !== 0 ? a / b : "Cannot divide by zero";
-function calculate(num1, num2, operation) {
- switch(operation) {
- case '+': return add(num1, num2);
- case '-': return subtract(num1, num2);
- case '*': return multiply(num1, num2);
- case '/': return divide(num1, num2);
- default: return "Invalid operation";
- }
-}
-console.log(calculate(10, 5, '+')); // 15
-console.log(calculate(10, 5, '/')); // 2`}</CodeBlock>
-          <Typography variant="h3">Validation Functions</Typography>
-          <CodeBlock language="javascript">{`function isValidEmail(email) {
- return email.includes('@') && email.includes('.');
-}
-function isValidPassword(password) {
- return password.length >= 8;
-}
-function validateUser(email, password) {
- if (!isValidEmail(email)) {
- return "Invalid email format";
- }
- if (!isValidPassword(password)) {
- return "Password must be at least 8 characters";
- }
- return "Valid!";
-}
-console.log(validateUser("test@email.com", "12345678")); // Valid!
-console.log(validateUser("testemail", "12345678")); // Invalid email`}</CodeBlock>
-          <Typography variant="h3">Greeting Function</Typography>
-          <CodeBlock language="javascript">{`function getGreeting() {
- const hour = new Date().getHours();
- if (hour < 12) {
- return "Good morning";
- } else if (hour < 18) {
- return "Good afternoon";
- } else {
- return "Good evening";
- }
-}
-function personalizeGreeting(name) {
- return \`\${getGreeting()}, \${name}!\`;
-}
-console.log(personalizeGreeting("Sokha"));
-// Output depends on time of day`}</CodeBlock>
-        </div>
+
+      {/* Try it */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Try it yourself</h2>
+        <p className="text-sm text-muted-foreground">
+          Write an arrow function called <code className="font-mono bg-stone-100 px-1 rounded">square</code> that takes
+          a number and returns its square. Then call it a few times and write the
+          results to the page.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{
+            js: `// Write your arrow function here
+const square = (n) => {
+  // return n squared
+};
+
+document.write(square(4) + "<br>"); // should be 16
+document.write(square(7));          // should be 49`,
+          }}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Self-Check Exercises</Typography>
-          <Typography variant="h3">Exercise 1: Basic Function</Typography>
-          <Typography>
-            Create a function that:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Takes a person&apos;s name</li>
-            <li>Returns &quot;Hello, [name]!&quot;</li>
-            <li>Call it with 3 different names</li>
-          </ul>
-          <Typography variant="h3">Exercise 2: Calculator</Typography>
-          <Typography>
-            Create functions for add, subtract, multiply, divide. Each takes two numbers and returns the result.
-          </Typography>
-          <Typography variant="h3">Exercise 3: Temperature Converter</Typography>
-          <Typography>
-            Create two functions:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>celsiusToFahrenheit(celsius) — returns fahrenheit</li>
-            <li>fahrenheitToCelsius(fahrenheit) — returns celsius</li>
-          </ul>
-          <Typography>
-            Formula: F = (C × 9/5) + 32
-          </Typography>
-          <Typography variant="h3">Exercise 4: Grade Function</Typography>
-          <Typography>
-            Create a function that:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Takes a score (0-100)</li>
-            <li>Returns the grade (A, B, C, D, F)</li>
-          </ul>
-          <Typography variant="h3">Exercise 5: Password Generator</Typography>
-          <Typography>
-            Create a function that generates a random password:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Takes a length parameter (default 8)</li>
-            <li>Returns a random string of that length</li>
-            <li>Use letters and numbers</li>
-          </ul>
-        </div>
+
+      {/* Challenge */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Challenge</h2>
+        <p className="text-sm text-muted-foreground">
+          Write an arrow function called <code className="font-mono bg-stone-100 px-1 rounded">greet</code> that accepts
+          a <code className="font-mono bg-stone-100 px-1 rounded">name</code> parameter and{" "}
+          <strong>returns</strong> a greeting string. Then call it and write the
+          result to the page.
+        </p>
+        <CodePlayground
+          mode="js"
+          starter={{
+            js: `// Write an arrow function called greet
+// It should take a name parameter
+// and return a greeting string
+
+// Then call it:
+// document.write(greet("Sokha"));
+`,
+          }}
+          challenge={{
+            prompt:
+              "Write an arrow function called greet that takes a name parameter and returns a greeting string.",
+            check(_html, _css, js) {
+              const hasGreetDeclared =
+                js.includes("const greet") ||
+                js.includes("let greet") ||
+                js.includes("function greet");
+              if (!hasGreetDeclared)
+                return {
+                  passed: false,
+                  message: "Name your function greet — use const greet = ... or function greet(...).",
+                };
+              const hasArrow = js.includes("=>");
+              const hasFunction = js.includes("function");
+              if (!hasArrow && !hasFunction)
+                return {
+                  passed: false,
+                  message: "Use an arrow function (=>) or a function declaration.",
+                };
+              if (!js.includes("return"))
+                return {
+                  passed: false,
+                  message: "Your function should return a greeting string.",
+                };
+              return {
+                passed: true,
+                message: "Challenge complete! You wrote and called a function.",
+              };
+            },
+          }}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Module Summary</Typography>
-          <Typography>
-            Function Types
-          </Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Syntax</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Declaration</TableCell>
-                <TableCell>function name() {}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Expression</TableCell>
-                <TableCell>const name = function() {}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Arrow</TableCell>
-                <TableCell>const name = () =&gt; {}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography>
-            Key Concepts
-          </Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Concept</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Parameters</TableCell>
-                <TableCell>Inputs to the function</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Return</TableCell>
-                <TableCell>Output from the function</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Scope</TableCell>
-                <TableCell>Where variables are accessible</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Default values</TableCell>
-                <TableCell>Fallback for missing parameters</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Next Steps</Typography>
-          <Typography>
-            Before moving to Module 06:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>Create functions with parameters</li>
-            <li>Use return statements</li>
-            <li>Understand scope</li>
-            <li>Practice arrow functions</li>
-            <li>Get mentor verification</li>
-          </ul>
-          <Typography>
-            Coming Next: Module 06 - Arrays &amp; Loops
-          </Typography>
-          <Typography>
-            You will learn to work with collections of data!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            Functions are your building blocks!
-          </Typography>
-          <Typography>
-            Good functions make good code.
-          </Typography>
-        </div>
-      </section>
-    </div>
+    </article>
   );
 }

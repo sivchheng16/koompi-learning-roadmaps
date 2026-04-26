@@ -1,0 +1,370 @@
+- generic [ref=e3]:
+  - region "Notifications alt+T"
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - link "KOOMPI KOOMPI Learning Platform" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "KOOMPI" [ref=e8]
+        - generic [ref=e9]:
+          - generic [ref=e10]: KOOMPI
+          - generic [ref=e11]: Learning Platform
+      - navigation [ref=e12]:
+        - link "Home" [ref=e13] [cursor=pointer]:
+          - /url: /
+          - img [ref=e15]
+          - generic [ref=e18]: Home
+        - link "About" [ref=e20] [cursor=pointer]:
+          - /url: /about
+          - img [ref=e21]
+          - generic [ref=e23]: About
+        - link "Modules" [ref=e24] [cursor=pointer]:
+          - /url: /services
+          - img [ref=e25]
+          - generic [ref=e29]: Modules
+        - link "Features" [ref=e30] [cursor=pointer]:
+          - /url: /portfolio
+          - img [ref=e31]
+          - generic [ref=e34]: Features
+        - link "The Vault" [ref=e35] [cursor=pointer]:
+          - /url: /vault
+          - img [ref=e36]
+          - generic [ref=e38]: The Vault
+      - generic [ref=e39]:
+        - button "Sign in" [ref=e40] [cursor=pointer]:
+          - img [ref=e41]
+          - text: Sign in
+        - paragraph [ref=e44]: © 2026 KOOMPI OS
+  - main [ref=e45]:
+    - generic [ref=e46]:
+      - navigation [ref=e47]:
+        - generic [ref=e48]:
+          - button "Toggle menu" [ref=e49] [cursor=pointer]:
+            - img [ref=e51]
+          - link "KOOMPI" [ref=e52] [cursor=pointer]:
+            - /url: /
+            - img "KOOMPI" [ref=e53]
+          - button "Sign in" [ref=e54] [cursor=pointer]
+      - generic [ref=e56]:
+        - generic [ref=e58]: KOOMPI Learning Roadmap
+        - heading "Learn to build great software." [level=1] [ref=e60]:
+          - text: Learn to build
+          - text: great software.
+        - paragraph [ref=e61]: Empowering the next generation of Linux users and developers. Structured modules, hands-on projects, and core system insights — from terminal basics to full-stack applications.
+        - generic [ref=e62]:
+          - button "Explore Courses" [ref=e63] [cursor=pointer]:
+            - text: Explore Courses
+            - img [ref=e64]
+          - button "About the Platform" [ref=e66] [cursor=pointer]
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - paragraph [ref=e70]: Course Library
+          - generic [ref=e71]:
+            - heading "Programming Languages & Frameworks" [level=2] [ref=e72]:
+              - text: Programming Languages
+              - text: "& Frameworks"
+            - paragraph [ref=e73]: Explore the core foundations of modern computing and software development.
+        - generic [ref=e74]:
+          - 'button "Foundation Recomend 3 lessons Foundation Master the essential digital skills: from Linux terminal navigation to professional file management and typing proficiency. Start learning 135m" [ref=e76] [cursor=pointer]':
+            - generic [ref=e77]:
+              - img "Foundation" [ref=e79]
+              - generic [ref=e80]:
+                - generic [ref=e81]: Recomend
+                - generic [ref=e82]: 3 lessons
+              - generic [ref=e83]:
+                - heading "Foundation" [level=3] [ref=e84]
+                - paragraph [ref=e85]: "Master the essential digital skills: from Linux terminal navigation to professional file management and typing proficiency."
+              - generic [ref=e86]:
+                - generic [ref=e87]:
+                  - text: Start learning
+                  - img [ref=e88]
+                - generic [ref=e90]:
+                  - img [ref=e91]
+                  - text: 135m
+          - button "HTML Beginner 8 lessons HTML The standard markup language for creating web pages. Learn how to structure content, build forms, add media, and create the skeleton of every website. Start learning 360m" [ref=e95] [cursor=pointer]:
+            - generic [ref=e96]:
+              - img "HTML" [ref=e98]
+              - generic [ref=e99]:
+                - generic [ref=e100]: Beginner
+                - generic [ref=e101]: 8 lessons
+              - generic [ref=e102]:
+                - heading "HTML" [level=3] [ref=e103]
+                - paragraph [ref=e104]: The standard markup language for creating web pages. Learn how to structure content, build forms, add media, and create the skeleton of every website.
+              - generic [ref=e105]:
+                - generic [ref=e106]:
+                  - text: Start learning
+                  - img [ref=e107]
+                - generic [ref=e109]:
+                  - img [ref=e110]
+                  - text: 360m
+          - button "CSS Beginner 8 lessons CSS Style sheet language for describing the presentation of HTML documents. Master selectors, the box model, Flexbox, and responsive design principles. Start learning 360m" [ref=e114] [cursor=pointer]:
+            - generic [ref=e115]:
+              - img "CSS" [ref=e117]
+              - generic [ref=e118]:
+                - generic [ref=e119]: Beginner
+                - generic [ref=e120]: 8 lessons
+              - generic [ref=e121]:
+                - heading "CSS" [level=3] [ref=e122]
+                - paragraph [ref=e123]: Style sheet language for describing the presentation of HTML documents. Master selectors, the box model, Flexbox, and responsive design principles.
+              - generic [ref=e124]:
+                - generic [ref=e125]:
+                  - text: Start learning
+                  - img [ref=e126]
+                - generic [ref=e128]:
+                  - img [ref=e129]
+                  - text: 360m
+          - button "JavaScript Intermediate 8 lessons JavaScript The language of the web. Learn variables, functions, arrays, loops, and DOM manipulation to make websites interactive and dynamic. Start learning 360m" [ref=e133] [cursor=pointer]:
+            - generic [ref=e134]:
+              - img "JavaScript" [ref=e136]
+              - generic [ref=e137]:
+                - generic [ref=e138]: Intermediate
+                - generic [ref=e139]: 8 lessons
+              - generic [ref=e140]:
+                - heading "JavaScript" [level=3] [ref=e141]
+                - paragraph [ref=e142]: The language of the web. Learn variables, functions, arrays, loops, and DOM manipulation to make websites interactive and dynamic.
+              - generic [ref=e143]:
+                - generic [ref=e144]:
+                  - text: Start learning
+                  - img [ref=e145]
+                - generic [ref=e147]:
+                  - img [ref=e148]
+                  - text: 360m
+          - button "JS Advanced Intermediate 6 lessons JS Advanced Go deeper into JavaScript with ES6+ features, asynchronous programming, REST APIs, and professional error handling patterns. Start learning 270m" [ref=e152] [cursor=pointer]:
+            - generic [ref=e153]:
+              - img "JS Advanced" [ref=e155]
+              - generic [ref=e156]:
+                - generic [ref=e157]: Intermediate
+                - generic [ref=e158]: 6 lessons
+              - generic [ref=e159]:
+                - heading "JS Advanced" [level=3] [ref=e160]
+                - paragraph [ref=e161]: Go deeper into JavaScript with ES6+ features, asynchronous programming, REST APIs, and professional error handling patterns.
+              - generic [ref=e162]:
+                - generic [ref=e163]:
+                  - text: Start learning
+                  - img [ref=e164]
+                - generic [ref=e166]:
+                  - img [ref=e167]
+                  - text: 270m
+          - button "Git & GitHub Beginner 5 lessons Git & GitHub Version control is a superpower. Learn Git fundamentals, branching, merging, and how to collaborate with teams using GitHub. Start learning 225m" [ref=e171] [cursor=pointer]:
+            - generic [ref=e172]:
+              - img "Git & GitHub" [ref=e174]
+              - generic [ref=e175]:
+                - generic [ref=e176]: Beginner
+                - generic [ref=e177]: 5 lessons
+              - generic [ref=e178]:
+                - heading "Git & GitHub" [level=3] [ref=e179]
+                - paragraph [ref=e180]: Version control is a superpower. Learn Git fundamentals, branching, merging, and how to collaborate with teams using GitHub.
+              - generic [ref=e181]:
+                - generic [ref=e182]:
+                  - text: Start learning
+                  - img [ref=e183]
+                - generic [ref=e185]:
+                  - img [ref=e186]
+                  - text: 225m
+          - button "React Advanced 7 lessons React A powerful UI library for building component-based interfaces. Learn props, state, hooks, routing, and build real applications. Start learning 315m" [ref=e190] [cursor=pointer]:
+            - generic [ref=e191]:
+              - img "React" [ref=e193]
+              - generic [ref=e194]:
+                - generic [ref=e195]: Advanced
+                - generic [ref=e196]: 7 lessons
+              - generic [ref=e197]:
+                - heading "React" [level=3] [ref=e198]
+                - paragraph [ref=e199]: A powerful UI library for building component-based interfaces. Learn props, state, hooks, routing, and build real applications.
+              - generic [ref=e200]:
+                - generic [ref=e201]:
+                  - text: Start learning
+                  - img [ref=e202]
+                - generic [ref=e204]:
+                  - img [ref=e205]
+                  - text: 315m
+          - button "Next.js Advanced 7 lessons Next.js The React framework for production. Learn server-side rendering, file-based routing, API routes, Tailwind CSS, and deployment. Start learning 315m" [ref=e209] [cursor=pointer]:
+            - generic [ref=e210]:
+              - img "Next.js" [ref=e212]
+              - generic [ref=e213]:
+                - generic [ref=e214]: Advanced
+                - generic [ref=e215]: 7 lessons
+              - generic [ref=e216]:
+                - heading "Next.js" [level=3] [ref=e217]
+                - paragraph [ref=e218]: The React framework for production. Learn server-side rendering, file-based routing, API routes, Tailwind CSS, and deployment.
+              - generic [ref=e219]:
+                - generic [ref=e220]:
+                  - text: Start learning
+                  - img [ref=e221]
+                - generic [ref=e223]:
+                  - img [ref=e224]
+                  - text: 315m
+      - generic [ref=e228]:
+        - generic [ref=e229]:
+          - generic [ref=e230]:
+            - paragraph [ref=e231]: Game Archive
+            - heading "The Vault." [level=2] [ref=e232] [cursor=pointer]
+          - link "View all games" [ref=e233] [cursor=pointer]:
+            - /url: /vault
+            - text: View all games
+            - img [ref=e234]
+        - generic [ref=e236]:
+          - button "Typing Code Typing Code typing typing" [ref=e238] [cursor=pointer]:
+            - img "Typing Code" [ref=e240]
+            - generic [ref=e241]:
+              - heading "Typing Code" [level=3] [ref=e242]
+              - paragraph [ref=e243]: typing
+            - generic [ref=e244]: typing
+            - img [ref=e246]
+          - button "Typing Math Typing Math typing typing" [ref=e249] [cursor=pointer]:
+            - img "Typing Math" [ref=e251]
+            - generic [ref=e252]:
+              - heading "Typing Math" [level=3] [ref=e253]
+              - paragraph [ref=e254]: typing
+            - generic [ref=e255]: typing
+            - img [ref=e257]
+          - button "Dragon Drop Dragon Drop mouse mouse" [ref=e260] [cursor=pointer]:
+            - img "Dragon Drop" [ref=e262]
+            - generic [ref=e263]:
+              - heading "Dragon Drop" [level=3] [ref=e264]
+              - paragraph [ref=e265]: mouse
+            - generic [ref=e266]: mouse
+            - img [ref=e268]
+          - button "Robot Brainiac Robot Brainiac Action Action" [ref=e271] [cursor=pointer]:
+            - img "Robot Brainiac" [ref=e273]
+            - generic [ref=e274]:
+              - heading "Robot Brainiac" [level=3] [ref=e275]
+              - paragraph [ref=e276]: Action
+            - generic [ref=e277]: Action
+            - img [ref=e279]
+          - button "Master Mouse Master Mouse mouse mouse" [ref=e282] [cursor=pointer]:
+            - img "Master Mouse" [ref=e284]
+            - generic [ref=e285]:
+              - heading "Master Mouse" [level=3] [ref=e286]
+              - paragraph [ref=e287]: mouse
+            - generic [ref=e288]: mouse
+            - img [ref=e290]
+          - button "Link Number Link Number puzzle puzzle" [ref=e293] [cursor=pointer]:
+            - img "Link Number" [ref=e295]
+            - generic [ref=e296]:
+              - heading "Link Number" [level=3] [ref=e297]
+              - paragraph [ref=e298]: puzzle
+            - generic [ref=e299]: puzzle
+            - img [ref=e301]
+      - generic [ref=e305]:
+        - generic [ref=e306]:
+          - paragraph [ref=e307]: Our Approach
+          - heading "Clean code, clear thinking." [level=2] [ref=e308]:
+            - text: Clean code,
+            - text: clear thinking.
+        - generic [ref=e309]:
+          - paragraph [ref=e310]: KOOMPI OS is built on the principles of open-source freedom and educational empowerment. Our platform gives you the tools to explore, build, and innovate within the Linux ecosystem.
+          - link "Read the full story" [ref=e311] [cursor=pointer]:
+            - /url: /about
+            - text: Read the full story
+            - img [ref=e312]
+          - generic [ref=e314]:
+            - generic [ref=e315]:
+              - heading "Quality First" [level=3] [ref=e316]
+              - paragraph [ref=e317]: We use quality code, robust architecture, and refined design that feels premium and improves over time.
+            - generic [ref=e318]:
+              - heading "Open Learning" [level=3] [ref=e319]
+              - paragraph [ref=e320]: Every module is designed to build on the last — structured paths from beginner to advanced.
+          - generic [ref=e321] [cursor=pointer]:
+            - img "KOOMPI Team" [ref=e323]
+            - generic [ref=e324]:
+              - heading "KOOMPI Core Team" [level=4] [ref=e325]
+              - paragraph [ref=e326]: System Architecture · Open Source
+      - generic [ref=e329]:
+        - generic [ref=e330]:
+          - paragraph [ref=e331]: What We Do
+          - heading "Full service, start to finish." [level=2] [ref=e332]:
+            - text: Full service,
+            - text: start to finish.
+          - paragraph [ref=e333]: From the first concept to deployment — we handle every step of the development process.
+          - link "Explore all services" [ref=e335] [cursor=pointer]:
+            - /url: /services
+            - text: Explore all services
+            - img [ref=e336]
+        - generic [ref=e338]:
+          - generic [ref=e339]:
+            - img [ref=e341]
+            - heading "Frontend Development" [level=3] [ref=e343]
+            - paragraph [ref=e344]: Clean, responsive interfaces built with modern frameworks and attention to detail.
+          - generic [ref=e345]:
+            - img [ref=e347]
+            - heading "Backend Development" [level=3] [ref=e351]
+            - paragraph [ref=e352]: Robust server-side solutions and scalable API architectures.
+          - generic [ref=e353]:
+            - img [ref=e355]
+            - heading "Mobile & Cross-Platform" [level=3] [ref=e358]
+            - paragraph [ref=e359]: Seamless experiences across iOS, Android, and web platforms.
+          - generic [ref=e360]:
+            - img [ref=e362]
+            - heading "UI/UX Design" [level=3] [ref=e366]
+            - paragraph [ref=e367]: User-centered designs that balance aesthetics with clear functionality.
+      - generic [ref=e369]:
+        - paragraph [ref=e370]: Get in touch
+        - heading "Have a project in mind?" [level=2] [ref=e371]:
+          - text: Have a project
+          - text: in mind?
+        - generic [ref=e372]:
+          - link "Start a conversation" [ref=e373] [cursor=pointer]:
+            - /url: /services#contact
+          - link "View services" [ref=e374] [cursor=pointer]:
+            - /url: /services
+      - generic [ref=e376]:
+        - generic [ref=e377]:
+          - generic [ref=e378]:
+            - link "KOOMPI KOOMPI OS" [ref=e379] [cursor=pointer]:
+              - /url: /
+              - img "KOOMPI" [ref=e380]
+              - generic [ref=e381]: KOOMPI OS
+            - paragraph [ref=e382]: Developing high-performance software and educational systems for the next generation of builders.
+            - generic [ref=e383]:
+              - link "GitHub" [ref=e384] [cursor=pointer]:
+                - /url: https://github.com/koompi
+                - img [ref=e385]
+              - link "Telegram" [ref=e388] [cursor=pointer]:
+                - /url: https://t.me/koompi
+                - img [ref=e389]
+              - link "Instagram" [ref=e391] [cursor=pointer]:
+                - /url: https://instagram.com/koompi_os
+                - img [ref=e392]
+          - generic [ref=e395]:
+            - heading "Navigation" [level=3] [ref=e396]
+            - list [ref=e397]:
+              - listitem [ref=e398]:
+                - link "Home" [ref=e399] [cursor=pointer]:
+                  - /url: /
+                  - text: Home
+                  - img [ref=e400]
+              - listitem [ref=e403]:
+                - link "About" [ref=e404] [cursor=pointer]:
+                  - /url: /about
+                  - text: About
+                  - img [ref=e405]
+              - listitem [ref=e408]:
+                - link "Modules" [ref=e409] [cursor=pointer]:
+                  - /url: /services
+                  - text: Modules
+                  - img [ref=e410]
+              - listitem [ref=e413]:
+                - link "Features" [ref=e414] [cursor=pointer]:
+                  - /url: /portfolio
+                  - text: Features
+                  - img [ref=e415]
+              - listitem [ref=e418]:
+                - link "The Vault" [ref=e419] [cursor=pointer]:
+                  - /url: /vault
+                  - text: The Vault
+                  - img [ref=e420]
+          - generic [ref=e423]:
+            - heading "Studio" [level=3] [ref=e424]
+            - generic [ref=e425]:
+              - generic [ref=e426]:
+                - paragraph [ref=e427]: Phnom Penh, Cambodia
+                - paragraph [ref=e428]:
+                  - text: KOOMPI HQ, No. 34–36
+                  - text: St. 200, Phsar Thmei II
+              - link "Contact us" [ref=e429] [cursor=pointer]:
+                - /url: /services#contact
+        - generic [ref=e430]:
+          - generic [ref=e431]:
+            - generic [ref=e432]: © 2026 KOOMPI OS
+            - generic [ref=e433]: "|"
+            - generic [ref=e434]: Official Software Department
+          - generic [ref=e435]: Powered by KOOMPI

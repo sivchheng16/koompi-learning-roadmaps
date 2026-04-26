@@ -4,19 +4,19 @@ import { CodeBlock } from '../../components/ui/CodeBlock';
 import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Introduction() {
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
+    <article className="max-w-3xl mx-auto font-sans space-y-10">
+      <div>
+        <div>
           <Typography variant="h1">Introduction: Git & GitHub</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track 05: Git &amp; GitHub</Typography>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Level Overview</Typography>
           <Typography>
             Git is version control — it tracks changes to your code. GitHub hosts your code online and enables collaboration.
@@ -34,9 +34,9 @@ export default function Introduction() {
             <li>Collaboration Workflow</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Prerequisites</Typography>
           <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
             <li>Completed Track 01 &amp; Track 02 (HTML &amp; CSS)</li>
@@ -44,9 +44,9 @@ export default function Introduction() {
             <li>Have a project you want to track</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Why Git Matters</Typography>
           <CodeBlock language="text">{`┌─────────────────────────────────────────────────────────────────────────────┐
 │ WITHOUT GIT vs WITH GIT │
@@ -68,9 +68,9 @@ export default function Introduction() {
 │ │
 └─────────────────────────────────────────────────────────────────────────────┘`}</CodeBlock>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Module Index</Typography>
           <Table>
             <TableHeader>
@@ -109,9 +109,9 @@ export default function Introduction() {
             </TableBody>
           </Table>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">What You&apos;ll Learn</Typography>
           <Typography>
             By the end of this level, you will:
@@ -124,9 +124,9 @@ export default function Introduction() {
             <li>Contribute to open source</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Key Commands Preview</Typography>
           <CodeBlock language="bash">{`# Start tracking project
 git init
@@ -138,9 +138,9 @@ git push origin main
 # Get updates from GitHub
 git pull origin main`}</CodeBlock>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography variant="h2">Track Completion</Typography>
           <Typography>
             To complete Track 05:
@@ -154,9 +154,9 @@ git pull origin main`}</CodeBlock>
             <li>Git &amp; GitHub Badge earned</li>
           </ul>
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
+      </div>
+      <div>
+        <div>
           <Typography>
             Professionals use Git!
           </Typography>
@@ -167,7 +167,7 @@ git pull origin main`}</CodeBlock>
             Start with Module 02: Introduction to Git
           </Typography>
         </div>
-      </section>
-    </div>
+      </div>
+    </article>
   );
 }

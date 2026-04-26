@@ -1,572 +1,367 @@
+import React from "react";
+import { useParams } from "react-router-dom";
+import { CodePlayground } from "../../components/playground/CodePlayground";
+import { CheckCircle2 } from "lucide-react";
+import { useProgress } from "../../context/ProgressContext";
 
-import React from 'react';
-import { Typography } from '../../components/ui/Typography';
-import { CodeBlock } from '../../components/ui/CodeBlock';
-import { Table, TableHead, TableBody, TableHeader, TableRow, TableCell } from '../../components/ui/table';
 export default function Module07ProjectQuiz() {
+  const { moduleId } = useParams<{ moduleId: string }>();
+  const { notifyChallengePassed, isLessonUnlocked } = useProgress();
+  const unlocked = isLessonUnlocked(moduleId ?? "");
+
   return (
-    <div className="module-container">
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h1">Project - Interactive Quiz</Typography>
+    <article className="max-w-3xl mx-auto space-y-14 font-sans">
+
+      {/* Hook */}
+      <section className="space-y-4">
+        <div className="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold tracking-wide uppercase">
+          Module 07 — Capstone Project
         </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Track 03: JavaScript Basics</Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Overview</Typography>
-          <Typography>
-            Combine everything you&apos;ve learned to build an Interactive Quiz Application!
-          </Typography>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Requirements</Typography>
-          <Typography variant="h3">Must Have (Required)</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Requirement</TableHead>
-                <TableHead>Skills Demonstrated</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Multiple questions (5+)</TableCell>
-                <TableCell>Arrays, objects</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Multiple choice answers</TableCell>
-                <TableCell>DOM manipulation</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Track score</TableCell>
-                <TableCell>Variables, logic</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Show current question number</TableCell>
-                <TableCell>Loops, counters</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Correct/incorrect feedback</TableCell>
-                <TableCell>Conditionals</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Final results screen</TableCell>
-                <TableCell>DOM, template literals</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Restart functionality</TableCell>
-                <TableCell>Functions, reset</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Styled with your CSS</TableCell>
-                <TableCell>HTML/CSS skills</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Typography variant="h3">Nice to Have (Bonus)</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Feature</TableHead>
-                <TableHead>Skills Shown</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Timer per question</TableCell>
-                <TableCell>setInterval, async</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Progress bar</TableCell>
-                <TableCell>DOM, CSS</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Animations</TableCell>
-                <TableCell>CSS transitions</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>High score tracking</TableCell>
-                <TableCell>localStorage</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Category selection</TableCell>
-                <TableCell>Advanced logic</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Sound effects</TableCell>
-                <TableCell>Audio API</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Project Structure</Typography>
-          <CodeBlock language="text">{`quiz-app/
-├── index.html
-├── css/
-│ └── style.css
-└── js/
- └── app.js`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 1: HTML Structure</Typography>
-          <CodeBlock language="html">{`<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Cambodia Knowledge Quiz</title>
- <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
- <div class="quiz-container">
- <!-- Start Screen -->
- <div id="start-screen" class="screen">
- <h1> Cambodia Quiz</h1>
- <p>Test your knowledge about Cambodia!</p>
- <button id="start-btn" class="btn btn-primary">Start Quiz</button>
- </div>
- <!-- Quiz Screen -->
- <div id="quiz-screen" class="screen hidden">
- <div class="quiz-header">
- <span id="question-number">Question 1/10</span>
- <span id="score">Score: 0</span>
- </div>
- <div class="quiz-body">
- <h2 id="question">Question text here?</h2>
- <div id="answers" class="answers">
- <!-- Answers will be inserted here -->
- </div>
- </div>
- <div class="quiz-footer">
- <button id="next-btn" class="btn" disabled>Next Question</button>
- </div>
- </div>
- <!-- Result Screen -->
- <div id="result-screen" class="screen hidden">
- <h1>Quiz Complete!</h1>
- <div id="final-score"></div>
- <p id="result-message"></p>
- <button id="restart-btn" class="btn btn-primary">Play Again</button>
- </div>
- </div>
- <script src="js/app.js"></script>
-</body>
-</html>`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 2: CSS Styling</Typography>
-          <CodeBlock language="css">{`/* css/style.css */
-* {
- margin: 0;
- padding: 0;
- box-sizing: border-box;
-}
-body {
- font-family: 'Segoe UI', Tahoma, sans-serif;
- background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
- min-height: 100vh;
- display: flex;
- justify-content: center;
- align-items: center;
- padding: 20px;
-}
-.quiz-container {
- background: white;
- border-radius: 16px;
- box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
- max-width: 600px;
- width: 100%;
- overflow: hidden;
-}
-.screen {
- padding: 40px;
- text-align: center;
-}
-.hidden {
- display: none !important;
-}
-/* Start Screen */
-#start-screen h1 {
- font-size: 2.5rem;
- margin-bottom: 15px;
- color: #1e3c72;
-}
-#start-screen p {
- color: #666;
- margin-bottom: 30px;
-}
-/* Buttons */
-.btn {
- padding: 15px 40px;
- font-size: 1rem;
- border: none;
- border-radius: 8px;
- cursor: pointer;
- transition: transform 0.2s, box-shadow 0.2s;
-}
-.btn:hover:not(:disabled) {
- transform: translateY(-2px);
- box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-.btn:disabled {
- opacity: 0.5;
- cursor: not-allowed;
-}
-.btn-primary {
- background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
- color: white;
-}
-/* Quiz Screen */
-.quiz-header {
- display: flex;
- justify-content: space-between;
- margin-bottom: 30px;
- color: #666;
- font-size: 0.9rem;
-}
-#question {
- font-size: 1.5rem;
- color: #333;
- margin-bottom: 30px;
- line-height: 1.4;
-}
-.answers {
- display: flex;
- flex-direction: column;
- gap: 12px;
-}
-.answer-btn {
- padding: 15px 20px;
- text-align: left;
- background: #f8f9fa;
- border: 2px solid #e9ecef;
- border-radius: 8px;
- cursor: pointer;
- transition: all 0.2s;
- font-size: 1rem;
-}
-.answer-btn:hover {
- border-color: #1e3c72;
- background: #f0f4ff;
-}
-.answer-btn.correct {
- background: #d4edda;
- border-color: #28a745;
- color: #155724;
-}
-.answer-btn.wrong {
- background: #f8d7da;
- border-color: #dc3545;
- color: #721c24;
-}
-.answer-btn:disabled {
- cursor: not-allowed;
-}
-.quiz-footer {
- margin-top: 30px;
-}
-/* Result Screen */
-#final-score {
- font-size: 4rem;
- font-weight: bold;
- color: #1e3c72;
- margin: 20px 0;
-}
-#result-message {
- font-size: 1.2rem;
- color: #666;
- margin-bottom: 30px;
-}
-/* Responsive */
-@media (max-width: 480px) {
- .screen {
- padding: 25px;
- }
- #start-screen h1 {
- font-size: 2rem;
- }
- #question {
- font-size: 1.2rem;
- }
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 3: JavaScript Logic</Typography>
-          <CodeBlock language="javascript">{`// js/app.js
-// Quiz Questions
-const questions = [
- {
- question: "What is the capital of Cambodia?",
- answers: ["Siem Reap", "Phnom Penh", "Battambang", "Sihanoukville"],
- correct: 1
- },
- {
- question: "Which ancient temple complex is Cambodia famous for?",
- answers: ["Borobudur", "Angkor Wat", "Bagan", "Ayutthaya"],
- correct: 1
- },
- {
- question: "What is the official language of Cambodia?",
- answers: ["Thai", "Vietnamese", "Khmer", "Lao"],
- correct: 2
- },
- {
- question: "Which river is the most important in Cambodia?",
- answers: ["Mekong River", "Amazon River", "Nile River", "Yangtze River"],
- correct: 0
- },
- {
- question: "What currency does Cambodia use?",
- answers: ["Thai Baht", "Vietnamese Dong", "Cambodian Riel", "US Dollar only"],
- correct: 2
- },
- {
- question: "In which year did Cambodia gain independence from France?",
- answers: ["1945", "1953", "1960", "1975"],
- correct: 1
- },
- {
- question: "What is the national animal of Cambodia?",
- answers: ["Elephant", "Tiger", "Kouprey", "Dragon"],
- correct: 2
- },
- {
- question: "Which lake in Cambodia is known as the largest freshwater lake in Southeast Asia?",
- answers: ["Tonle Sap", "Lake Victoria", "Lake Toba", "Inle Lake"],
- correct: 0
- }
-];
-// State variables
-let currentQuestion = 0;
-let score = 0;
-let answered = false;
-// DOM Elements
-const startScreen = document.getElementById("start-screen");
-const quizScreen = document.getElementById("quiz-screen");
-const resultScreen = document.getElementById("result-screen");
-const startBtn = document.getElementById("start-btn");
-const nextBtn = document.getElementById("next-btn");
-const restartBtn = document.getElementById("restart-btn");
-const questionEl = document.getElementById("question");
-const answersEl = document.getElementById("answers");
-const questionNumberEl = document.getElementById("question-number");
-const scoreEl = document.getElementById("score");
-const finalScoreEl = document.getElementById("final-score");
-const resultMessageEl = document.getElementById("result-message");
-// Event Listeners
-startBtn.addEventListener("click", startQuiz);
-nextBtn.addEventListener("click", nextQuestion);
-restartBtn.addEventListener("click", restartQuiz);
-// Functions
-function startQuiz() {
- startScreen.classList.add("hidden");
- quizScreen.classList.remove("hidden");
- showQuestion();
-}
-function showQuestion() {
- answered = false;
- nextBtn.disabled = true;
- const question = questions[currentQuestion];
- // Update question number and score
- questionNumberEl.textContent = \`Question \${currentQuestion + 1}/\${questions.length}\`;
- scoreEl.textContent = \`Score: \${score}\`;
- // Show question
- questionEl.textContent = question.question;
- // Clear previous answers
- answersEl.innerHTML = "";
- // Create answer buttons
- question.answers.forEach((answer, index) => {
- const button = document.createElement("button");
- button.textContent = answer;
- button.classList.add("answer-btn");
- button.addEventListener("click", () => selectAnswer(index));
- answersEl.appendChild(button);
- });
-}
-function selectAnswer(selectedIndex) {
- if (answered) return;
- answered = true;
- const question = questions[currentQuestion];
- const buttons = answersEl.querySelectorAll(".answer-btn");
- // Disable all buttons
- buttons.forEach(btn => btn.disabled = true);
- // Show correct/wrong
- if (selectedIndex === question.correct) {
- buttons[selectedIndex].classList.add("correct");
- score++;
- scoreEl.textContent = \`Score: \${score}\`;
- } else {
- buttons[selectedIndex].classList.add("wrong");
- buttons[question.correct].classList.add("correct");
- }
- // Enable next button
- nextBtn.disabled = false;
- // Change button text for last question
- if (currentQuestion === questions.length - 1) {
- nextBtn.textContent = "See Results";
- }
-}
-function nextQuestion() {
- currentQuestion++;
- if (currentQuestion < questions.length) {
- showQuestion();
- } else {
- showResults();
- }
-}
-function showResults() {
- quizScreen.classList.add("hidden");
- resultScreen.classList.remove("hidden");
- const percentage = Math.round((score / questions.length) * 100);
- finalScoreEl.textContent = \`\${score}/\${questions.length}\`;
- let message = "";
- if (percentage === 100) {
- message = " Perfect! You're a Cambodia expert!";
- } else if (percentage >= 80) {
- message = " Excellent! You know Cambodia well!";
- } else if (percentage >= 60) {
- message = " Good job! Keep learning!";
- } else if (percentage >= 40) {
- message = " Not bad! There's more to learn.";
- } else {
- message = " Keep exploring Cambodia!";
- }
- resultMessageEl.textContent = message;
-}
-function restartQuiz() {
- currentQuestion = 0;
- score = 0;
- nextBtn.textContent = "Next Question";
- resultScreen.classList.add("hidden");
- startScreen.classList.remove("hidden");
-}`}</CodeBlock>
-        </div>
-      </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Step 4: Add More Questions</Typography>
-          <Typography>
-            Expand your questions array with more topics:
-          </Typography>
-          <ul className="list-disc pl-8 mb-6 space-y-2 text-text-secondary">
-            <li>History</li>
-            <li>Geography</li>
-            <li>Culture</li>
-            <li>Food</li>
-            <li>Famous people</li>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          Project: Multiple-Choice Quiz App
+        </h1>
+        <p className="text-lg text-muted-foreground leading-relaxed">
+          You've learned variables, conditions, functions, arrays, and DOM
+          manipulation. Now you'll combine all of them into one working app — a
+          multiple-choice quiz. This is the kind of project you can put in your
+          portfolio and show to anyone.
+        </p>
+
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
+          <p className="text-sm font-semibold text-amber-800 mb-2">What you'll build</p>
+          <ul className="space-y-1 text-sm text-amber-900">
+            {[
+              "At least 2 questions shown on the page",
+              "A Submit button to check answers",
+              "Score counter logic in JavaScript",
+              "Final score displayed on the page",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2">
+                <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-amber-600" />
+                <span>{item}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Evaluation Criteria</Typography>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Criteria</TableHead>
-                <TableHead>Points</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Functionality (40)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Questions display correctly</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Answer selection works</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Score tracking accurate</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Results show at end</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Code Quality (30)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Clean, organized code</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Meaningful variable names</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Functions used properly</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Design (20)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Visual appeal</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Responsive design</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Extras (10)</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Additional features</TableCell>
-                <TableCell>10</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
+
+      {/* Concept */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold text-foreground">How a quiz app works</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          The logic is simpler than it looks. You store your questions in an array
+          of objects. When the user clicks Submit, you loop through the answers,
+          count correct ones, and display the result.
+        </p>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`// 1. Data — array of question objects
+const questions = [
+  {
+    question: "What is the capital of Cambodia?",
+    options: ["Siem Reap", "Phnom Penh", "Battambang"],
+    answer: "Phnom Penh",
+  },
+  {
+    question: "Which currency does Cambodia use?",
+    options: ["Baht", "Riel", "Dong"],
+    answer: "Riel",
+  },
+];
+
+// 2. State
+let score = 0;
+
+// 3. On submit — check each answer
+document.querySelector("#submit").addEventListener("click", () => {
+  score = 0;
+  questions.forEach((q, i) => {
+    const selected = document.querySelector(\`[name="q\${i}"]:checked\`);
+    if (selected && selected.value === q.answer) {
+      score++;
+    }
+  });
+  document.querySelector("#result").textContent =
+    \`You scored \${score} / \${questions.length}\`;
+});`}
+        </pre>
+
+        <h2 className="text-xl font-semibold text-foreground pt-4">Rendering questions from data</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          Instead of hardcoding HTML for every question, use{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">.map()</code> to generate it from the array.
+          Adding a new question is then just one line in the data.
+        </p>
+        <pre className="bg-stone-100 rounded-xl px-5 py-4 text-sm font-mono overflow-x-auto leading-relaxed">
+{`const quizHTML = questions.map((q, i) => {
+  const optionsHTML = q.options.map((opt) =>
+    \`<label>
+      <input type="radio" name="q\${i}" value="\${opt}"> \${opt}
+    </label>\`
+  ).join("");
+
+  return \`<div class="question">
+    <p><strong>\${i + 1}. \${q.question}</strong></p>
+    \${optionsHTML}
+  </div>\`;
+}).join("");
+
+document.querySelector("#quiz").innerHTML = quizHTML;`}
+        </pre>
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography variant="h2">Level Complete</Typography>
-          <Typography>
-            Upon completing this project:
-          </Typography>
-          <Typography>
-            JavaScript Basics Badge earned
-JavaScript Developer Certificate awarded
-Ready for Track 04: JavaScript Advanced or Track 05: Git &amp; GitHub
-          </Typography>
-        </div>
+
+      {/* Example */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Live example — full working quiz</h2>
+        <p className="text-sm text-muted-foreground">
+          This is a complete quiz. Read through every line — you know all the
+          concepts involved. Then try changing the questions or adding a fourth one.
+        </p>
+        <CodePlayground
+          mode="web"
+          height="480px"
+          starter={{
+            html: `<div id="quiz"></div>
+<button id="submit">Submit Answers</button>
+<p id="result"></p>`,
+            css: `body { font-family: system-ui, sans-serif; padding: 24px; max-width: 500px; }
+.question { border: 1px solid #e5e7eb; border-radius: 10px;
+  padding: 16px; margin-bottom: 16px; background: #fafaf9; }
+.question p { margin: 0 0 10px; }
+label { display: block; margin: 6px 0; font-size: 14px; cursor: pointer; }
+input[type=radio] { margin-right: 8px; }
+#submit { padding: 10px 24px; background: #f59e0b; border: none;
+  border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; }
+#submit:hover { background: #d97706; }
+#result { margin-top: 16px; font-size: 18px; font-weight: 700; color: #1d4ed8; }`,
+            js: `const questions = [
+  {
+    question: "What is the capital of Cambodia?",
+    options: ["Siem Reap", "Phnom Penh", "Battambang"],
+    answer: "Phnom Penh",
+  },
+  {
+    question: "Which river runs through Phnom Penh?",
+    options: ["Mekong", "Amazon", "Nile"],
+    answer: "Mekong",
+  },
+  {
+    question: "What does HTML stand for?",
+    options: [
+      "HyperText Markup Language",
+      "High Transfer Markup Language",
+      "Home Tool Markup Language",
+    ],
+    answer: "HyperText Markup Language",
+  },
+];
+
+const quizHTML = questions.map((q, i) => {
+  const optionsHTML = q.options
+    .map(
+      (opt) =>
+        \`<label><input type="radio" name="q\${i}" value="\${opt}"> \${opt}</label>\`
+    )
+    .join("");
+  return \`<div class="question"><p><strong>\${i + 1}. \${q.question}</strong></p>\${optionsHTML}</div>\`;
+}).join("");
+
+document.querySelector("#quiz").innerHTML = quizHTML;
+
+document.querySelector("#submit").addEventListener("click", () => {
+  let score = 0;
+  questions.forEach((q, i) => {
+    const selected = document.querySelector(\`[name="q\${i}"]:checked\`);
+    if (selected && selected.value === q.answer) score++;
+  });
+  document.querySelector("#result").innerHTML =
+    \`You scored <strong>\${score}</strong> out of \${questions.length}. \${
+      score === questions.length ? "Perfect! 🎉" : "Keep practising!"
+    }\`;
+});`,
+          }}
+        />
       </section>
-      <section className="lesson-section">
-        <div className="lesson-content">
-          <Typography>
-            You built your first JavaScript app!
-          </Typography>
-          <Typography>
-            This quiz will grow with you — add new features as you learn!
-          </Typography>
-        </div>
+
+      {/* Try it */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Customise it</h2>
+        <p className="text-sm text-muted-foreground">
+          Fork the example above and make it your own. Ideas: change the questions
+          to Cambodia history, add a 4th question, change colours, or show which
+          answers were wrong after submit.
+        </p>
+        <CodePlayground
+          mode="web"
+          height="480px"
+          starter={{
+            html: `<h2>My Quiz</h2>
+<div id="quiz"></div>
+<button id="submit">Check Score</button>
+<p id="result"></p>`,
+            css: `body { font-family: system-ui, sans-serif; padding: 24px; max-width: 500px; }
+h2 { margin-bottom: 20px; }
+.question { border: 1px solid #e5e7eb; border-radius: 10px;
+  padding: 16px; margin-bottom: 16px; }
+.question p { margin: 0 0 10px; font-weight: 600; }
+label { display: block; margin: 6px 0; font-size: 14px; cursor: pointer; }
+input[type=radio] { margin-right: 8px; }
+#submit { padding: 10px 24px; background: #3b82f6; color: white;
+  border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
+#result { margin-top: 16px; font-size: 16px; font-weight: 700; }`,
+            js: `// Replace these questions with your own!
+const questions = [
+  {
+    question: "What year did Cambodia gain independence?",
+    options: ["1953", "1960", "1975"],
+    answer: "1953",
+  },
+  {
+    question: "What is the currency of Cambodia?",
+    options: ["Baht", "Dong", "Riel"],
+    answer: "Riel",
+  },
+];
+
+const quizHTML = questions.map((q, i) => {
+  const optsHTML = q.options
+    .map((opt) => \`<label><input type="radio" name="q\${i}" value="\${opt}"> \${opt}</label>\`)
+    .join("");
+  return \`<div class="question"><p>\${i + 1}. \${q.question}</p>\${optsHTML}</div>\`;
+}).join("");
+document.querySelector("#quiz").innerHTML = quizHTML;
+
+document.querySelector("#submit").addEventListener("click", () => {
+  let score = 0;
+  questions.forEach((q, i) => {
+    const picked = document.querySelector(\`[name="q\${i}"]:checked\`);
+    if (picked && picked.value === q.answer) score++;
+  });
+  document.querySelector("#result").textContent =
+    \`Score: \${score} / \${questions.length}\`;
+});`,
+          }}
+        />
       </section>
-    </div>
+
+      {/* Challenge */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Challenge</h2>
+        <p className="text-sm text-muted-foreground">
+          Build a quiz app with at least 2 questions, a Submit button, a{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">score</code> variable in JavaScript, and
+          a final score displayed using{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">innerHTML</code> or{" "}
+          <code className="font-mono bg-stone-100 px-1 rounded">textContent</code>.
+        </p>
+        <CodePlayground
+          mode="web"
+          height="520px"
+          starter={{
+            html: `<!-- Build your quiz here -->
+<div id="quiz"></div>
+<button id="submit">Submit</button>
+<p id="result"></p>`,
+            css: `body { font-family: system-ui, sans-serif; padding: 24px; max-width: 500px; }
+.question { border: 1px solid #e5e7eb; border-radius: 10px;
+  padding: 16px; margin-bottom: 16px; }
+.question p { margin: 0 0 8px; font-weight: 600; }
+label { display: block; margin: 5px 0; cursor: pointer; }
+input[type=radio] { margin-right: 6px; }
+#submit { padding: 10px 24px; background: #10b981; color: white;
+  border: none; border-radius: 8px; cursor: pointer; }
+#result { margin-top: 16px; font-size: 16px; font-weight: 700; color: #059669; }`,
+            js: `const questions = [
+  {
+    question: "Add your first question here",
+    options: ["Option A", "Option B", "Option C"],
+    answer: "Option A",
+  },
+  {
+    question: "Add your second question here",
+    options: ["Option A", "Option B", "Option C"],
+    answer: "Option B",
+  },
+];
+
+let score = 0;
+
+const html = questions.map((q, i) => {
+  const opts = q.options
+    .map((o) => \`<label><input type="radio" name="q\${i}" value="\${o}"> \${o}</label>\`)
+    .join("");
+  return \`<div class="question"><p>\${i + 1}. \${q.question}</p>\${opts}</div>\`;
+}).join("");
+document.querySelector("#quiz").innerHTML = html;
+
+document.querySelector("#submit").addEventListener("click", () => {
+  score = 0;
+  questions.forEach((q, i) => {
+    const sel = document.querySelector(\`[name="q\${i}"]:checked\`);
+    if (sel && sel.value === q.answer) score++;
+  });
+  document.querySelector("#result").textContent =
+    \`Your score: \${score} / \${questions.length}\`;
+});`,
+          }}
+          challenge={{
+            prompt:
+              "Build a quiz with at least 2 questions, a Submit button, a score variable, and display the final score.",
+            check(html, _css, js) {
+              if (!html.includes("<button"))
+                return { passed: false, message: "Add a <button> element for submitting." };
+              if (!js.includes("score"))
+                return {
+                  passed: false,
+                  message: "Declare a score variable in your JavaScript.",
+                };
+              if (!js.includes("innerHTML") && !js.includes("textContent"))
+                return {
+                  passed: false,
+                  message:
+                    "Display the score using innerHTML or textContent on a DOM element.",
+                };
+              return {
+                passed: true,
+                message:
+                  "Challenge complete! You built a JavaScript quiz app — your first real project.",
+              };
+            },
+          }}
+          onChallengePassed={() => notifyChallengePassed(moduleId ?? "")}
+        />
+      </section>
+
+      {/* Gate */}
+      <section>
+        {unlocked ? (
+          <div className="flex items-start gap-4 px-6 py-5 rounded-2xl bg-green-50 border border-green-200">
+            <CheckCircle2 size={20} className="text-green-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-sans font-semibold text-green-800">Challenge passed</p>
+              <p className="text-sm text-green-700 mt-0.5">
+                Click <strong>Complete &amp; Next</strong> below to continue.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="px-6 py-5 rounded-2xl bg-stone-50 border border-border">
+            <p className="text-sm font-sans text-muted-foreground">
+              Complete the challenge above to unlock the next lesson.
+            </p>
+          </div>
+        )}
+      </section>
+
+      {/* Wrap up */}
+      <section className="space-y-3 border-t border-border pt-10">
+        <h2 className="text-xl font-semibold text-foreground">You completed JavaScript Basics</h2>
+        <p className="text-muted-foreground leading-relaxed">
+          In this track you learned variables, data types, conditions, functions,
+          arrays, DOM manipulation, and you shipped a real app. The next track —
+          JavaScript Advanced — covers ES6+, async/await, and working with real
+          APIs. You're ready.
+        </p>
+      </section>
+    </article>
   );
 }
